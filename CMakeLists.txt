@@ -12,6 +12,27 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+
+    add_custom_target(doc_doxygen
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_IN}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Génération de la documentation avec Doxygen"
+        VERBATIM
+    )
+
+else()
+    message(WARNING "Doxygen n'a pas été trouvé — pas de documentation.")
+endif()
+
+# Rendre visible Doxyfile dans Qt Creator
+add_custom_target(show_doxyfile SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+
+
+
 set(TS_FILES ToDoApp_en_US.ts)
 
 set(PROJECT_SOURCES
@@ -26,6 +47,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ToDoApp
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        README.md
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ToDoApp APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
