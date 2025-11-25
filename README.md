@@ -249,4 +249,3 @@ Cette commande génère automatiquement :
 * **Simon Bélier**
 * **Wissal Jalfa**
 
-**Projet académique** - Cours de Langages et Outils pour l'Algorithmique Avancée (LAOA)
