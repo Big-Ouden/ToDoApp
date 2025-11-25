@@ -250,15 +250,3 @@ Cette commande génère automatiquement :
 * **Wissal Jalfa**
 
 **Projet académique** - Cours de Langages et Outils pour l'Algorithmique Avancée (LAOA)
-
-## Licence
-
-Ce projet est distribué sous la **GNU General Public License v2.0 (GPL-2.0)**.
-
-Voir le fichier `LICENSE` pour les détails complets.
-
-## Remerciements
-
-* Projet Qt pour l'excellent framework Qt
-* Équipe Doxygen pour les outils de génération de documentation
-* Développeurs CMake pour le système de build
