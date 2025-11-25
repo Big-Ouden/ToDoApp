@@ -10,46 +10,25 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
-# Documentation Doxygen
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
-    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
-    add_custom_target(doc_doxygen
-        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_IN}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT "Génération de la documentation avec Doxygen"
-        VERBATIM
-    )
-endif()
+# ========================================
+# Organisation des fichiers sources
+# ========================================
+file(GLOB HEADERS CONFIGURE_DEPENDS "*.h")
+file(GLOB SOURCES CONFIGURE_DEPENDS "*.cpp")
+file(GLOB UI_FILES CONFIGURE_DEPENDS "*.ui")
+file(GLOB RESOURCE_FILES CONFIGURE_DEPENDS "*.qrc")
 
-# Organisation des fichiers par catégorie
-set(HEADERS
-    mainwindow.h
-)
-
-set(SOURCES
-    main.cpp
-    mainwindow.cpp
-)
-
-set(UI_FILES
-    mainwindow.ui
-)
-
+# Fichiers de traduction
 set(TS_FILES
     ToDoApp_en_US.ts
 )
 
-set(RESOURCE_FILES
-    # resources.qrc
-)
-
+# Documentation
 set(DOC_FILES
     README.md
     Doxyfile
 )
 
-# Regroupement de tous les fichiers sources
 set(PROJECT_SOURCES
     ${HEADERS}
     ${SOURCES}
@@ -57,6 +36,12 @@ set(PROJECT_SOURCES
     ${TS_FILES}
 )
 
+
+
+
+# ========================================
+# Compilation de l'application
+# ========================================
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ToDoApp
         MANUAL_FINALIZATION
@@ -96,7 +81,7 @@ set_target_properties(ToDoApp PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-# Organisation visuelle dans Qt Creator avec source_group
+# Organisation visuelle dans Qt Creator
 source_group("Header Files" FILES ${HEADERS})
 source_group("Source Files" FILES ${SOURCES})
 source_group("Form Files" FILES ${UI_FILES})
@@ -104,6 +89,186 @@ source_group("Translation Files" FILES ${TS_FILES})
 source_group("Resource Files" FILES ${RESOURCE_FILES})
 source_group("Documentation" FILES ${DOC_FILES})
 
+# ========================================
+# 1. GÉNÉRATION DE LA DOCUMENTATION (Doxygen)
+# ========================================
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.generated)
+
+    # Configurer le Doxyfile pour qu'il pointe vers les bons chemins
+    file(READ ${DOXYGEN_IN} DOXYFILE_CONTENT)
+    string(REPLACE "INPUT                  = ."
+                   "INPUT                  = ${CMAKE_CURRENT_SOURCE_DIR}"
+                   DOXYFILE_CONTENT "${DOXYFILE_CONTENT}")
+    string(REPLACE "OUTPUT_DIRECTORY       = doc"
+                   "OUTPUT_DIRECTORY       = ${CMAKE_CURRENT_BINARY_DIR}/doc"
+                   DOXYFILE_CONTENT "${DOXYFILE_CONTENT}")
+    string(REPLACE "USE_MDFILE_AS_MAINPAGE = README.md"
+                   "USE_MDFILE_AS_MAINPAGE = ${CMAKE_CURRENT_SOURCE_DIR}/README.md"
+                   DOXYFILE_CONTENT "${DOXYFILE_CONTENT}")
+    file(WRITE ${DOXYGEN_OUT} "${DOXYFILE_CONTENT}")
+
+    add_custom_target(doc
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Génération de la documentation avec Doxygen"
+        VERBATIM
+    )
+
+    message(STATUS "Doxygen trouvé - cible 'doc' disponible")
+else()
+    message(WARNING "Doxygen n'a pas été trouvé - documentation non disponible")
+endif()
+
+# ========================================
+# 2. GÉNÉRATION DU LISTING DU CODE
+# ========================================
+
+add_custom_target(listing
+    COMMAND ${CMAKE_COMMAND} -E echo "Génération du listing du code source..."
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/listing
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/generate_listing.cmake
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Création du listing du code source"
+    VERBATIM
+)
+
+# Créer le script de génération de listing
+file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/generate_listing.cmake "
+# Script de génération de listing
+
+# Liste explicite des fichiers sources (mêmes fichiers que pour l'archive)
+set(ALL_SOURCES
+    ${HEADERS}
+    ${SOURCES}
+    ${UI_FILES}
+    ${RESOURCE_FILES}
+)
+
+set(LISTING_FILE \"${CMAKE_BINARY_DIR}/listing/code_listing.txt\")
+file(WRITE \${LISTING_FILE} \"LISTING DU CODE SOURCE - ${PROJECT_NAME} v${PROJECT_VERSION}\\n\")
+file(APPEND \${LISTING_FILE} \"========================================\\n\\n\")
+
+foreach(source_file \${ALL_SOURCES})
+    file(RELATIVE_PATH rel_path \"${CMAKE_CURRENT_SOURCE_DIR}\" \${source_file})
+    file(APPEND \${LISTING_FILE} \"\\n\\n\")
+    file(APPEND \${LISTING_FILE} \"================================================================================\\n\")
+    file(APPEND \${LISTING_FILE} \"Fichier: \${rel_path}\\n\")
+    file(APPEND \${LISTING_FILE} \"================================================================================\\n\\n\")
+    file(READ \${source_file} FILE_CONTENT)
+    file(APPEND \${LISTING_FILE} \"\${FILE_CONTENT}\")
+endforeach()
+
+message(STATUS \"Listing généré: \${LISTING_FILE}\")
+")
+
+
+# ========================================
+# 3. GESTION DES TRADUCTIONS
+# ========================================
+
+# Mise à jour des fichiers .ts
+add_custom_target(update_translations
+    COMMAND Qt${QT_VERSION_MAJOR}::lupdate
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        -ts ${TS_FILES}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Mise à jour des fichiers de traduction (.ts)"
+    VERBATIM
+)
+
+# Compilation des fichiers .ts en .qm
+add_custom_target(release_translations
+    COMMENT "Compilation des fichiers de traduction (.ts -> .qm)"
+    VERBATIM
+)
+
+foreach(ts_file ${TS_FILES})
+    get_filename_component(ts_name ${ts_file} NAME_WE)
+    add_custom_command(
+        TARGET release_translations POST_BUILD
+        COMMAND Qt${QT_VERSION_MAJOR}::lrelease
+            ${CMAKE_CURRENT_SOURCE_DIR}/${ts_file}
+            -qm ${CMAKE_CURRENT_BINARY_DIR}/${ts_name}.qm
+        COMMENT "Compilation de ${ts_file}"
+    )
+endforeach()
+
+# Cible combinée pour les traductions
+add_custom_target(translations
+    COMMENT "Mise à jour et compilation des traductions"
+)
+add_dependencies(translations update_translations release_translations)
+
+# ========================================
+# 4. GÉNÉRATION D'ARCHIVE TRANSPORTABLE
+# ========================================
+# ========================================
+# 4. GÉNÉRATION D'ARCHIVE TRANSPORTABLE
+# ========================================
+
+set(ARCHIVE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-src")
+
+# Liste explicite des fichiers source à inclure
+set(SOURCE_DIST_FILES
+    ${HEADERS}
+    ${SOURCES}
+    ${UI_FILES}
+    ${TS_FILES}
+    ${RESOURCE_FILES}
+    ${DOC_FILES}
+    CMakeLists.txt
+)
+
+# On travaille depuis le répertoire source du projet
+# pour que les chemins soient corrects dans l’archive
+# (ex : ToDoApp/main.cpp)
+add_custom_target(archive-tar
+    COMMAND ${CMAKE_COMMAND} -E echo "Création de l'archive ${ARCHIVE_NAME}.tar.gz..."
+    COMMAND ${CMAKE_COMMAND} -E tar czf
+        ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.gz
+        --format=gnutar
+        ${SOURCE_DIST_FILES}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Archive TAR.GZ créée"
+    VERBATIM
+)
+
+add_custom_target(archive-zip
+    COMMAND ${CMAKE_COMMAND} -E echo "Création de l'archive ${ARCHIVE_NAME}.zip..."
+    COMMAND ${CMAKE_COMMAND} -E tar cf
+        ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.zip
+        --format=zip
+        ${SOURCE_DIST_FILES}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Archive ZIP créée"
+    VERBATIM
+)
+
+# Cible générale
+add_custom_target(archive
+    DEPENDS archive-zip archive-tar
+    COMMENT "Génération des archives du projet"
+)
+
+
+# ========================================
+# 5. CIBLE "ALL-IN-ONE" - GÉNÉRATION COMPLÈTE
+# ========================================
+add_custom_target(deliverable
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target translations
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target doc
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target listing
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target archive
+    COMMENT "Génération complète: documentation + listing + traductions + archive"
+    VERBATIM
+)
+
+# ========================================
+# Installation
+# ========================================
 include(GNUInstallDirs)
 install(TARGETS ToDoApp
     BUNDLE DESTINATION .
@@ -111,6 +276,28 @@ install(TARGETS ToDoApp
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+# Installer les fichiers de traduction
+install(FILES ${QM_FILES}
+    DESTINATION ${CMAKE_INSTALL_BINDIR}/translations
+)
+
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ToDoApp)
 endif()
+
+# ========================================
+# Résumé des cibles disponibles
+# ========================================
+message(STATUS "==============================================")
+message(STATUS "Cibles disponibles:")
+message(STATUS "  - ToDoApp          : Compilation de l'application")
+message(STATUS "  - doc              : Génération de la documentation")
+message(STATUS "  - listing          : Génération du listing du code")
+message(STATUS "  - translations     : Mise à jour et compilation des traductions")
+message(STATUS "  - update_translations : Mise à jour des .ts")
+message(STATUS "  - release_translations : Compilation des .ts en .qm")
+message(STATUS "  - archive          : Création d'une archive du projet")
+message(STATUS "  - archive-zip      : Archive au format ZIP")
+message(STATUS "  - archive-tar      : Archive au format TAR.GZ")
+message(STATUS "  - deliverable      : TOUT générer (doc + listing + trad + archive)")
+message(STATUS "==============================================")
