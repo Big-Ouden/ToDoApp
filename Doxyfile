@@ -1,7 +1,6 @@
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
-
 PROJECT_NAME           = ToDoApp
 PROJECT_BRIEF          = "Documentation du projet Qt ToDoApp"
 OUTPUT_DIRECTORY       = doc
@@ -9,10 +8,21 @@ OUTPUT_DIRECTORY       = doc
 #---------------------------------------------------------------------------
 # Input
 #---------------------------------------------------------------------------
-
 INPUT                  = .
 RECURSIVE              = YES
-FILE_PATTERNS          = *.h *.cpp *.ui
+FILE_PATTERNS          = *.h *.cpp *.ui *.md
+
+# Exclusions importantes
+EXCLUDE_PATTERNS       = */build/* \
+                         */build-*/* \
+                         */.git/* \
+                         */doc/* \
+                         */moc_* \
+                         */ui_* \
+                         */qrc_* \
+                         */.qtc_clangd/*
+
+EXCLUDE_SYMBOLS        =
 
 EXTRACT_ALL            = YES
 EXTRACT_PRIVATE        = YES
@@ -27,27 +37,39 @@ PREDEFINED             = Q_OBJECT \
                          signals=public \
                          slots=public \
                          Q_SLOTS=public \
-                         Q_SIGNALS=public
+                         Q_SIGNALS=public \
+                         Q_EMIT= \
+                         Q_DECLARE_PRIVATE \
+                         Q_DECLARE_PUBLIC
 
 #---------------------------------------------------------------------------
 # Output formats
 #---------------------------------------------------------------------------
-
 GENERATE_HTML          = YES
 HTML_OUTPUT            = html
-
-GENERATE_LATEX         = NO  # Mets YES si tu veux PDF via LaTeX
+GENERATE_LATEX         = NO
 
 QUIET                  = NO
 WARNINGS               = YES
 WARN_IF_UNDOCUMENTED   = NO
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = NO
 
 #---------------------------------------------------------------------------
 # Misc
 #---------------------------------------------------------------------------
-
 GENERATE_TREEVIEW      = YES
 FULL_PATH_NAMES        = NO
 SOURCE_BROWSER         = YES
 INLINE_SOURCES         = YES
 USE_MDFILE_AS_MAINPAGE = README.md
+
+# Options d'affichage améliorées
+SHOW_INCLUDE_FILES     = YES
+SHOW_USED_FILES        = YES
+SHOW_FILES             = YES
+SHOW_NAMESPACES        = YES
+
+# Graphiques (nécessite Graphviz installé)
+HAVE_DOT               = NO
+CLASS_DIAGRAMS         = YES
