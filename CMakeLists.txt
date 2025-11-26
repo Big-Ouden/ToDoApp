@@ -17,7 +17,7 @@ file(GLOB HEADERS CONFIGURE_DEPENDS "*.h")
 file(GLOB SOURCES CONFIGURE_DEPENDS "*.cpp")
 file(GLOB UI_FILES CONFIGURE_DEPENDS "*.ui")
 file(GLOB RESOURCE_FILES CONFIGURE_DEPENDS "*.qrc")
-
+file(GLOB MISC_FILES CONFIGURE_DEPENDS "misc/*")
 # Fichiers de traduction
 set(TS_FILES
     ToDoApp_en_US.ts
@@ -36,6 +36,12 @@ set(PROJECT_SOURCES
     ${TS_FILES}
 )
 
+set(MISC_FILES
+    ${MISC_FILES}
+    misc/modele_graphe.pdf
+    misc/modele_graphe.uxf
+    misc/todo.md
+)
 
 
 
@@ -48,6 +54,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         ${RESOURCE_FILES}
         ${DOC_FILES}
+        ${MISC_FILES}
     )
     qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
@@ -88,6 +95,7 @@ source_group("Form Files" FILES ${UI_FILES})
 source_group("Translation Files" FILES ${TS_FILES})
 source_group("Resource Files" FILES ${RESOURCE_FILES})
 source_group("Documentation" FILES ${DOC_FILES})
+source_group("Miscellaneous Files" FILES ${MISC_FILES})
 
 # ========================================
 # 1. GÉNÉRATION DE LA DOCUMENTATION (Doxygen)
@@ -202,9 +210,6 @@ add_custom_target(translations
 )
 add_dependencies(translations update_translations release_translations)
 
-# ========================================
-# 4. GÉNÉRATION D'ARCHIVE TRANSPORTABLE
-# ========================================
 # ========================================
 # 4. GÉNÉRATION D'ARCHIVE TRANSPORTABLE
 # ========================================

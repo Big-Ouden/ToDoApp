@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>329</x>
+      <y>273</y>
+      <w>147</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>Task
+--
+- id: : QUuid
+- title : QString 
+- description : QString          
+- dueDate : QDate                
+- priority : Priority            
+- status : Status                
+- subtasks : QList&lt;Task*&gt;        
+--
++ addSubtask(Task*)              
++ removeSubtask(int)             
++ hasSubtasks() : bool           
++ isCompleted() : bool   </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>315</x>
+      <y>490</y>
+      <w>168</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>Category
+--
+- id : QUuid                 
+- name : QString             
+- tasks : QList&lt;Task*&gt;       
+--
++ addTask(Task*)             
++ removeTask(Task*)    </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>280</x>
+      <y>7</y>
+      <w>259</w>
+      <h>203</h>
+    </coordinates>
+    <panel_attributes>TaskModel
+--
+- rootTasks : QList&lt;Task*&gt;     
+--
++ rowCount(QModelIndex) : int                         
++ columnCount(QModelIndex) : int                      
++ data(QModelIndex, int role) : QVariant              
++ setData(QModelIndex, QVariant, int role) : bool     
++ index(int,int,QModelIndex) : QModelIndex            
++ parent(QModelIndex) : QModelIndex                   
++ flags(QModelIndex) : Qt::ItemFlags                  
++ insertTask(Task*)                                   
++ removeTask(QModelIndex)                             
++ getTask(QModelIndex) : Task*      
+--
+Signals:
++ taskAdded(Task*)  
++ taskRemoved(Task*)
++ taskUpdated(Task*)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>469</x>
+      <y>336</y>
+      <w>42</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m1=0
+m2=*</panel_attributes>
+    <additional_attributes>10.0;10.0;40.0;10.0;40.0;70.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>385</x>
+      <y>420</y>
+      <w>56</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=0..1
+Contient</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>399</x>
+      <y>203</y>
+      <w>21</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=*</panel_attributes>
+    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>595</x>
+      <y>308</y>
+      <w>252</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>PersistenceManager
+--
++ saveToJson(QString path, QList&lt;Task*&gt;) : bool          
++ loadFromJson(QString path) : QList&lt;Task*&gt;           
++ saveToXml(QString path, QList&lt;Task*&gt;) : bool 
++ loadFromXml(QString path): QList&lt;Task*&gt; </panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
