@@ -27,7 +27,7 @@ QWidget *TaskItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
         cb->addItem("Critical");
         return cb;
     }
-    return QStyledItemDelegate::createEditor(parent, nullptr, index);
+    return QStyledItemDelegate::createEditor(parent, QStyleOptionViewItem(), index);
 }
 
 void TaskItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const

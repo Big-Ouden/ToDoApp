@@ -18,17 +18,21 @@ public:
 
     void setTask(Task *task);
     void clearTask();
+    void updateTranslations();  // Méthode publique pour forcer la mise à jour
 
 signals:
-    void taskModified();
+    void taskModified(Task* task);
 
 protected:
     void changeEvent(QEvent *event) override;
 
 private slots:
     void onUserEdited();
+    void onApplyClicked();
 
 private:
+    void updateComboTranslations();
+    
     Ui::TaskDetailWidget *ui;
     Task *m_task;
 };

@@ -1,6 +1,9 @@
 #include "taskmodel.h"
 #include <QBrush>
 #include <QIcon>
+#include <QMimeData>
+#include <QDataStream>
+#include <QIODevice>
 
 /**
  * @file taskmodel.cpp
@@ -66,6 +69,22 @@ int TaskModel::columnCount(const QModelIndex & /*parent*/) const
     return 6; // Title, Description, DueDate, Priority, Status, Category
 }
 
+QVariant TaskModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        switch (section) {
+        case 0: return tr("Titre");
+        case 1: return tr("Description");
+        case 2: return tr("Date d'échéance");
+        case 3: return tr("Priorité");
+        case 4: return tr("Statut");
+        case 5: return tr("Catégorie");
+        default: return {};
+        }
+    }
+    return QAbstractItemModel::headerData(section, orientation, role);
+}
+
 QVariant TaskModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) return {};
@@ -85,17 +104,38 @@ QVariant TaskModel::data(const QModelIndex &index, int role) const
         }
     }
 
-    if (role == Qt::ForegroundRole && t->isOverdue()) {
+    if (role == Qt::BackgroundRole && index.column() == 4) {
+        // Colorer le status
+        switch (t->status()) {
+        case Status::NOTSTARTED: return QBrush(QColor(220, 220, 220)); // Gris clair
+        case Status::INPROGRESS: return QBrush(QColor(173, 216, 230)); // Bleu clair
+        case Status::COMPLETED: return QBrush(QColor(144, 238, 144)); // Vert clair
+        case Status::CANCELLED: return QBrush(QColor(255, 200, 200)); // Rouge clair
+        }
+    }
+    
+    if (role == Qt::BackgroundRole && index.column() == 3) {
+        // Colorer la priorité
+        switch (t->priority()) {
+        case Priority::LOW: return QBrush(QColor(200, 255, 200)); // Vert pâle
+        case Priority::MEDIUM: return QBrush(QColor(255, 255, 200)); // Jaune pâle
+        case Priority::HIGH: return QBrush(QColor(255, 220, 180)); // Orange pâle
+        case Priority::CRITICAL: return QBrush(QColor(255, 180, 180)); // Rouge pâle
+        }
+    }
+    
+    if (role == Qt::ForegroundRole && t->isOverdue() && index.column() == 2) {
+        // Seulement la date en rouge si en retard
         return QBrush(Qt::red);
     }
 
     if (role == Qt::DecorationRole && index.column() == 3) {
         // optional: return an icon for priority
         switch (t->priority()) {
-        case Priority::Low: return QIcon();
-        case Priority::Medium: return QIcon();
-        case Priority::High: return QIcon();
-        case Priority::Critical: return QIcon();
+        case Priority::LOW: return QIcon();
+        case Priority::MEDIUM: return QIcon();
+        case Priority::HIGH: return QIcon();
+        case Priority::CRITICAL: return QIcon();
         }
     }
 
@@ -124,8 +164,12 @@ bool TaskModel::setData(const QModelIndex &index, const QVariant &value, int rol
 
 Qt::ItemFlags TaskModel::flags(const QModelIndex &index) const
 {
-    if (!index.isValid()) return Qt::NoItemFlags;
-    return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable;
+    Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
+    
+    if (index.isValid())
+        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable;
+    else
+        return Qt::ItemIsDropEnabled | defaultFlags;
 }
 
 void TaskModel::insertTask(Task *task, Task *parentTask)
@@ -148,7 +192,7 @@ void TaskModel::insertTask(Task *task, Task *parentTask)
     connect(task, &Task::taskModified, this, [this, task]() {
         // find index and emit dataChanged for the row
         // naive approach: emit dataChanged for whole model root
-        emit dataChanged(index(0,0,QModelIndex()), index(rowCount(QModelIndex())-1, columnCount(QModelIndex())-1));
+        emit dataChanged(index(0,0,QModelIndex()), index(rowCount(QModelIndex())-1, columnCount(QModelIndex())-1, QModelIndex()));
         emit taskUpdated(task);
     });
 
@@ -195,4 +239,158 @@ void TaskModel::clear()
     qDeleteAll(m_rootTasks);
     m_rootTasks.clear();
     endResetModel();
+}
+
+void TaskModel::promoteTask(const QModelIndex &index)
+{
+    if (!index.isValid()) return;
+    
+    Task *task = getTask(index);
+    if (!task) return;
+    
+    Task *parent = task->parentTask();
+    if (!parent) return; // Déjà au niveau racine
+    
+    Task *grandParent = parent->parentTask();
+    
+    // Retirer de l'ancien parent
+    int oldRow = parent->subtasks().indexOf(task);
+    QModelIndex parentIdx = createIndex(
+        grandParent ? grandParent->subtasks().indexOf(parent) : m_rootTasks.indexOf(parent),
+        0, parent);
+    
+    beginRemoveRows(parentIdx, oldRow, oldRow);
+    parent->removeSubtask(task);
+    endRemoveRows();
+    
+    // Ajouter au même niveau que l'ancien parent
+    if (grandParent) {
+        int newRow = grandParent->subtasks().indexOf(parent) + 1;
+        QModelIndex grandParentIdx = createIndex(
+            grandParent->parentTask() ? grandParent->parentTask()->subtasks().indexOf(grandParent) : m_rootTasks.indexOf(grandParent),
+            0, grandParent);
+        
+        beginInsertRows(grandParentIdx, newRow, newRow);
+        grandParent->insertSubtask(newRow, task);
+        endInsertRows();
+    } else {
+        int newRow = m_rootTasks.indexOf(parent) + 1;
+        beginInsertRows(QModelIndex(), newRow, newRow);
+        m_rootTasks.insert(newRow, task);
+        task->setParentTask(nullptr);
+        endInsertRows();
+    }
+    
+    emit taskUpdated(task);
+}
+
+Qt::DropActions TaskModel::supportedDropActions() const
+{
+    return Qt::MoveAction;
+}
+
+QStringList TaskModel::mimeTypes() const
+{
+    return QStringList() << "application/x-task-pointer";
+}
+
+QMimeData *TaskModel::mimeData(const QModelIndexList &indexes) const
+{
+    if (indexes.isEmpty()) return nullptr;
+    
+    QMimeData *mimeData = new QMimeData();
+    QByteArray encodedData;
+    QDataStream stream(&encodedData, QIODevice::WriteOnly);
+    
+    // Encoder le pointeur de la première tâche sélectionnée
+    QModelIndex index = indexes.first();
+    if (index.isValid()) {
+        Task *task = getTask(index);
+        stream << reinterpret_cast<quintptr>(task);
+    }
+    
+    mimeData->setData("application/x-task-pointer", encodedData);
+    return mimeData;
+}
+
+bool TaskModel::canDropMimeData(const QMimeData *data, Qt::DropAction action,
+                                 int row, int column, const QModelIndex &parent) const
+{
+    Q_UNUSED(row);
+    Q_UNUSED(column);
+    
+    if (!data->hasFormat("application/x-task-pointer"))
+        return false;
+    
+    if (action != Qt::MoveAction)
+        return false;
+    
+    return true;
+}
+
+bool TaskModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
+                              int row, int column, const QModelIndex &parent)
+{
+    if (!canDropMimeData(data, action, row, column, parent))
+        return false;
+    
+    if (action == Qt::IgnoreAction)
+        return true;
+    
+    // Décoder la tâche
+    QByteArray encodedData = data->data("application/x-task-pointer");
+    QDataStream stream(&encodedData, QIODevice::ReadOnly);
+    
+    quintptr taskPtr;
+    stream >> taskPtr;
+    Task *draggedTask = reinterpret_cast<Task*>(taskPtr);
+    
+    if (!draggedTask) return false;
+    
+    // Vérifier qu'on ne déplace pas dans ses propres sous-tâches
+    Task *newParent = parent.isValid() ? getTask(parent) : nullptr;
+    Task *checkParent = newParent;
+    while (checkParent) {
+        if (checkParent == draggedTask) {
+            return false; // Impossible de déplacer dans ses propres sous-tâches
+        }
+        checkParent = checkParent->parentTask();
+    }
+    
+    // Retirer de l'ancien emplacement
+    Task *oldParent = draggedTask->parentTask();
+    int oldRow = -1;
+    QModelIndex oldParentIdx;
+    
+    if (oldParent) {
+        oldRow = oldParent->subtasks().indexOf(draggedTask);
+        oldParentIdx = createIndex(
+            oldParent->parentTask() ? oldParent->parentTask()->subtasks().indexOf(oldParent) : m_rootTasks.indexOf(oldParent),
+            0, oldParent);
+        beginRemoveRows(oldParentIdx, oldRow, oldRow);
+        oldParent->removeSubtask(draggedTask);
+        endRemoveRows();
+    } else {
+        oldRow = m_rootTasks.indexOf(draggedTask);
+        beginRemoveRows(QModelIndex(), oldRow, oldRow);
+        m_rootTasks.removeAt(oldRow);
+        endRemoveRows();
+    }
+    
+    // Insérer au nouvel emplacement
+    int newRow = (row >= 0) ? row : (newParent ? newParent->subtasks().size() : m_rootTasks.size());
+    
+    if (newParent) {
+        beginInsertRows(parent, newRow, newRow);
+        newParent->insertSubtask(newRow, draggedTask);
+        endInsertRows();
+    } else {
+        beginInsertRows(QModelIndex(), newRow, newRow);
+        m_rootTasks.insert(newRow, draggedTask);
+        draggedTask->setParentTask(nullptr);
+        endInsertRows();
+    }
+    
+    emit taskUpdated(draggedTask);
+    return true;
 }

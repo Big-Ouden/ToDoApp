@@ -46,8 +46,10 @@ public:
 
     Task *parentTask() const;
     const QList<Task*>& subtasks() const;
+    void setParentTask(Task *parent);
 
     void addSubtask(Task *t);
+    void insertSubtask(int index, Task *t);
     void removeSubtask(Task *t);
 
 signals:

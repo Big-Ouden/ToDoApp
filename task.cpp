@@ -11,8 +11,8 @@ Task::Task(const QString &title, QObject *parent)
     m_id(QUuid::createUuid()),
     m_title(title),
     m_dueDate(),
-    m_priority(Priority::Low),
-    m_status(Status::NotStarted),
+    m_priority(Priority::LOW),
+    m_status(Status::NOTSTARTED),
     m_parentTask(nullptr)
 {
 }
@@ -100,7 +100,7 @@ void Task::setStatus(Status s)
 /**
  * @brief Indique si la tâche est complétée.
  */
-bool Task::isCompleted() const { return m_status == Status::Completed; }
+bool Task::isCompleted() const { return m_status == Status::COMPLETED; }
 
 /**
  * @brief Indique si la tâche est en retard.
@@ -149,6 +149,20 @@ void Task::addSubtask(Task *t)
 }
 
 /**
+ * @brief Insère une sous-tâche à une position donnée.
+ */
+void Task::insertSubtask(int index, Task *t)
+{
+    if (!t) return;
+    if (m_subtasks.contains(t)) return;
+    m_subtasks.insert(index, t);
+    t->setParent(this);
+    t->m_parentTask = this;
+    emit subtaskAdded(t);
+    emit taskModified();
+}
+
+/**
  * @brief Supprime une sous-tâche (ne delete pas l'objet, laisse la stratégie mémoire au modèle).
  * @return true si trouvée et retirée.
  */
@@ -159,4 +173,12 @@ void Task::removeSubtask(Task *t)
     t->m_parentTask = nullptr;
     emit subtaskRemoved(t);
     emit taskModified();
+}
+
+/**
+ * @brief Définit le parent de la tâche.
+ */
+void Task::setParentTask(Task *parent)
+{
+    m_parentTask = parent;
 }

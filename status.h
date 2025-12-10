@@ -11,7 +11,7 @@ enum class Status
     CANCELLED
 };
 
-inline QString priorityToString(Status s) {
+inline QString statusToString(Status s) {
     switch(s) {
     case Status::NOTSTARTED: return "Not started";
     case Status::INPROGRESS: return "In progress";

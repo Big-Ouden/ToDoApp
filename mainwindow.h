@@ -5,6 +5,8 @@
 
 #include <QMainWindow>
 #include <QTranslator>
+#include <QSettings>
+#include <QActionGroup>
 
 #include "taskmodel.h"
 #include "taskfilterproxymodel.h"
@@ -28,6 +30,7 @@ private slots:
     void onAddSubtask();
     void onDeleteTask();
     void onMarkCompleted();
+    void onPromoteTask();
     void onSaveFile();
     void onSaveFileAs();
     void onOpenFile();
@@ -35,6 +38,14 @@ private slots:
     void onSearchTextChanged(const QString &text);
     void onAbout();
     void updateStatusBar();
+    void onShowCompletedToggled(bool checked);
+    void onPriorityFilterChanged(int index);
+    void onStatusFilterChanged(int index);
+    
+private:
+    void loadPreferences();
+    void savePreferences();
+    void setupConnections();
 
 public:
     void setLanguage(const QString &lang);
@@ -48,9 +59,12 @@ private:
     TaskModel *m_taskModel;
     TaskFilterProxyModel *m_proxyModel;
     TaskDetailWidget *m_detailWidget;
+    bool m_showCompleted;
 
     QTranslator m_translator;
     QString m_currentFilePath;
+    QString m_currentLanguage;
+    QActionGroup *m_languageGroup;
 };
 
 #endif // MAINWINDOW_H

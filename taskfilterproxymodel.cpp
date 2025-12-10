@@ -9,8 +9,11 @@
 
 TaskFilterProxyModel::TaskFilterProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent),
-    m_priorityFilter(Priority::Low),
-    m_statusFilter(Status::NotStarted)
+    m_priorityFilter(Priority::LOW),
+    m_statusFilter(Status::NOTSTARTED),
+    m_showCompleted(true),
+    m_priorityFilterEnabled(false),
+    m_statusFilterEnabled(false)
 {
     setRecursiveFilteringEnabled(true);
 }
@@ -18,19 +21,31 @@ TaskFilterProxyModel::TaskFilterProxyModel(QObject *parent)
 void TaskFilterProxyModel::setSearchText(const QString &text)
 {
     m_searchText = text;
-    invalidateFilter();
+    beginResetModel();
+    endResetModel();
 }
 
-void TaskFilterProxyModel::setPriorityFilter(Priority p)
+void TaskFilterProxyModel::setPriorityFilter(Priority p, bool enabled)
 {
     m_priorityFilter = p;
-    invalidateFilter();
+    m_priorityFilterEnabled = enabled;
+    beginResetModel();
+    endResetModel();
 }
 
-void TaskFilterProxyModel::setStatusFilter(Status s)
+void TaskFilterProxyModel::setStatusFilter(Status s, bool enabled)
 {
     m_statusFilter = s;
-    invalidateFilter();
+    m_statusFilterEnabled = enabled;
+    beginResetModel();
+    endResetModel();
+}
+
+void TaskFilterProxyModel::setShowCompleted(bool show)
+{
+    m_showCompleted = show;
+    beginResetModel();
+    endResetModel();
 }
 
 bool TaskFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &parent) const
@@ -41,12 +56,19 @@ bool TaskFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &parent) 
     Task *t = static_cast<Task*>(srcIndex.internalPointer());
     if (!t) return false;
 
-    bool matchesText = m_searchText.isEmpty() || t->title().contains(m_searchText, Qt::CaseInsensitive) || t->description().contains(m_searchText, Qt::CaseInsensitive);
-    bool matchesPriority = true; // if filter selects "Any" we would handle it; simplified here
-    bool matchesStatus = true;
+    // Filtrer par texte
+    bool matchesText = m_searchText.isEmpty() || 
+                       t->title().contains(m_searchText, Qt::CaseInsensitive) || 
+                       t->description().contains(m_searchText, Qt::CaseInsensitive);
+    
+    // Filtrer par status complété
+    bool matchesCompleted = m_showCompleted || (t->status() != Status::COMPLETED);
+    
+    // Filtrer par priorité si activé
+    bool matchesPriority = !m_priorityFilterEnabled || (t->priority() == m_priorityFilter);
+    
+    // Filtrer par status si activé
+    bool matchesStatus = !m_statusFilterEnabled || (t->status() == m_statusFilter);
 
-    Q_UNUSED(matchesPriority)
-    Q_UNUSED(matchesStatus)
-
-    return matchesText;
+    return matchesText && matchesCompleted && matchesPriority && matchesStatus;
 }
