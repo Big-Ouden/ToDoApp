@@ -18,6 +18,18 @@ QJsonObject PersistenceManager::taskToJson(Task *t)
     obj["dueDate"] = t->dueDate().isValid() ? t->dueDate().toString(Qt::ISODate) : QString();
     obj["priority"] = priorityToString(t->priority());
     obj["status"] = statusToString(t->status());
+    
+    // Tags
+    QJsonArray tagsArray;
+    for (const QString &tag : t->tags())
+        tagsArray.append(tag);
+    obj["tags"] = tagsArray;
+    
+    // Attachments
+    QJsonArray attachmentsArray;
+    for (const QUrl &url : t->attachments())
+        attachmentsArray.append(url.toString());
+    obj["attachments"] = attachmentsArray;
 
     QJsonArray arr;
     for (Task *st : t->subtasks())
@@ -41,8 +53,30 @@ QList<Task*> PersistenceManager::loadFromJson(const QString &filePath)
     // simple recursive loader
     std::function<Task*(const QJsonObject&)> loader = [&](const QJsonObject &o) -> Task* {
         Task *t = new Task(o.value("title").toString());
+        t->setDescription(o.value("description").toString());
         QString due = o.value("dueDate").toString();
         if (!due.isEmpty()) t->setDueDate(QDate::fromString(due, Qt::ISODate));
+        
+        // Charger priority et status
+        QString priorityStr = o.value("priority").toString();
+        t->setPriority(stringToPriority(priorityStr));
+        QString statusStr = o.value("status").toString();
+        t->setStatus(stringToStatus(statusStr));
+        
+        // Charger les tags
+        QJsonArray tagsArray = o.value("tags").toArray();
+        QStringList tags;
+        for (const QJsonValue &tagVal : tagsArray)
+            tags.append(tagVal.toString());
+        t->setTags(tags);
+        
+        // Charger les attachments
+        QJsonArray attachmentsArray = o.value("attachments").toArray();
+        QList<QUrl> attachments;
+        for (const QJsonValue &attachVal : attachmentsArray)
+            attachments.append(QUrl(attachVal.toString()));
+        t->setAttachments(attachments);
+        
         // priority/status parsing left simple: ignore parsing back to enum for brevity
         QJsonArray subs = o.value("subtasks").toArray();
         for (const QJsonValue &sv : subs) {

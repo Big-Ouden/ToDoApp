@@ -66,7 +66,7 @@ int TaskModel::rowCount(const QModelIndex &parent) const
 
 int TaskModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return 6; // Title, Description, DueDate, Priority, Status, Category
+    return 6; // Title, DueDate, Priority, Status, Category, Tags
 }
 
 QVariant TaskModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -74,11 +74,11 @@ QVariant TaskModel::headerData(int section, Qt::Orientation orientation, int rol
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
         case 0: return tr("Titre");
-        case 1: return tr("Description");
-        case 2: return tr("Date d'échéance");
-        case 3: return tr("Priorité");
-        case 4: return tr("Statut");
-        case 5: return tr("Catégorie");
+        case 1: return tr("Date d'échéance");
+        case 2: return tr("Priorité");
+        case 3: return tr("Statut");
+        case 4: return tr("Catégorie");
+        case 5: return tr("Étiquettes");
         default: return {};
         }
     }
@@ -95,16 +95,16 @@ QVariant TaskModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
         switch (index.column()) {
         case 0: return t->title();
-        case 1: return t->description();
-        case 2: return t->dueDate().isValid() ? t->dueDate().toString(Qt::ISODate) : QString();
-        case 3: return priorityToString(t->priority());
-        case 4: return statusToString(t->status());
-        case 5: return QString(); // category name resolution omitted for brevity
+        case 1: return t->dueDate().isValid() ? t->dueDate().toString(Qt::ISODate) : QString();
+        case 2: return priorityToString(t->priority());
+        case 3: return statusToString(t->status());
+        case 4: return QString(); // category name resolution omitted for brevity
+        case 5: return t->tags().join(", ");
         default: return {};
         }
     }
 
-    if (role == Qt::BackgroundRole && index.column() == 4) {
+    if (role == Qt::BackgroundRole && index.column() == 3) {
         // Colorer le status
         switch (t->status()) {
         case Status::NOTSTARTED: return QBrush(QColor(220, 220, 220)); // Gris clair
@@ -114,7 +114,7 @@ QVariant TaskModel::data(const QModelIndex &index, int role) const
         }
     }
     
-    if (role == Qt::BackgroundRole && index.column() == 3) {
+    if (role == Qt::BackgroundRole && index.column() == 2) {
         // Colorer la priorité
         switch (t->priority()) {
         case Priority::LOW: return QBrush(QColor(200, 255, 200)); // Vert pâle
@@ -124,12 +124,12 @@ QVariant TaskModel::data(const QModelIndex &index, int role) const
         }
     }
     
-    if (role == Qt::ForegroundRole && t->isOverdue() && index.column() == 2) {
+    if (role == Qt::ForegroundRole && t->isOverdue() && index.column() == 1) {
         // Seulement la date en rouge si en retard
         return QBrush(Qt::red);
     }
 
-    if (role == Qt::DecorationRole && index.column() == 3) {
+    if (role == Qt::DecorationRole && index.column() == 2) {
         // optional: return an icon for priority
         switch (t->priority()) {
         case Priority::LOW: return QIcon();

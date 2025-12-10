@@ -9,6 +9,13 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <functional>
+#include <QPrinter>
+#include <QPainter>
+#include <QTextDocument>
+#include <QPrintDialog>
+#include <QPageSize>
+#include <QPageLayout>
+#include <QInputDialog>
 
 /**
  * @file mainwindow.cpp
@@ -49,11 +56,11 @@ MainWindow::MainWindow(QWidget *parent)
     
     // Ajuster la largeur des colonnes
     ui->taskTreeView->setColumnWidth(0, 300); // Titre - plus large
-    ui->taskTreeView->setColumnWidth(1, 200); // Description
-    ui->taskTreeView->setColumnWidth(2, 120); // Date d'échéance
-    ui->taskTreeView->setColumnWidth(3, 100); // Priorité
-    ui->taskTreeView->setColumnWidth(4, 100); // Statut
-    ui->taskTreeView->setColumnWidth(5, 100); // Catégorie
+    ui->taskTreeView->setColumnWidth(1, 120); // Date d'échéance
+    ui->taskTreeView->setColumnWidth(2, 100); // Priorité
+    ui->taskTreeView->setColumnWidth(3, 100); // Statut
+    ui->taskTreeView->setColumnWidth(4, 100); // Catégorie
+    ui->taskTreeView->setColumnWidth(5, 200); // Étiquettes
 
     // ========================================
     // Connexions des signaux - TreeView
@@ -72,7 +79,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Charger les préférences avant de définir la locale
     loadPreferences();
     
-    QLocale::setDefault(QLocale(QLocale::French, QLocale::France));
+    // Appliquer la langue chargée depuis les préférences
+    setLanguage(m_currentLanguage);
+    
     updateStatusBar();
     setWindowTitle(tr("ToDoApp - Nouveau fichier"));
 }
@@ -107,6 +116,34 @@ void MainWindow::setupConnections()
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::onSaveFile);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::onSaveFileAs);
     
+    // Créer les actions d'export PDF et d'impression
+    QAction *exportPdfAction = new QAction(tr("Exporter en PDF..."), this);
+    exportPdfAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_E));
+    connect(exportPdfAction, &QAction::triggered, this, &MainWindow::onExportPdf);
+    
+    QAction *printAction = new QAction(tr("Imprimer..."), this);
+    printAction->setShortcut(QKeySequence::Print);
+    connect(printAction, &QAction::triggered, this, &MainWindow::onPrintTasks);
+    
+    // Insérer avant l'action de sortie (Quit)
+    QAction *beforeAction = nullptr;
+    for (QAction *act : ui->menuFile->actions()) {
+        if (act->objectName() == "actionQuit") {
+            beforeAction = act;
+            break;
+        }
+    }
+    
+    if (beforeAction) {
+        ui->menuFile->insertSeparator(beforeAction);
+        ui->menuFile->insertAction(beforeAction, printAction);
+        ui->menuFile->insertAction(beforeAction, exportPdfAction);
+    } else {
+        ui->menuFile->addSeparator();
+        ui->menuFile->addAction(exportPdfAction);
+        ui->menuFile->addAction(printAction);
+    }
+    
     connect(ui->actionAddTask, &QAction::triggered, this, &MainWindow::onAddTask);
     connect(ui->actionAddSubtask, &QAction::triggered, this, &MainWindow::onAddSubtask);
     connect(ui->actionDeleteTask, &QAction::triggered, this, &MainWindow::onDeleteTask);
@@ -132,6 +169,13 @@ void MainWindow::setupConnections()
     // ========================================
     // Connexions des signaux - Recherche
     // ========================================
+    ui->searchLineEdit->setPlaceholderText(tr("Rechercher (essayez: tag:, priority:, status:, date:)"));
+    ui->searchLineEdit->setToolTip(tr("Recherche avancée:\n"
+                                       "• tag:urgent - Rechercher par étiquette\n"
+                                       "• priority:high - Rechercher par priorité\n"
+                                       "• status:completed - Rechercher par statut\n"
+                                       "• date:2024-12 - Rechercher par date\n"
+                                       "• Texte simple - Recherche dans titre et description"));
     connect(ui->searchLineEdit, &QLineEdit::textChanged, this, &MainWindow::onSearchTextChanged);
     
     // ========================================
@@ -723,4 +767,187 @@ void MainWindow::savePreferences()
     settings.setValue("windowState", saveState());
     settings.setValue("lastFile", m_currentFilePath);
     settings.setValue("showCompleted", m_showCompleted);
+}
+
+// ========================================
+// Export PDF et Impression
+// ========================================
+
+QString MainWindow::generateTasksHtml(const PdfExportTemplate &tmpl)
+{
+    QString html = "<html><head><style>";
+    html += tmpl.css();
+    html += "</style></head><body>";
+    
+    // En-tête avec substitution des variables
+    QString header = tmpl.headerHtml();
+    header.replace("{{TITLE}}", tr("Liste des tâches"));
+    header.replace("{{DATE}}", tr("Généré le %1").arg(QDate::currentDate().toString("dddd d MMMM yyyy")));
+    html += header;
+    
+    // Fonction récursive pour générer le HTML des tâches
+    std::function<void(Task*, int)> generateTaskHtml = [&](Task* task, int level) {
+        if (!task) return;
+        
+        QString priorityClass = QString("priority-%1").arg(priorityToString(task->priority()).toLower().replace(" ", "-"));
+        QString statusClass = task->isCompleted() ? " status-completed" : "";
+        
+        html += QString("<div class='task %1%2' style='margin-left: %3px;'>")
+                    .arg(priorityClass)
+                    .arg(statusClass)
+                    .arg(level * 20);
+        
+        html += QString("<div class='task-title'>%1</div>").arg(task->title().toHtmlEscaped());
+        
+        html += "<div class='task-meta'>";
+        
+        if (task->dueDate().isValid()) {
+            html += "<div><span class='meta-label'>" + tr("Échéance:") + "</span> " 
+                    + task->dueDate().toString("dd/MM/yyyy") + "</div>";
+        }
+        
+        html += "<div><span class='meta-label'>" + tr("Priorité:") + "</span> " 
+                + priorityToString(task->priority()) + "</div>";
+        html += "<div><span class='meta-label'>" + tr("Statut:") + "</span> " 
+                + statusToString(task->status()) + "</div>";
+        
+        if (!task->tags().isEmpty()) {
+            html += "<div><span class='meta-label'>" + tr("Étiquettes:") + "</span> ";
+            for (const QString &tag : task->tags()) {
+                html += "<span class='tags'>" + tag.toHtmlEscaped() + "</span> ";
+            }
+            html += "</div>";
+        }
+        
+        html += "</div>"; // fin task-meta
+        
+        if (!task->description().isEmpty()) {
+            html += "<div class='task-desc'>" + task->description().toHtmlEscaped() + "</div>";
+        }
+        
+        html += "</div>"; // fin task
+        
+        // Sous-tâches
+        for (Task* subtask : task->subtasks()) {
+            generateTaskHtml(subtask, level + 1);
+        }
+    };
+    
+    // Parcourir toutes les tâches racines
+    for (int i = 0; i < m_taskModel->rowCount(QModelIndex()); ++i) {
+        QModelIndex index = m_taskModel->index(i, 0, QModelIndex());
+        Task* task = m_taskModel->getTask(index);
+        generateTaskHtml(task, 0);
+    }
+    
+    // Pied de page avec substitution
+    QString footer = tmpl.footerHtml();
+    footer.replace("{{DATE}}", QDate::currentDate().toString("dd/MM/yyyy"));
+    html += footer;
+    
+    html += "</body></html>";
+    return html;
+}
+
+void MainWindow::onExportPdf()
+{
+    // Choisir le template
+    QList<PdfExportTemplate> templates = PdfExportTemplate::availableTemplates();
+    QStringList templateNames;
+    for (const auto &tmpl : templates) {
+        templateNames << tmpl.name();
+    }
+    
+    bool ok;
+    QString selectedName = QInputDialog::getItem(
+        this,
+        tr("Choisir un template"),
+        tr("Sélectionnez le style d'export:"),
+        templateNames,
+        0,
+        false,
+        &ok
+    );
+    
+    if (!ok) {
+        return;
+    }
+    
+    // Trouver le template sélectionné
+    PdfExportTemplate selectedTemplate = templates[0];
+    for (const auto &tmpl : templates) {
+        if (tmpl.name() == selectedName) {
+            selectedTemplate = tmpl;
+            break;
+        }
+    }
+    
+    QString fileName = QFileDialog::getSaveFileName(
+        this,
+        tr("Exporter en PDF"),
+        QDir::homePath() + "/tasks.pdf",
+        tr("Fichiers PDF (*.pdf)")
+    );
+    
+    if (fileName.isEmpty()) {
+        return;
+    }
+    
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+    printer.setPageSize(QPageSize::A4);
+    printer.setPageMargins(QMarginsF(15, 15, 15, 15), QPageLayout::Millimeter);
+    
+    QTextDocument document;
+    document.setHtml(generateTasksHtml(selectedTemplate));
+    document.print(&printer);
+    
+    statusBar()->showMessage(tr("PDF exporté avec succès: %1").arg(fileName), 3000);
+}
+
+void MainWindow::onPrintTasks()
+{
+    // Choisir le template
+    QList<PdfExportTemplate> templates = PdfExportTemplate::availableTemplates();
+    QStringList templateNames;
+    for (const auto &tmpl : templates) {
+        templateNames << tmpl.name();
+    }
+    
+    bool ok;
+    QString selectedName = QInputDialog::getItem(
+        this,
+        tr("Choisir un template"),
+        tr("Sélectionnez le style d'impression:"),
+        templateNames,
+        0,
+        false,
+        &ok
+    );
+    
+    if (!ok) {
+        return;
+    }
+    
+    // Trouver le template sélectionné
+    PdfExportTemplate selectedTemplate = templates[0];
+    for (const auto &tmpl : templates) {
+        if (tmpl.name() == selectedName) {
+            selectedTemplate = tmpl;
+            break;
+        }
+    }
+    
+    QPrinter printer(QPrinter::HighResolution);
+    QPrintDialog printDialog(&printer, this);
+    printDialog.setWindowTitle(tr("Imprimer les tâches"));
+    
+    if (printDialog.exec() == QDialog::Accepted) {
+        QTextDocument document;
+        document.setHtml(generateTasksHtml(selectedTemplate));
+        document.print(&printer);
+        
+        statusBar()->showMessage(tr("Impression effectuée"), 2000);
+    }
 }

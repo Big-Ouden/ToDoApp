@@ -21,6 +21,14 @@ inline QString statusToString(Status s) {
     return "Unknown";
 }
 
+inline Status stringToStatus(const QString &s) {
+    if (s == "Not started") return Status::NOTSTARTED;
+    if (s == "In progress") return Status::INPROGRESS;
+    if (s == "Completed") return Status::COMPLETED;
+    if (s == "Cancelled") return Status::CANCELLED;
+    return Status::NOTSTARTED; // default
+}
+
 
 
 #endif // STATUS_H

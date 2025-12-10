@@ -182,3 +182,106 @@ void Task::setParentTask(Task *parent)
 {
     m_parentTask = parent;
 }
+
+// ========================================
+// Gestion des tags
+// ========================================
+
+/**
+ * @brief Retourne la liste des tags.
+ */
+const QStringList &Task::tags() const
+{
+    return m_tags;
+}
+
+/**
+ * @brief Définit la liste complète des tags.
+ */
+void Task::setTags(const QStringList &tags)
+{
+    if (m_tags != tags) {
+        m_tags = tags;
+        emit tagsChanged();
+        emit taskModified();
+    }
+}
+
+/**
+ * @brief Ajoute un tag s'il n'existe pas déjà.
+ */
+void Task::addTag(const QString &tag)
+{
+    QString trimmedTag = tag.trimmed();
+    if (!trimmedTag.isEmpty() && !m_tags.contains(trimmedTag, Qt::CaseInsensitive)) {
+        m_tags.append(trimmedTag);
+        emit tagsChanged();
+        emit taskModified();
+    }
+}
+
+/**
+ * @brief Supprime un tag s'il existe.
+ */
+void Task::removeTag(const QString &tag)
+{
+    if (m_tags.removeOne(tag)) {
+        emit tagsChanged();
+        emit taskModified();
+    }
+}
+
+/**
+ * @brief Vérifie si la tâche possède un tag donné (insensible à la casse).
+ */
+bool Task::hasTag(const QString &tag) const
+{
+    return m_tags.contains(tag, Qt::CaseInsensitive);
+}
+
+// ========================================
+// Gestion des pièces jointes
+// ========================================
+
+/**
+ * @brief Retourne la liste des pièces jointes.
+ */
+const QList<QUrl> &Task::attachments() const
+{
+    return m_attachments;
+}
+
+/**
+ * @brief Définit la liste complète des pièces jointes.
+ */
+void Task::setAttachments(const QList<QUrl> &attachments)
+{
+    if (m_attachments != attachments) {
+        m_attachments = attachments;
+        emit attachmentsChanged();
+        emit taskModified();
+    }
+}
+
+/**
+ * @brief Ajoute une pièce jointe.
+ */
+void Task::addAttachment(const QUrl &url)
+{
+    if (url.isValid() && !m_attachments.contains(url)) {
+        m_attachments.append(url);
+        emit attachmentsChanged();
+        emit taskModified();
+    }
+}
+
+/**
+ * @brief Supprime une pièce jointe.
+ */
+void Task::removeAttachment(const QUrl &url)
+{
+    if (m_attachments.removeOne(url)) {
+        emit attachmentsChanged();
+        emit taskModified();
+    }
+}

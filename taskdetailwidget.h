@@ -4,9 +4,17 @@
 #pragma once
 
 #include <QWidget>
+#include <QCompleter>
+#include <QListWidgetItem>
 #include "task.h"
 
 namespace Ui { class TaskDetailWidget; }
+
+enum class ViewMode {
+    TextOnly,      // Uniquement le texte éditable
+    PreviewOnly,   // Uniquement l'aperçu (éditable via double-clic)
+    Split          // Les deux côte à côte
+};
 
 class TaskDetailWidget : public QWidget
 {
@@ -25,16 +33,42 @@ signals:
 
 protected:
     void changeEvent(QEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
     void onUserEdited();
     void onApplyClicked();
+    void onTagsEditReturnPressed();
+    void onTagItemDoubleClicked(QListWidgetItem *item);
+    
+    // Markdown toolbar
+    void onBoldClicked();
+    void onItalicClicked();
+    void onCodeClicked();
+    void onLinkClicked();
+    void onListClicked();
+    void onDescriptionTextChanged();
+    void onPreviewDoubleClicked();
+    
+    // View mode
+    void onViewModeChanged();
+    
+    // Attachments
+    void onAddAttachmentClicked();
+    void onAttachmentItemDoubleClicked(QListWidgetItem *item);
 
 private:
     void updateComboTranslations();
+    void updateTagsList();
+    void updateAttachmentsList();
+    void insertMarkdownFormat(const QString &prefix, const QString &suffix = "");
+    void updateMarkdownPreview();
+    void updateViewMode();
     
     Ui::TaskDetailWidget *ui;
     Task *m_task;
+    QCompleter *m_tagsCompleter;
+    ViewMode m_viewMode;
 };
 
 

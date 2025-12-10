@@ -32,7 +32,138 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QTextEdit" name="descEdit"/>
+      <layout class="QVBoxLayout" name="descriptionLayout">
+       <item>
+        <layout class="QHBoxLayout" name="markdownToolbar">
+         <item>
+          <widget class="QToolButton" name="boldButton">
+           <property name="text">
+            <string>B</string>
+           </property>
+           <property name="toolTip">
+            <string>Gras (Ctrl+B)</string>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="italicButton">
+           <property name="text">
+            <string>I</string>
+           </property>
+           <property name="toolTip">
+            <string>Italique (Ctrl+I)</string>
+           </property>
+           <property name="font">
+            <font>
+             <italic>true</italic>
+            </font>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="codeButton">
+           <property name="text">
+            <string>&lt;/&gt;</string>
+           </property>
+           <property name="toolTip">
+            <string>Code inline</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="linkButton">
+           <property name="text">
+            <string>🔗</string>
+           </property>
+           <property name="toolTip">
+            <string>Lien</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="listButton">
+           <property name="text">
+            <string>• </string>
+           </property>
+           <property name="toolTip">
+            <string>Liste</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="toolbarSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QToolButton" name="textOnlyButton">
+           <property name="text">
+            <string>📝</string>
+           </property>
+           <property name="toolTip">
+            <string>Texte uniquement</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="previewOnlyButton">
+           <property name="text">
+            <string>👁</string>
+           </property>
+           <property name="toolTip">
+            <string>Aperçu uniquement (double-clic pour éditer)</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="splitViewButton">
+           <property name="text">
+            <string>⚏</string>
+           </property>
+           <property name="toolTip">
+            <string>Vue divisée</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTextEdit" name="descEdit"/>
+       </item>
+       <item>
+        <widget class="QTextBrowser" name="previewBrowser">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
 
      <item row="2" column="0">
@@ -80,6 +211,69 @@
        <item><property name="text"><string>Completed</string></property></item>
        <item><property name="text"><string>Cancelled</string></property></item>
       </widget>
+     </item>
+
+     <item row="5" column="0">
+      <widget class="QLabel" name="labelTags">
+       <property name="text">
+        <string>Étiquettes :</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <layout class="QVBoxLayout" name="tagsLayout">
+       <item>
+        <widget class="QLineEdit" name="tagsEdit">
+         <property name="placeholderText">
+          <string>Ajouter une étiquette (Entrée pour valider)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListWidget" name="tagsListWidget">
+         <property name="maximumHeight">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+
+     <item row="6" column="0">
+      <widget class="QLabel" name="labelAttachments">
+       <property name="text">
+        <string>Pièces jointes :</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <layout class="QVBoxLayout" name="attachmentsLayout">
+       <item>
+        <layout class="QHBoxLayout" name="attachmentsButtonsLayout">
+         <item>
+          <widget class="QPushButton" name="addAttachmentButton">
+           <property name="text">
+            <string>Ajouter un fichier</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="attachmentsSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QListWidget" name="attachmentsListWidget">
+         <property name="maximumHeight">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
 
     </layout>

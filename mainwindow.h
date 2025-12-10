@@ -11,6 +11,7 @@
 #include "taskmodel.h"
 #include "taskfilterproxymodel.h"
 #include "taskdetailwidget.h"
+#include "pdfexporttemplate.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -41,11 +42,14 @@ private slots:
     void onShowCompletedToggled(bool checked);
     void onPriorityFilterChanged(int index);
     void onStatusFilterChanged(int index);
+    void onExportPdf();
+    void onPrintTasks();
     
 private:
     void loadPreferences();
     void savePreferences();
     void setupConnections();
+    QString generateTasksHtml(const PdfExportTemplate &tmpl);
 
 public:
     void setLanguage(const QString &lang);

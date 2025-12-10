@@ -21,4 +21,12 @@ inline QString priorityToString(Priority p) {
     return "Unknown";
 }
 
+inline Priority stringToPriority(const QString &s) {
+    if (s == "Low") return Priority::LOW;
+    if (s == "Medium") return Priority::MEDIUM;
+    if (s == "High") return Priority::HIGH;
+    if (s == "Critical") return Priority::CRITICAL;
+    return Priority::LOW; // default
+}
+
 #endif // PRIORITY_H
