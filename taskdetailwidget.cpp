@@ -105,23 +105,36 @@ void TaskDetailWidget::onApplyClicked()
 void TaskDetailWidget::updateTranslations()
 {
     qDebug() << "TaskDetailWidget::updateTranslations() appelée";
+    qDebug() << "  QLocale actuelle:" << QLocale().name();
+    qDebug() << "  Traducteur français:" << qApp->translate("TaskDetailWidget", "Titre :");
     
-    // Forcer la mise à jour manuelle des labels avec tr()
-    ui->labelTitle->setText(tr("Titre :"));
-    ui->labelDesc->setText(tr("Description :"));
-    ui->labelDate->setText(tr("Échéance :"));
-    ui->labelPriority->setText(tr("Priorité :"));
-    ui->labelStatus->setText(tr("Statut :"));
-    ui->applyButton->setText(tr("Appliquer"));
+    // Forcer la mise à jour manuelle des labels SANS tr() - utiliser directement les textes
+    QLocale currentLocale = QLocale();
+    if (currentLocale.language() == QLocale::French) {
+        // Utiliser les textes français directement
+        ui->labelTitle->setText("Titre :");
+        ui->labelDesc->setText("Description :");
+        ui->labelDate->setText("Échéance :");
+        ui->labelPriority->setText("Priorité :");
+        ui->labelStatus->setText("Statut :");
+        ui->applyButton->setText("Appliquer");
+    } else {
+        // Utiliser les textes anglais directement
+        ui->labelTitle->setText("Title:");
+        ui->labelDesc->setText("Description:");
+        ui->labelDate->setText("Due Date:");
+        ui->labelPriority->setText("Priority:");
+        ui->labelStatus->setText("Status:");
+        ui->applyButton->setText("Apply");
+    }
     
-    qDebug() << "  labelTitle:" << ui->labelTitle->text();
-    qDebug() << "  labelDate:" << ui->labelDate->text();
+    qDebug() << "  labelTitle après setText:" << ui->labelTitle->text();
+    qDebug() << "  labelDate après setText:" << ui->labelDate->text();
     
     // Mettre à jour les combos
     updateComboTranslations();
     
     // Mettre à jour le format de date selon la locale actuelle
-    QLocale currentLocale = QLocale();
     ui->dateEdit->setLocale(currentLocale);
     if (currentLocale.language() == QLocale::French) {
         ui->dateEdit->setDisplayFormat("dd/MM/yyyy");

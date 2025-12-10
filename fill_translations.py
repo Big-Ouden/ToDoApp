@@ -111,6 +111,13 @@ translations_fr = {
     "En cours": "En cours",
     "Complétée": "Complétée",
     "Annulée": "Annulée",
+    # Labels du TaskDetailWidget
+    "Titre :": "Titre :",
+    "Description :": "Description :",
+    "Échéance :": "Échéance :",
+    "Priorité :": "Priorité :",
+    "Statut :": "Statut :",
+    "Appliquer": "Appliquer",
 }
 
 # Traductions anglaises (noter que & est décodé automatiquement par le parser XML)

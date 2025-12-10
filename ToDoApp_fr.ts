@@ -551,7 +551,7 @@ Cette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).</so
     <message>
         <location filename="mainwindow.cpp" line="333" />
         <location filename="mainwindow.cpp" line="398" />
-        <location filename="mainwindow.cpp" line="700" />
+        <location filename="mainwindow.cpp" line="703" />
         <source>ToDoApp - %1</source>
         <translation>ToDoApp - %1</translation>
     </message>
@@ -698,26 +698,30 @@ Cette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).</so
     <message>
         <location filename="taskdetailwidget.ui" line="19" />
         <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_taskdetailwidget.h" line="140" />
+        <location filename="taskdetailwidget.cpp" line="110" />
         <source>Titre :</source>
-        <translation type="unfinished" />
+        <translation>Titre :</translation>
     </message>
     <message>
         <location filename="taskdetailwidget.ui" line="30" />
         <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_taskdetailwidget.h" line="141" />
+        <location filename="taskdetailwidget.cpp" line="111" />
         <source>Description :</source>
-        <translation type="unfinished" />
+        <translation>Description :</translation>
     </message>
     <message>
         <location filename="taskdetailwidget.ui" line="41" />
         <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_taskdetailwidget.h" line="142" />
+        <location filename="taskdetailwidget.cpp" line="112" />
         <source>Échéance :</source>
-        <translation type="unfinished" />
+        <translation>Échéance :</translation>
     </message>
     <message>
         <location filename="taskdetailwidget.ui" line="56" />
         <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_taskdetailwidget.h" line="143" />
+        <location filename="taskdetailwidget.cpp" line="113" />
         <source>Priorité :</source>
-        <translation type="unfinished" />
+        <translation>Priorité :</translation>
     </message>
     <message>
         <location filename="taskdetailwidget.ui" line="62" />
@@ -746,8 +750,9 @@ Cette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).</so
     <message>
         <location filename="taskdetailwidget.ui" line="72" />
         <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_taskdetailwidget.h" line="149" />
+        <location filename="taskdetailwidget.cpp" line="114" />
         <source>Statut :</source>
-        <translation type="unfinished" />
+        <translation>Statut :</translation>
     </message>
     <message>
         <location filename="taskdetailwidget.ui" line="78" />
@@ -776,51 +781,52 @@ Cette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).</so
     <message>
         <location filename="taskdetailwidget.ui" line="100" />
         <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_taskdetailwidget.h" line="155" />
+        <location filename="taskdetailwidget.cpp" line="115" />
         <source>Appliquer</source>
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location filename="taskdetailwidget.cpp" line="124" />
+        <location filename="taskdetailwidget.cpp" line="154" />
         <source>Très faible</source>
         <translation>Très faible</translation>
     </message>
     <message>
-        <location filename="taskdetailwidget.cpp" line="125" />
+        <location filename="taskdetailwidget.cpp" line="155" />
         <source>Faible</source>
         <translation>Faible</translation>
     </message>
     <message>
-        <location filename="taskdetailwidget.cpp" line="126" />
+        <location filename="taskdetailwidget.cpp" line="156" />
         <source>Moyenne</source>
         <translation>Moyenne</translation>
     </message>
     <message>
-        <location filename="taskdetailwidget.cpp" line="127" />
+        <location filename="taskdetailwidget.cpp" line="157" />
         <source>Élevée</source>
         <translation>Élevée</translation>
     </message>
     <message>
-        <location filename="taskdetailwidget.cpp" line="128" />
+        <location filename="taskdetailwidget.cpp" line="158" />
         <source>Critique</source>
         <translation>Critique</translation>
     </message>
     <message>
-        <location filename="taskdetailwidget.cpp" line="133" />
+        <location filename="taskdetailwidget.cpp" line="163" />
         <source>Non démarrée</source>
         <translation>Non démarrée</translation>
     </message>
     <message>
-        <location filename="taskdetailwidget.cpp" line="134" />
+        <location filename="taskdetailwidget.cpp" line="164" />
         <source>En cours</source>
         <translation>En cours</translation>
     </message>
     <message>
-        <location filename="taskdetailwidget.cpp" line="135" />
+        <location filename="taskdetailwidget.cpp" line="165" />
         <source>Complétée</source>
         <translation>Complétée</translation>
     </message>
     <message>
-        <location filename="taskdetailwidget.cpp" line="136" />
+        <location filename="taskdetailwidget.cpp" line="166" />
         <source>Annulée</source>
         <translation>Annulée</translation>
     </message>

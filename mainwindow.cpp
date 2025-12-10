@@ -560,6 +560,7 @@ void MainWindow::setLanguage(const QString &lang)
 {
     m_currentLanguage = lang;
     
+    // Retirer complètement l'ancien traducteur
     qApp->removeTranslator(&m_translator);
     
     // Mapper le code de langue au nom de fichier .qm
@@ -568,13 +569,21 @@ void MainWindow::setLanguage(const QString &lang)
         qmLang = "en_US";
     }
     
-    // Charger depuis les ressources Qt
+    // Créer un nouveau traducteur et charger depuis les ressources Qt
     QString qmFile = QString(":/i18n/ToDoApp_%1.qm").arg(qmLang);
     if (m_translator.load(qmFile)) {
         qApp->installTranslator(&m_translator);
         qDebug() << "Traduction chargée:" << qmFile;
     } else {
         qWarning() << "Impossible de charger la traduction:" << qmFile;
+    }
+    
+    // IMPORTANT: Installer un traducteur vide si français pour forcer le rechargement
+    if (lang == "fr") {
+        // Le français est la langue source, donc pas besoin de traducteur
+        // mais on force quand même le rechargement
+        qApp->removeTranslator(&m_translator);
+        // Ne rien installer, laisser Qt utiliser les sources
     }
     
     // Définir la locale appropriée
