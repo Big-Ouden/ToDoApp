@@ -16,6 +16,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS PrintSupport)
 
 # ========================================
 # Organisation des fichiers sources
@@ -24,6 +25,8 @@ file(GLOB HEADERS CONFIGURE_DEPENDS "*.h")
 file(GLOB SOURCES CONFIGURE_DEPENDS "*.cpp")
 file(GLOB UI_FILES CONFIGURE_DEPENDS "*.ui")
 file(GLOB RESOURCE_FILES CONFIGURE_DEPENDS "*.qrc")
+# Exclure translations.qrc de la liste automatique car on le génère dynamiquement
+list(FILTER RESOURCE_FILES EXCLUDE REGEX "translations\\.qrc$")
 file(GLOB MISC_FILES CONFIGURE_DEPENDS "misc/*")
 
 # Fichiers de traduction
@@ -32,19 +35,34 @@ set(TS_FILES
     ToDoApp_fr.ts
 )
 
-# Générer les fichiers .qm dans le répertoire source pour les inclure dans les ressources
+# Générer les fichiers .qm dans le répertoire de build
 set(QM_FILES)
 foreach(ts_file ${TS_FILES})
     get_filename_component(ts_name ${ts_file} NAME_WE)
-    list(APPEND QM_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${ts_name}.qm")
+    list(APPEND QM_FILES "${CMAKE_CURRENT_BINARY_DIR}/${ts_name}.qm")
 endforeach()
 
-# Compiler les .ts en .qm dans le répertoire source
+# Compiler les .ts en .qm dans le répertoire de build
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_translation(QM_FILES ${TS_FILES})
 else()
     qt5_add_translation(QM_FILES ${TS_FILES})
 endif()
+
+# Générer dynamiquement le fichier translations.qrc avec les bons chemins
+set(TRANSLATIONS_QRC "${CMAKE_CURRENT_BINARY_DIR}/translations_generated.qrc")
+file(WRITE ${TRANSLATIONS_QRC} "<RCC>\n    <qresource prefix=\"/i18n\">\n")
+foreach(qm_file ${QM_FILES})
+    get_filename_component(qm_filename ${qm_file} NAME)
+    file(APPEND ${TRANSLATIONS_QRC} "        <file alias=\"${qm_filename}\">${qm_file}</file>\n")
+endforeach()
+file(APPEND ${TRANSLATIONS_QRC} "    </qresource>\n</RCC>\n")
+
+# Ajouter le fichier .qrc généré à la liste des ressources
+list(APPEND RESOURCE_FILES ${TRANSLATIONS_QRC})
+
+# S'assurer que les fichiers .qm sont générés avant la compilation
+set_source_files_properties(${TRANSLATIONS_QRC} PROPERTIES OBJECT_DEPENDS "${QM_FILES}")
 
 # Documentation
 set(DOC_FILES
@@ -101,6 +119,7 @@ endif()
 
 target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::PrintSupport)
 
 # ========================================
 # Configuration de l'icône d'application
@@ -348,7 +367,9 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "ToDoApp")
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+endif()
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 
 if(WIN32)
