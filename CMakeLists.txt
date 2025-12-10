@@ -81,7 +81,6 @@ set(MISC_FILES
     ${MISC_FILES}
     misc/modele_graphe.pdf
     misc/modele_graphe.uxf
-    misc/todo.md
 )
 
 set(UI_FILES
