@@ -1,251 +1,181 @@
 # ToDoApp
 
-Application de gestion de tâches (To-Do list) développée avec Qt Widgets dans le cadre d'un projet académique.
+Application de gestion de tâches hiérarchiques développée avec Qt Widgets.
 
-## Fonctionnalités
+## Description
 
-* Ajout, suppression et gestion de tâches
-* Interface graphique Qt Widgets
-* Interface conçue avec Qt Designer (fichiers `.ui`)
-* Support multilingue (système de traduction avec fichiers `.ts`)
-* Génération automatique de documentation avec Doxygen
-* Génération de listing du code source
-* Création d'archives pour la livraison du projet
+ToDoApp est une application de gestion de tâches permettant de créer, organiser et suivre des tâches avec support des sous-tâches, des priorités, des statuts et des étiquettes. L'application offre une interface graphique intuitive avec support multilingue (français/anglais), export PDF et recherche avancée.
+
+## Fonctionnalités principales
+
+* Gestion hiérarchique des tâches et sous-tâches
+* Système de priorités (Low, Medium, High, Critical)
+* Suivi du statut (Not started, In progress, Completed, Cancelled)
+* Étiquettes (tags) pour catégoriser les tâches
+* Pièces jointes pour lier des fichiers aux tâches
+* Description au format Markdown avec aperçu en temps réel
+* Recherche avancée avec préfixes (tag:, priority:, status:, date:)
+* Export PDF avec templates personnalisables
+* Interface multilingue (français, anglais)
+* Sauvegarde/chargement au format JSON
+* Interface responsive avec panneau de détails
 
 ## Prérequis
 
-* Qt 5 ou Qt 6 (avec les composants Widgets et LinguistTools)
-* CMake ≥ 3.16
-* Compilateur compatible C++17
-* (Optionnel) Doxygen pour la génération de documentation
+* Qt 5.15 ou Qt 6.2+ (composants : Widgets, Core, PrintSupport, LinguistTools)
+* CMake >= 3.16
+* Compilateur C++17 compatible (GCC, Clang, MSVC)
+* Doxygen >= 1.9 (optionnel, pour générer la documentation)
 
 ## Compilation
 
-### Compilation standard
+### Linux / macOS
 
 ```bash
-# Créer le dossier de build
 mkdir build
 cd build
-
-# Configurer le projet
 cmake ..
-
-# Compiler l'application
-cmake --build .
-
-# Lancer l'application
+make -j$(nproc)
 ./ToDoApp
 ```
 
-### Avec Qt Creator
+### Windows (Visual Studio)
 
-1. Ouvrir `CMakeLists.txt` dans Qt Creator
-2. Configurer le projet avec le kit souhaité
-3. Compiler et exécuter le projet (Ctrl+R)
+```bash
+mkdir build
+cd build
+cmake .. -G "Visual Studio 16 2019"
+cmake --build . --config Release
+.\Release\ToDoApp.exe
+```
+
+### Qt Creator
+
+1. Ouvrir le fichier `CMakeLists.txt`
+2. Configurer le projet avec le kit Qt approprié
+3. Compiler (Ctrl+B) et exécuter (Ctrl+R)
 
 ## Cibles CMake disponibles
 
-Le projet fournit plusieurs cibles utiles pour le développement et la livraison :
-
-### Application
+### Application principale
 
 ```bash
-# Compiler l'application principale
-cmake --build . --target ToDoApp
+make                    # Compiler l'application
+make clean              # Nettoyer les fichiers de build
 ```
 
 ### Documentation
 
 ```bash
-# Générer la documentation HTML avec Doxygen
-cmake --build . --target doc
+make doc               # Générer la documentation Doxygen (HTML)
 ```
 
-La documentation est générée dans : `build/doc/html/index.html`
+Documentation générée dans : `build/doc/html/index.html`
 
-### Listing du code
+### Code listing
 
 ```bash
-# Générer un listing complet de tout le code source
-cmake --build . --target listing
+make listing           # Générer un listing complet du code source
 ```
 
-Le listing est généré dans : `build/listing/code_listing.txt`
+Listing généré dans : `build/listing/code_listing.txt`
 
 ### Traductions
 
 ```bash
-# Mettre à jour les fichiers de traduction (.ts) depuis le code source
-cmake --build . --target update_translations
-
-# Compiler les fichiers de traduction (.ts -> .qm)
-cmake --build . --target release_translations
-
-# Mettre à jour ET compiler les traductions
-cmake --build . --target translations
+make update_translations     # Extraire les chaînes traduisibles du code
+make release_translations    # Compiler les fichiers .ts en .qm
+make translations           # update + release
 ```
 
-### Création d'archive
+### Archives
 
 ```bash
-# Créer une archive ZIP du projet
-cmake --build . --target archive-zip
-
-# Créer une archive TAR.GZ du projet
-cmake --build . --target archive-tar
-
-# Créer les deux archives
-cmake --build . --target archive
+make archive-zip       # Créer une archive ZIP du projet
+make archive-tar       # Créer une archive TAR.GZ
+make archive          # Créer les deux archives
 ```
-
-Les archives sont créées dans le dossier `build/` avec le nom : `ToDoApp-<version>-src.zip`
 
 ### Livrable complet
 
 ```bash
-# Générer TOUT d'un coup :
-# - Documentation
-# - Listing du code
-# - Traductions
-# - Archive du projet
-cmake --build . --target deliverable
+make deliverable      # Générer doc + listing + traductions + archives
 ```
-
-**Cette commande est idéale pour générer tous les livrables du projet en une seule fois !** 🎯
 
 ## Structure du projet
 
 ```
 ToDoApp/
-├── CMakeLists.txt          # Configuration CMake
-├── Doxyfile             # Fichier de configuration Doxygen
-├── README.md               # Ce fichier
-├── main.cpp                # Point d'entrée de l'application
-├── mainwindow.h/cpp        # Implémentation de la fenêtre principale
-├── mainwindow.ui           # Interface Qt Designer
-├── ToDoApp_en_US.ts        # Traduction anglaise
-├── ToDoApp_fr_FR.ts        # Traduction française
-└── build/                  # Dossier de compilation (généré)
-    ├── ToDoApp             # Exécutable
-    ├── doc/                # Documentation générée
-    ├── listing/            # Listing du code généré
-    └── *.zip               # Archives générées
+├── CMakeLists.txt              # Configuration CMake
+├── Doxyfile                    # Configuration Doxygen
+├── README.md                   # Ce fichier
+├── LICENSE                     # Licence GPLv2
+├── main.cpp                    # Point d'entrée
+├── mainwindow.{h,cpp,ui}       # Fenêtre principale
+├── task.{h,cpp}                # Modèle de tâche
+├── taskmodel.{h,cpp}           # Modèle arborescent Qt
+├── taskfilterproxymodel.{h,cpp} # Filtrage et recherche
+├── taskdetailwidget.{h,cpp,ui} # Panneau de détails
+├── persistencemanager.{h,cpp}  # Sauvegarde/chargement JSON
+├── pdfexporttemplate.{h,cpp}   # Templates export PDF
+├── priority.h                  # Enum des priorités
+├── status.h                    # Enum des statuts
+├── ToDoApp_fr.ts               # Traduction française
+├── ToDoApp_en_US.ts            # Traduction anglaise
+└── build/                      # Dossier de compilation (généré)
 ```
 
-## Ajout de nouveaux fichiers sources
+## Utilisation
 
-Lors de l'ajout de nouveaux fichiers `.cpp`, `.h` ou `.ui`, ils seront automatiquement détectés grâce à l'option `CONFIGURE_DEPENDS` dans CMakeLists.txt. Il suffit de recompiler le projet.
+### Créer une tâche
 
-## Traductions
+1. Cliquer sur "Nouvelle tâche" ou utiliser le raccourci Ctrl+N
+2. Remplir les informations dans le panneau de droite
+3. Cliquer sur "Appliquer" pour enregistrer
 
-### Ajouter une nouvelle langue
+### Ajouter une sous-tâche
 
-1. Ajouter le nouveau fichier `.ts` dans la variable `TS_FILES` du `CMakeLists.txt` :
-   ```cmake
-   set(TS_FILES
-       ToDoApp_en_US.ts
-       ToDoApp_fr_FR.ts
-       ToDoApp_es_ES.ts  # Espagnol
-   )
-   ```
+1. Sélectionner une tâche parente
+2. Cliquer sur "Ajouter sous-tâche" ou utiliser Ctrl+Shift+N
+3. Remplir les informations de la sous-tâche
 
-2. Générer et mettre à jour les traductions :
-   ```bash
-   cmake --build . --target update_translations
-   ```
+### Recherche avancée
 
-3. Ouvrir le fichier `.ts` avec Qt Linguist pour traduire les chaînes de caractères
+Utiliser les préfixes dans le champ de recherche :
 
-4. Compiler les traductions :
-   ```bash
-   cmake --build . --target release_translations
-   ```
+* `tag:urgent` - Chercher par étiquette
+* `priority:high` - Filtrer par priorité
+* `status:completed` - Filtrer par statut
+* `date:2025-12` - Filtrer par date d'échéance
 
-## Personnalisation
+### Export PDF
 
-### Exclure des fichiers de la documentation
+1. Menu Fichier > Exporter en PDF
+2. Choisir un template (Default, Minimal, Detailed, Colorful)
+3. Sélectionner l'emplacement et enregistrer
 
-Éditer `Doxyfile` et modifier la ligne `EXCLUDE_PATTERNS` :
+## Licence
 
-```doxyfile
-EXCLUDE_PATTERNS = */build/* \
-                   */mon_dossier_exclu/*
-```
-
-### Exclure des fichiers de l'archive
-
-Éditer `CMakeLists.txt` et modifier la variable `EXCLUDE_PATTERNS` :
-
-```cmake
-set(EXCLUDE_PATTERNS
-    ".git/*"
-    "build*/*"
-    "*.user"
-    # Ajoutez vos patterns ici
-)
-```
-
-## Résolution de problèmes
-
-### "No files to be processed" lors de la génération de documentation
-
-Supprimez le dossier `build/` et reconfigurez :
-
-```bash
-rm -rf build
-mkdir build
-cd build
-cmake ..
-```
-
-### Outils de traduction introuvables
-
-Installer Qt Linguist :
-
-```bash
-# Ubuntu/Debian
-sudo apt install qttools5-dev-tools
-
-# Fedora
-sudo dnf install qt5-linguist
-
-# macOS (avec Homebrew)
-brew install qt
-```
-
-### Doxygen introuvable
-
-Installer Doxygen :
-
-```bash
-# Ubuntu/Debian
-sudo apt install doxygen
-
-# Fedora
-sudo dnf install doxygen
-
-# macOS (avec Homebrew)
-brew install doxygen
-```
-
-## Rendu du projet
-
-Pour générer tous les livrables nécessaires au rendu du projet :
-
-```bash
-cd build
-cmake --build . --target deliverable
-```
-
-Cette commande génère automatiquement :
-- La documentation dans `build/doc/html/`
-- Le listing du code dans `build/listing/code_listing.txt`
-- Les fichiers de traduction compilés (`.qm`)
-- L'archive du projet `ToDoApp-0.1-src.zip`
+Ce projet est distribué sous licence GNU General Public License v2.0 (GPLv2).
+Voir le fichier LICENSE pour plus de détails.
 
 ## Auteurs
 
-* **Simon Bélier**
-* **Wissal Jalfa**
+* Simon Bélier
+* Wissal Jalfa
+
+## Contribution
+
+Ce projet a été développé dans le cadre d'un projet académique.
+
+## Documentation technique
+
+La documentation complète générée par Doxygen est disponible après compilation :
+
+```bash
+make doc
+xdg-open build/doc/html/index.html  # Linux
+open build/doc/html/index.html      # macOS
+start build\doc\html\index.html     # Windows
+```
 
