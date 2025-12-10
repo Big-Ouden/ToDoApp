@@ -112,7 +112,7 @@
   - Indiquer: héritage (QObject, QAbstractItemModel), composition, agrégation
   - Signaler les signaux/slots principaux
   
-- [ ] **Valider avec l'enseignant le 20/11/2025**
+
 
 ---
 

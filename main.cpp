@@ -3,26 +3,27 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include <QFile>
+#include <QDir>
 
-/*!
- * \brief main
- * \param argc
- * \param argv
- * \return
- */
 int main(int argc, char *argv[])
 {
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication a(argc, argv);
 
+    // Charger traduction système (si disponible)
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
     for (const QString &locale : uiLanguages) {
         const QString baseName = "ToDoApp_" + QLocale(locale).name();
-        if (translator.load(":/i18n/" + baseName)) {
+        // recherche dans ressources et dans répertoire ./i18n
+        if (translator.load(":/i18n/" + baseName) ||
+            translator.load(QDir::currentPath() + "/i18n/" + baseName + ".qm")) {
             a.installTranslator(&translator);
             break;
         }
     }
+
     MainWindow w;
     w.show();
     return a.exec();

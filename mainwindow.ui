@@ -6,25 +6,131 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1000</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>ToDoApp</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QWidget" name="topBar">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLineEdit" name="searchLineEdit">
+         <property name="placeholderText">
+          <string>Rechercher...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QToolButton" name="addTaskButton">
+         <property name="text"><string>Ajouter</string></property>
+         <property name="toolTip"><string>Ajouter une tâche</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="addSubtaskButton">
+         <property name="text"><string>Ajouter sous-tâche</string></property>
+         <property name="toolTip"><string>Ajouter une sous-tâche</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="deleteTaskButton">
+         <property name="text"><string>Supprimer</string></property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+
+      <!-- Left: tree view of tasks -->
+      <widget class="QWidget" name="leftPane">
+       <layout class="QVBoxLayout" name="leftLayout">
+        <item>
+         <widget class="QTreeView" name="taskTreeView">
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <property name="rootIsDecorated">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- Right: placeholder for detail widget (will be replaced in code) -->
+      <widget class="QWidget" name="rightPane">
+       <layout class="QVBoxLayout" name="rightLayout">
+        <item>
+         <widget class="QLabel" name="detailPlaceholder">
+          <property name="text">
+           <string>Détails de la tâche</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+     </widget>
+    </item>
+
+   </layout>
+  </widget>
+
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>19</height>
+     <width>1000</width>
+     <height>22</height>
     </rect>
    </property>
+   <addaction name="menuFile"/>
+   <addaction name="menuHelp"/>
   </widget>
+
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionNew"/>
+  <action name="actionOpen"/>
+  <action name="actionSave"/>
+  <action name="actionSaveAs"/>
+  <action name="actionAbout"/>
+  <widget class="QMenu" name="menuFile">
+   <property name="title">
+    <string>Fichier</string>
+   </property>
+   <addaction name="actionNew"/>
+   <addaction name="actionOpen"/>
+   <addaction name="actionSave"/>
+   <addaction name="actionSaveAs"/>
+  </widget>
+  <widget class="QMenu" name="menuHelp">
+   <property name="title">
+    <string>Aide</string>
+   </property>
+   <addaction name="actionAbout"/>
+  </widget>
  </widget>
  <resources/>
  <connections/>

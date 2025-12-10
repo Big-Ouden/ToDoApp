@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1">
-  <zoom_level>7</zoom_level>
+  <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>329</x>
-      <y>273</y>
-      <w>147</w>
-      <h>154</h>
+      <x>352</x>
+      <y>1056</y>
+      <w>216</w>
+      <h>360</h>
     </coordinates>
     <panel_attributes>Task
 --
@@ -16,22 +16,39 @@
 - description : QString          
 - dueDate : QDate                
 - priority : Priority            
-- status : Status                
+- status : Status         
+- category: Category*   
+- parentTask: Task*    
 - subtasks : QList&lt;Task*&gt;        
 --
-+ addSubtask(Task*)              
-+ removeSubtask(int)             
-+ hasSubtasks() : bool           
-+ isCompleted() : bool   </panel_attributes>
++ Task(const QString&amp; title)
+
++ addSubtask(Task* subtask)
++ removeSubtask(Task* subtask): bool
+
++ hasSubtasks() const: bool
++ isCompleted() const: bool
+
++ setParentTask(Task* parent)
++ setCategory(Category* c)
+
++ getSubtasks() const: QList&lt;Task*&gt;
+--
+Signals:
++ taskModified()
++ subtaskAdded(Task*)
++ subtaskRemoved(Task*)
+
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>315</x>
-      <y>490</y>
-      <w>168</w>
-      <h>91</h>
+      <x>0</x>
+      <y>1112</y>
+      <w>192</w>
+      <h>136</h>
     </coordinates>
     <panel_attributes>Category
 --
@@ -39,92 +56,303 @@
 - name : QString             
 - tasks : QList&lt;Task*&gt;       
 --
-+ addTask(Task*)             
-+ removeTask(Task*)    </panel_attributes>
++ Category(const QString&amp; name)
+
++ addTask(Task* t)             
++ removeTask(Task* t)
++ getTasks() : QList&lt;Task*&gt;    </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>280</x>
-      <y>7</y>
-      <w>259</w>
-      <h>203</h>
+      <x>296</x>
+      <y>656</y>
+      <w>344</w>
+      <h>320</h>
     </coordinates>
-    <panel_attributes>TaskModel
+    <panel_attributes>&lt;&lt;QAbstractItemModel&gt;&gt;
+TaskModel
 --
 - rootTasks : QList&lt;Task*&gt;     
+- categories : QList&lt;Category*&gt; 
 --
-+ rowCount(QModelIndex) : int                         
-+ columnCount(QModelIndex) : int                      
-+ data(QModelIndex, int role) : QVariant              
-+ setData(QModelIndex, QVariant, int role) : bool     
-+ index(int,int,QModelIndex) : QModelIndex            
-+ parent(QModelIndex) : QModelIndex                   
-+ flags(QModelIndex) : Qt::ItemFlags                  
-+ insertTask(Task*)                                   
-+ removeTask(QModelIndex)                             
-+ getTask(QModelIndex) : Task*      
++ index(row: int,col: int, parent: QModelIndex) : QModelIndex            
++ parent(child: QModelIndex) : QModelIndex          
+         
++ rowCount(parent: QModelIndex) : int                         
++ columnCount(parent: QModelIndex) : int                      
+
++ data(index: QModelIndex, role: int) : QVariant              
++ setData(index: QModelIndex, value: QVariant, role: role) : bool
+     
++ flags(index: QModelIndex) : Qt::ItemFlags 
+                 
++ insertTask(task: Task*, parentTask: Task*)                                   
++ removeTask(index: QModelIndex)                             
++ getTask(QModelIndex) : Task*
++ clear()      
 --
 Signals:
-+ taskAdded(Task*)  
-+ taskRemoved(Task*)
-+ taskUpdated(Task*)</panel_attributes>
++ taskAdded(Task*);
++ taskRemoved(Task*);
++ taskUpdated(Task*);
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>469</x>
-      <y>336</y>
-      <w>42</w>
-      <h>70</h>
+      <x>184</x>
+      <y>1168</y>
+      <w>184</w>
+      <h>40</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-
-m1=0
-m2=*</panel_attributes>
-    <additional_attributes>10.0;10.0;40.0;10.0;40.0;70.0;10.0;70.0</additional_attributes>
+    <panel_attributes>lt=-&gt;&gt;&gt;&gt;
+
+m1=0..1
+Appartient à</panel_attributes>
+    <additional_attributes>210.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>385</x>
-      <y>420</y>
-      <w>56</w>
-      <h>84</h>
+      <x>432</x>
+      <y>968</y>
+      <w>64</w>
+      <h>104</h>
     </coordinates>
-    <panel_attributes>lt=-
+    <panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;
 m1=*
-m2=0..1
 Contient</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>399</x>
-      <y>203</y>
-      <w>21</w>
-      <h>84</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-
-m1=*</panel_attributes>
-    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>595</x>
-      <y>308</y>
-      <w>252</w>
-      <h>77</h>
+      <x>448</x>
+      <y>0</y>
+      <w>288</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;QMainWindow&gt;&gt;
+ToDoApp
+--
+-TaskModel* model
+-QSortFilterProxyModel* proxy
+-PersistenceManager* persistence
+--
++setupUi()
++setupActions()
++loadFromFile(QString)
++saveToFile(QString)
++changeLanguage(QString)
++onTaskSelected(QModelIndex)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>672</x>
+      <y>280</y>
+      <w>288</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>PersistenceManager
 --
-+ saveToJson(QString path, QList&lt;Task*&gt;) : bool          
-+ loadFromJson(QString path) : QList&lt;Task*&gt;           
-+ saveToXml(QString path, QList&lt;Task*&gt;) : bool 
-+ loadFromXml(QString path): QList&lt;Task*&gt; </panel_attributes>
++ save(const QString&amp; filename, const QList&lt;Task*&gt;&amp; tasks, const QList&lt;Category*&gt;&amp; categories): bool
++ load(const QString&amp; filename, QList&lt;Task*&gt;&amp; outTasks, QList&lt;Category*&gt;&amp; outCategories) : bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>336</x>
+      <y>584</y>
+      <w>48</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+Filtre
+m1=1
+</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>696</x>
+      <y>152</y>
+      <w>32</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;
+m1=1
+</panel_attributes>
+    <additional_attributes>10.0;160.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>920</x>
+      <y>368</y>
+      <w>288</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>XmlPersistenceManager
+--
++ save(...) : bool
++ load(...) : QList&lt;Task*&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>624</x>
+      <y>368</y>
+      <w>288</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>JsonPersistenceManager
+--
++ save(...) : bool
++ load(...) : QList&lt;Task*&gt;         
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>752</x>
+      <y>320</y>
+      <w>24</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>936</x>
+      <y>320</y>
+      <w>24</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>560</x>
+      <y>1112</y>
+      <w>88</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>Enfant
+lt=-
+m1=1
+m2=*</panel_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0;50.0;90.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>136</x>
+      <y>272</y>
+      <w>296</w>
+      <h>320</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Proxy&gt;&gt;
+QSortFilterProxyModel
+--
+- QAbstractItemModel* sourceModel
+- int filterKeyColumn
+- Qt::CaseSensitivity filterCase
+- QString filterString
+- int filterRole
+- int sortRole
+- bool dynamicSortFilter
+--
++ setSourceModel(QAbstractItemModel*)
++ mapToSource(QModelIndex) : QModelIndex
++ mapFromSource(QModelIndex) : QModelIndex
+--
++ setFilterFixedString(QString)
++ setFilterRegExp(QRegExp)
++ setFilterWildcard(QString)
++ setFilterKeyColumn(int)
++ setFilterCaseSensitivity(Qt::CaseSensitivity)
++ setFilterRole(int)
+--
++ sort(int, Qt::SortOrder)
+--
+Signals
++ filterChanged()
++ sortColumnChanged(int)
++ sortOrderChanged(Qt::SortOrder)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>544</x>
+      <y>152</y>
+      <w>32</w>
+      <h>520</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;
+m1=1
+</panel_attributes>
+    <additional_attributes>10.0;630.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>288</x>
+      <y>152</y>
+      <w>208</w>
+      <h>136</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;
+m1=1
+</panel_attributes>
+    <additional_attributes>10.0;150.0;10.0;70.0;240.0;70.0;240.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>688</x>
+      <y>1184</y>
+      <w>192</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Enum&gt;&gt;
+Status
+--
++ NOTSTARTED
++ INPROGRESS
++ COMPLETED
++ CANCELLED</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>688</x>
+      <y>1072</y>
+      <w>192</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Enum&gt;&gt;
+Priority
+--
++ LOW
++ MEDIUM
++ HIGH
++ CRITICAL  </panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>

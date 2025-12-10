@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 # ========================================
 # Organisation des fichiers sources
@@ -43,7 +45,10 @@ set(MISC_FILES
     misc/todo.md
 )
 
-
+set(UI_FILES
+    mainwindow.ui
+    taskdetailwidget.ui
+)
 
 # ========================================
 # Compilation de l'application
@@ -52,6 +57,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ToDoApp
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        ${UI_FILES}
         ${RESOURCE_FILES}
         ${DOC_FILES}
         ${MISC_FILES}
@@ -75,6 +81,8 @@ else()
 endif()
 
 target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::Core)
 
 if(${QT_VERSION} VERSION_LESS 6.1.0)
     set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.ToDoApp)

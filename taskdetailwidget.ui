@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TaskDetailWidget</class>
+ <widget class="QWidget" name="TaskDetailWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="labelTitle">
+       <property name="text">
+        <string>Titre :</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="titleEdit"/>
+     </item>
+
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelDesc">
+       <property name="text">
+        <string>Description :</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QTextEdit" name="descEdit"/>
+     </item>
+
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelDate">
+       <property name="text">
+        <string>Échéance :</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QDateEdit" name="dateEdit">
+       <property name="calendarPopup">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelPriority">
+       <property name="text">
+        <string>Priorité :</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QComboBox" name="priorityCombo">
+       <item><property name="text"><string>Low</string></property></item>
+       <item><property name="text"><string>Medium</string></property></item>
+       <item><property name="text"><string>High</string></property></item>
+       <item><property name="text"><string>Critical</string></property></item>
+      </widget>
+     </item>
+
+     <item row="4" column="0">
+      <widget class="QLabel" name="labelStatus">
+       <property name="text">
+        <string>Statut :</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QComboBox" name="statusCombo">
+       <item><property name="text"><string>Not started</string></property></item>
+       <item><property name="text"><string>In progress</string></property></item>
+       <item><property name="text"><string>Completed</string></property></item>
+       <item><property name="text"><string>Cancelled</string></property></item>
+      </widget>
+     </item>
+
+    </layout>
+   </item>
+
+   <item>
+    <layout class="QHBoxLayout" name="buttonsLayout">
+     <item>
+      <spacer name="spacer1">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="applyButton">
+       <property name="text">
+        <string>Appliquer</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
