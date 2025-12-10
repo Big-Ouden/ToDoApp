@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 project(ToDoApp VERSION 0.1 LANGUAGES CXX)
 
+# Définir le type de build par défaut si non spécifié
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
+endif()
+
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -20,10 +25,26 @@ file(GLOB SOURCES CONFIGURE_DEPENDS "*.cpp")
 file(GLOB UI_FILES CONFIGURE_DEPENDS "*.ui")
 file(GLOB RESOURCE_FILES CONFIGURE_DEPENDS "*.qrc")
 file(GLOB MISC_FILES CONFIGURE_DEPENDS "misc/*")
+
 # Fichiers de traduction
 set(TS_FILES
     ToDoApp_en_US.ts
+    ToDoApp_fr.ts
 )
+
+# Générer les fichiers .qm dans le répertoire source pour les inclure dans les ressources
+set(QM_FILES)
+foreach(ts_file ${TS_FILES})
+    get_filename_component(ts_name ${ts_file} NAME_WE)
+    list(APPEND QM_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${ts_name}.qm")
+endforeach()
+
+# Compiler les .ts en .qm dans le répertoire source
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_translation(QM_FILES ${TS_FILES})
+else()
+    qt5_add_translation(QM_FILES ${TS_FILES})
+endif()
 
 # Documentation
 set(DOC_FILES
@@ -62,7 +83,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${DOC_FILES}
         ${MISC_FILES}
     )
-    qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
     if(ANDROID)
         add_library(ToDoApp SHARED
@@ -77,21 +97,37 @@ else()
             ${DOC_FILES}
         )
     endif()
-    qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
 target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::Core)
-target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::Core)
+
+# ========================================
+# Configuration de l'icône d'application
+# ========================================
+if(WIN32)
+    # Windows: utiliser le fichier .rc
+    target_sources(ToDoApp PRIVATE resources/app.rc)
+elseif(APPLE)
+    # macOS: configurer l'icône du bundle
+    set(MACOSX_BUNDLE_ICON_FILE app_icon.icns)
+    set(APP_ICON_MACOSX ${CMAKE_CURRENT_SOURCE_DIR}/resources/app_icon.icns)
+    set_source_files_properties(${APP_ICON_MACOSX} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    target_sources(ToDoApp PRIVATE ${APP_ICON_MACOSX})
+else()
+    # Linux: l'icône sera installée séparément
+endif()
 
 if(${QT_VERSION} VERSION_LESS 6.1.0)
-    set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.ToDoApp)
+    set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.todoapp.ToDoApp)
 endif()
 
 set_target_properties(ToDoApp PROPERTIES
     ${BUNDLE_ID_OPTION}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE_BUNDLE_NAME "ToDoApp"
+    MACOSX_BUNDLE_INFO_STRING "Gestionnaire de tâches hiérarchique"
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
@@ -293,6 +329,44 @@ install(TARGETS ToDoApp
 install(FILES ${QM_FILES}
     DESTINATION ${CMAKE_INSTALL_BINDIR}/translations
 )
+
+# Installer l'icône sur Linux
+if(UNIX AND NOT APPLE)
+    install(FILES resources/app_icon.svg
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps
+        RENAME todoapp.svg
+    )
+endif()
+
+# ========================================
+# CPack - Génération de packages
+# ========================================
+set(CPACK_PACKAGE_NAME "ToDoApp")
+set(CPACK_PACKAGE_VENDOR "ToDoApp Development Team")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Gestionnaire de tâches hiérarchique multiplateforme")
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "ToDoApp")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+
+if(WIN32)
+    set(CPACK_GENERATOR "NSIS;ZIP")
+    set(CPACK_NSIS_DISPLAY_NAME "ToDoApp")
+    set(CPACK_NSIS_PACKAGE_NAME "ToDoApp")
+    set(CPACK_NSIS_MUI_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/app_icon.ico")
+elseif(APPLE)
+    set(CPACK_GENERATOR "DragNDrop")
+elseif(UNIX)
+    set(CPACK_GENERATOR "DEB;RPM;TGZ")
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "todoapp@example.com")
+    set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libqt6widgets6")
+    set(CPACK_RPM_PACKAGE_LICENSE "MIT")
+endif()
+
+include(CPack)
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ToDoApp)
