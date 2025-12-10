@@ -1,134 +1,348 @@
 {
     "tasks": [
         {
-            "description": "",
-            "dueDate": "2000-01-01",
-            "id": "{ff72668c-3b19-4c94-b7fd-6748809a2055}",
+            "attachments": [
+            ],
+            "description": "Planifier et organiser le prochain sprint de développement. Préparer les user stories et définir les objectifs.\n\n**Objectifs:**\n- Réunion d'équipe\n- Définition des priorités\n- Estimation du temps",
+            "dueDate": "2025-12-15",
+            "id": "{b22263f3-f039-4edc-8d06-1d57fa763007}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
                 {
-                    "description": "",
-                    "dueDate": "2000-01-01",
-                    "id": "{244269c0-286b-4afe-b7e4-500306a39c92}",
+                    "attachments": [
+                    ],
+                    "description": "Inviter tous les membres de l'équipe et préparer l'agenda",
+                    "dueDate": "2025-12-11",
+                    "id": "{8ab7ca0c-8dca-472f-b925-5646ac2115b2}",
                     "priority": "Low",
                     "status": "Not started",
                     "subtasks": [
                     ],
-                    "title": "Créer l'interface utilisateur"
+                    "tags": [
+                        "reunion",
+                        "planning"
+                    ],
+                    "title": "Organiser la réunion de sprint"
                 },
                 {
-                    "description": "",
-                    "dueDate": "2000-01-01",
-                    "id": "{98cc1fbe-ec74-4830-8e56-02072a881a14}",
+                    "attachments": [
+                    ],
+                    "description": "Créer les tickets dans Jira pour le prochain sprint",
+                    "dueDate": "2025-12-13",
+                    "id": "{ab7d79ea-ff5c-4bcf-ba06-164f8454e841}",
                     "priority": "Low",
                     "status": "Not started",
                     "subtasks": [
                     ],
-                    "title": "Implémenter la logique métier"
-                },
-                {
-                    "description": "",
-                    "dueDate": "2000-01-01",
-                    "id": "{952964b6-d40f-4bea-926c-060a11fd3ffa}",
-                    "priority": "Low",
-                    "status": "Not started",
-                    "subtasks": [
+                    "tags": [
+                        "jira",
+                        "tickets"
                     ],
-                    "title": "Tester l'application"
+                    "title": "Créer les user stories"
                 }
             ],
-            "title": "Développer ToDoApp"
+            "tags": [
+                "urgent",
+                "sprint",
+                "développement"
+            ],
+            "title": "🚀 Préparation Sprint Q1 2026"
         },
         {
-            "description": "",
-            "dueDate": "2000-01-01",
-            "id": "{918c87f7-30c8-4ee1-b198-62dc736c1276}",
+            "attachments": [
+            ],
+            "description": "# Projet de refactoring\n\nRefactoriser le code legacy du module d'authentification pour améliorer:\n- La maintenabilité\n- Les performances\n- La sécurité\n\n```python\n# Exemple de nouveau pattern\nclass AuthService:\n    def __init__(self):\n        self.validator = TokenValidator()\n```",
+            "dueDate": "2025-12-20",
+            "id": "{148f25e1-c905-4ed5-9a0f-425ebec49515}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
                 {
-                    "description": "",
-                    "dueDate": "2000-01-01",
-                    "id": "{4fd9ba34-dd35-4967-a979-ab7051cd4db2}",
+                    "attachments": [
+                    ],
+                    "description": "Analyser le code actuel et identifier les points d'amélioration",
+                    "dueDate": "2025-12-12",
+                    "id": "{60480f12-cefa-404b-a26c-4b3441830566}",
                     "priority": "Low",
                     "status": "Not started",
                     "subtasks": [
                     ],
-                    "title": "Guide d'utilisation"
+                    "tags": [
+                        "analyse",
+                        "code-review"
+                    ],
+                    "title": "Audit du code existant"
                 },
                 {
-                    "description": "",
-                    "dueDate": "2000-01-01",
-                    "id": "{de2998c1-76d5-454a-8400-724cde270a2d}",
+                    "attachments": [
+                    ],
+                    "description": "Créer des tests unitaires complets avant le refactoring",
+                    "dueDate": "2025-12-14",
+                    "id": "{45cda2e6-2c61-4a39-8226-4f596c6a203f}",
                     "priority": "Low",
                     "status": "Not started",
                     "subtasks": [
                     ],
-                    "title": "Documentation technique"
+                    "tags": [
+                        "tests",
+                        "tdd"
+                    ],
+                    "title": "Écrire les tests unitaires"
                 },
                 {
-                    "description": "",
-                    "dueDate": "2000-01-01",
-                    "id": "{e6c26fa8-3369-41c4-93c1-ab7e97cd16cc}",
+                    "attachments": [
+                    ],
+                    "description": "Implémenter le nouveau système d'authentification",
+                    "dueDate": "2025-12-18",
+                    "id": "{bbffb2c2-fab9-4a4a-b284-f525568537a5}",
                     "priority": "Low",
                     "status": "Not started",
                     "subtasks": [
-                        {
-                            "description": "",
-                            "dueDate": "2000-01-01",
-                            "id": "{aa69cbc9-7b37-4317-93ee-4835ec7a67bd}",
-                            "priority": "Low",
-                            "status": "Not started",
-                            "subtasks": [
-                            ],
-                            "title": "Fruits et légumes"
-                        },
-                        {
-                            "description": "",
-                            "dueDate": "2000-01-01",
-                            "id": "{dca8a335-4cc3-4df1-89cb-7b40d5aa2ab2}",
-                            "priority": "Low",
-                            "status": "Not started",
-                            "subtasks": [
-                            ],
-                            "title": "Produits laitiers"
-                        }
                     ],
-                    "title": "Acheter des courses"
+                    "tags": [
+                        "implementation",
+                        "auth"
+                    ],
+                    "title": "Refactoring principal"
                 }
             ],
-            "title": "Rédiger la documentation"
+            "tags": [
+                "refactoring",
+                "backend",
+                "securite"
+            ],
+            "title": "🔧 Refactoring module authentification"
         },
         {
-            "description": "",
-            "dueDate": "2000-01-01",
-            "id": "{975b45a9-3f89-49fe-8765-2a1e9abf2021}",
+            "attachments": [
+            ],
+            "description": "Rédiger la documentation technique complète du projet pour les nouveaux développeurs",
+            "dueDate": "2025-12-18",
+            "id": "{f486cc1c-c08a-4c7a-8187-f411daad70a8}",
+            "priority": "Low",
+            "status": "Not started",
+            "subtasks": [
+                {
+                    "attachments": [
+                    ],
+                    "description": "Guide de démarrage rapide avec exemples de code",
+                    "dueDate": "2025-12-14",
+                    "id": "{43ef8f89-eb27-4e45-a5af-155ca5a86b6b}",
+                    "priority": "Low",
+                    "status": "Not started",
+                    "subtasks": [
+                    ],
+                    "tags": [
+                        "documentation",
+                        "guide"
+                    ],
+                    "title": "Getting Started"
+                },
+                {
+                    "attachments": [
+                    ],
+                    "description": "Documentation de l'architecture système et des flux de données",
+                    "dueDate": "2025-12-16",
+                    "id": "{4ef84a92-d292-4ece-9ea7-367e37171850}",
+                    "priority": "Low",
+                    "status": "Not started",
+                    "subtasks": [
+                    ],
+                    "tags": [
+                        "architecture",
+                        "diagrammes"
+                    ],
+                    "title": "Documentation architecture"
+                }
+            ],
+            "tags": [
+                "documentation",
+                "onboarding"
+            ],
+            "title": "📚 Documentation technique"
+        },
+        {
+            "attachments": [
+            ],
+            "description": "**Formation sur les nouvelles technologies:**\n- React 18 avec Hooks\n- TypeScript avancé\n- Architecture microservices\n\n*Durée estimée: 2 jours*",
+            "dueDate": "2025-12-22",
+            "id": "{a5fc4fad-63a6-406a-9b74-30a4821f1c27}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
             ],
-            "title": "Préparer présentation projet"
+            "tags": [
+                "formation",
+                "react",
+                "typescript"
+            ],
+            "title": "📖 Formation équipe dev"
         },
         {
-            "description": "",
-            "dueDate": "2000-01-01",
-            "id": "{0c391d0c-ec43-4f7d-aca9-832b418dd699}",
+            "attachments": [
+            ],
+            "description": "Corriger les bugs critiques remontés en production:\n\n1. Bug #1234 - Crash au démarrage\n2. Bug #1235 - Fuite mémoire\n3. Bug #1236 - Erreur 500 sur /api/users",
+            "dueDate": "2025-12-11",
+            "id": "{7d7179c2-5e1b-4d42-aad3-cb23d355bea3}",
+            "priority": "Low",
+            "status": "Not started",
+            "subtasks": [
+                {
+                    "attachments": [
+                    ],
+                    "description": "L'application plante au démarrage sur certains devices Android",
+                    "dueDate": "2025-12-11",
+                    "id": "{88439d5b-1647-4c10-8a55-5ca319b00c30}",
+                    "priority": "Low",
+                    "status": "Not started",
+                    "subtasks": [
+                    ],
+                    "tags": [
+                        "bug",
+                        "android",
+                        "crash"
+                    ],
+                    "title": "🐛 Fix crash au démarrage"
+                },
+                {
+                    "attachments": [
+                    ],
+                    "description": "Identifier et corriger la fuite mémoire dans le gestionnaire de cache",
+                    "dueDate": "2025-12-11",
+                    "id": "{5fbbeb86-0eeb-455c-a2a8-525482e8e0f5}",
+                    "priority": "Low",
+                    "status": "Not started",
+                    "subtasks": [
+                    ],
+                    "tags": [
+                        "bug",
+                        "performance",
+                        "memory"
+                    ],
+                    "title": "🐛 Corriger fuite mémoire"
+                }
+            ],
+            "tags": [
+                "urgent",
+                "production",
+                "hotfix"
+            ],
+            "title": "🔥 Bugs critiques production"
+        },
+        {
+            "attachments": [
+            ],
+            "description": "### Réunion mensuelle d'équipe\n\n**Ordre du jour:**\n- Bilan du mois écoulé\n- Objectifs du mois prochain\n- Points bloquants\n- Amélioration continue\n\n**Participants:** Toute l'équipe technique",
+            "dueDate": "2025-12-30",
+            "id": "{8911d114-3b93-41ff-93f3-22cd97215ffa}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
             ],
-            "title": "Nouvelle tâche"
+            "tags": [
+                "reunion",
+                "retrospective"
+            ],
+            "title": "🗓️ Réunion mensuelle équipe"
         },
         {
-            "description": "sfdf",
-            "dueDate": "2000-01-01",
-            "id": "{9ca79f1a-c7d2-42e3-93c8-2cc6dddf3961}",
+            "attachments": [
+            ],
+            "description": "Optimiser les performances de l'application:\n- Réduire le temps de chargement de 30%\n- Améliorer les temps de réponse API\n- Optimiser les requêtes base de données",
+            "dueDate": "2025-12-25",
+            "id": "{bd6cfe4c-4957-4678-9cba-7e4fd4d99463}",
+            "priority": "Low",
+            "status": "Not started",
+            "subtasks": [
+                {
+                    "attachments": [
+                    ],
+                    "description": "Utiliser Lighthouse et WebPageTest pour l'analyse",
+                    "dueDate": "2025-12-16",
+                    "id": "{5f63483f-d3f6-4ba5-899a-71116a5c9647}",
+                    "priority": "Low",
+                    "status": "Not started",
+                    "subtasks": [
+                    ],
+                    "tags": [
+                        "performance",
+                        "audit"
+                    ],
+                    "title": "Audit de performance"
+                },
+                {
+                    "attachments": [
+                    ],
+                    "description": "Mettre en cache les requêtes fréquentes et optimiser les index",
+                    "dueDate": "2025-12-20",
+                    "id": "{625cebce-ee34-4320-b067-ba8b4cf536a0}",
+                    "priority": "Low",
+                    "status": "Not started",
+                    "subtasks": [
+                    ],
+                    "tags": [
+                        "database",
+                        "optimization",
+                        "cache"
+                    ],
+                    "title": "Optimisation BDD"
+                }
+            ],
+            "tags": [
+                "performance",
+                "optimization"
+            ],
+            "title": "⚡ Optimisation performances"
+        },
+        {
+            "attachments": [
+            ],
+            "description": "Mise en place d'une pipeline CI/CD complète avec:\n- Tests automatisés\n- Déploiement automatique\n- Rollback en cas d'erreur",
+            "dueDate": "",
+            "id": "{a02f2841-fb23-406d-abc3-a9e5b13e9a0a}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
             ],
-            "title": "Nouvelle tâche"
+            "tags": [
+                "devops",
+                "ci-cd",
+                "jenkins"
+            ],
+            "title": "🔄 Setup CI/CD"
+        },
+        {
+            "attachments": [
+            ],
+            "description": "Tâche complétée - Acheter du pain, du lait et des œufs",
+            "dueDate": "2025-12-09",
+            "id": "{5565beeb-c825-4999-af50-6e879421132f}",
+            "priority": "Low",
+            "status": "Not started",
+            "subtasks": [
+            ],
+            "tags": [
+                "personnel",
+                "courses"
+            ],
+            "title": "✅ Courses hebdomadaires"
+        },
+        {
+            "attachments": [
+            ],
+            "description": "Rendez-vous annulé suite à changement de planning",
+            "dueDate": "2025-12-08",
+            "id": "{3a475557-4e20-4068-8154-64525f2e2f18}",
+            "priority": "Low",
+            "status": "Not started",
+            "subtasks": [
+            ],
+            "tags": [
+                "personnel",
+                "sante"
+            ],
+            "title": "❌ Rendez-vous médecin"
         }
     ]
 }

@@ -10,23 +10,38 @@
 
 namespace Ui { class TaskDetailWidget; }
 
+/// Modes d'affichage de la description
 enum class ViewMode {
     TextOnly,      // Uniquement le texte éditable
     PreviewOnly,   // Uniquement l'aperçu (éditable via double-clic)
     Split          // Les deux côte à côte
 };
 
+/**
+ * @brief Widget de détail pour éditer une tâche.
+ */
 class TaskDetailWidget : public QWidget
 {
     Q_OBJECT
 
 public:
+    /** @brief Constructeur du widget */
     explicit TaskDetailWidget(QWidget *parent = nullptr);
+    
+    /** @brief Destructeur */
     ~TaskDetailWidget();
 
+    /**
+     * @brief Définit la tâche à afficher et éditer.
+     * @param task Tâche à afficher
+     */
     void setTask(Task *task);
+    
+    /** @brief Efface le contenu du widget */
     void clearTask();
-    void updateTranslations();  // Méthode publique pour forcer la mise à jour
+    
+    /** @brief Met à jour les traductions de l'interface */
+    void updateTranslations();
 
 signals:
     void taskModified(Task* task);

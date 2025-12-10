@@ -3,6 +3,7 @@
 
 #include <QString>
 
+/// États possibles d'une tâche
 enum class Status
 {
     NOTSTARTED,

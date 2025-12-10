@@ -3,6 +3,7 @@
 
 #include <QString>
 
+/// Niveaux de priorité d'une tâche
 enum class Priority
 {
     LOW,
