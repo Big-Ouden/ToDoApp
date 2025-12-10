@@ -290,20 +290,36 @@ void MainWindow::onDeleteTask()
     Task *t = m_taskModel->getTask(src);
     if (!t) return;
     
+    // Si l'utilisateur a désactivé la confirmation, supprimer directement
+    if (!m_askDeleteConfirmation) {
+        m_taskModel->removeTask(src);
+        m_detailWidget->setTask(nullptr);
+        return;
+    }
+    
     QString message = tr("Êtes-vous sûr de vouloir supprimer la tâche \"%1\" ?").arg(t->title());
     if (t->subtasks().size() > 0) {
         message += tr("\n\nCette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).").arg(t->subtasks().size());
     }
     
-    QMessageBox::StandardButton btn = QMessageBox::question(
-        this, 
-        tr("Confirmer la suppression"), 
-        message,
-        QMessageBox::Yes | QMessageBox::No,
-        QMessageBox::No
-    );
+    QMessageBox msgBox(this);
+    msgBox.setWindowTitle(tr("Confirmer la suppression"));
+    msgBox.setText(message);
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::No);
     
-    if (btn == QMessageBox::Yes) {
+    QCheckBox *dontAskAgain = new QCheckBox(tr("Ne plus demander confirmation"));
+    msgBox.setCheckBox(dontAskAgain);
+    
+    int ret = msgBox.exec();
+    
+    if (dontAskAgain->isChecked()) {
+        m_askDeleteConfirmation = false;
+        savePreferences();
+    }
+    
+    if (ret == QMessageBox::Yes) {
         m_taskModel->removeTask(src);
         m_detailWidget->setTask(nullptr);
     }
@@ -748,6 +764,9 @@ void MainWindow::loadPreferences()
     ui->actionShowCompleted->setChecked(showCompleted);
     m_showCompleted = showCompleted;
     
+    // Confirmation de suppression
+    m_askDeleteConfirmation = settings.value("askDeleteConfirmation", true).toBool();
+    
     // Charger le dernier fichier si disponible
     if (!m_currentFilePath.isEmpty() && QFile::exists(m_currentFilePath)) {
         QList<Task*> tasks = PersistenceManager::loadFromJson(m_currentFilePath);
@@ -770,6 +789,7 @@ void MainWindow::savePreferences()
     settings.setValue("windowState", saveState());
     settings.setValue("lastFile", m_currentFilePath);
     settings.setValue("showCompleted", m_showCompleted);
+    settings.setValue("askDeleteConfirmation", m_askDeleteConfirmation);
 }
 
 // ========================================

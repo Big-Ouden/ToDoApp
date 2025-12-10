@@ -67,6 +67,7 @@ private:
     TaskFilterProxyModel *m_proxyModel;
     TaskDetailWidget *m_detailWidget;
     bool m_showCompleted;
+    bool m_askDeleteConfirmation;
 
     QTranslator m_translator;
     QString m_currentFilePath;
