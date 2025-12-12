@@ -17,6 +17,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS PrintSupport)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Charts)
 
 # ========================================
 # Organisation des fichiers sources
@@ -119,6 +120,7 @@ endif()
 target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::Core)
 target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::PrintSupport)
+target_link_libraries(ToDoApp PRIVATE Qt${QT_VERSION_MAJOR}::Charts)
 
 # ========================================
 # Configuration de l'icône d'application
