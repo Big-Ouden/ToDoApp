@@ -29,6 +29,37 @@ public:
      * @return Liste des tâches chargées
      */
     static QList<Task*> loadFromJson(const QString &filePath);
+    
+    /**
+     * @brief Exporte des tâches sélectionnées vers un fichier JSON.
+     * @param filePath Chemin du fichier de destination
+     * @param tasks Liste des tâches à exporter
+     * @return true si l'export a réussi
+     */
+    static bool exportSelectedToJson(const QString &filePath, const QList<Task*> &tasks);
+    
+    /**
+     * @brief Importe des tâches depuis un fichier JSON.
+     * @param filePath Chemin du fichier source
+     * @return Liste des tâches importées
+     */
+    static QList<Task*> importFromJson(const QString &filePath);
+    
+    /**
+     * @brief Exporte des tâches au format CSV.
+     * @param filePath Chemin du fichier de destination
+     * @param tasks Liste des tâches à exporter
+     * @return true si l'export a réussi
+     */
+    static bool exportToCsv(const QString &filePath, const QList<Task*> &tasks);
+    
+    /**
+     * @brief Exporte des tâches au format Markdown.
+     * @param filePath Chemin du fichier de destination
+     * @param tasks Liste des tâches à exporter
+     * @return true si l'export a réussi
+     */
+    static bool exportToMarkdown(const QString &filePath, const QList<Task*> &tasks);
 
 private:
     /**

@@ -15,12 +15,12 @@ enum class Priority
 
 inline QString priorityToString(Priority p) {
     switch(p) {
-    case Priority::LOW: return QCoreApplication::translate("Priority", "Low");
-    case Priority::MEDIUM: return QCoreApplication::translate("Priority", "Medium");
-    case Priority::HIGH: return QCoreApplication::translate("Priority", "High");
-    case Priority::CRITICAL: return QCoreApplication::translate("Priority", "Critical");
+    case Priority::LOW: return QCoreApplication::translate("MainWindow", "Low");
+    case Priority::MEDIUM: return QCoreApplication::translate("MainWindow", "Medium");
+    case Priority::HIGH: return QCoreApplication::translate("MainWindow", "High");
+    case Priority::CRITICAL: return QCoreApplication::translate("MainWindow", "Critical");
     }
-    return QCoreApplication::translate("Priority", "Unknown");
+    return QCoreApplication::translate("MainWindow", "Unknown");
 }
 
 inline Priority stringToPriority(const QString &s) {

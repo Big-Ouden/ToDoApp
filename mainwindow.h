@@ -19,6 +19,10 @@ class QLineEdit;
 #include "pdfexporttemplate.h"
 #include "themesmanager.h"
 #include "statisticswidget.h"
+#include "pomodorotimer.h"
+#include "chartswidget.h"
+#include "timelinewidget.h"
+#include "burndownwidget.h"
 #include <QDockWidget>
 
 QT_BEGIN_NAMESPACE
@@ -58,6 +62,10 @@ private slots:
     void onExportPdf();
     void onPrintTasks();
     void onAutoSave();
+    void onExportSelected();
+    void onImportTasks();
+    void onExportCsv();
+    void onExportMarkdown();
     
 private:
     void loadPreferences();
@@ -79,6 +87,14 @@ private:
     TaskDetailWidget *m_detailWidget;
     StatisticsWidget *m_statisticsWidget;
     QDockWidget *m_statsDock;
+    PomodoroTimer *m_pomodoroWidget;
+    QDockWidget *m_pomodoroDock;
+    ChartsWidget *m_chartsWidget;
+    QDockWidget *m_chartsDock;
+    TimelineWidget *m_timelineWidget;
+    QDockWidget *m_timelineDock;
+    BurndownWidget *m_burndownWidget;
+    QDockWidget *m_burndownDock;
     bool m_showCompleted;
     bool m_askDeleteConfirmation;
     QTimer *m_autoSaveTimer;

@@ -119,6 +119,9 @@ public:
     
     /** @brief Active/désactive le mode sombre pour les couleurs */
     void setDarkMode(bool dark);
+    
+    /** @brief Force la mise à jour de toutes les cellules (pour retraduction) */
+    void refreshAllData();
 
 signals:
     void taskAdded(Task*);

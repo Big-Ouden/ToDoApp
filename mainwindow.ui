@@ -156,6 +156,12 @@
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="separator"/>
+    <addaction name="actionExportSelected"/>
+    <addaction name="actionImportTasks"/>
+    <addaction name="separator"/>
+    <addaction name="actionExportCsv"/>
+    <addaction name="actionExportMarkdown"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -295,6 +301,44 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionExportSelected">
+   <property name="text">
+    <string>Exporter les tâches sélectionnées...</string>
+   </property>
+   <property name="toolTip">
+    <string>Exporter les tâches sélectionnées au format JSON</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="actionImportTasks">
+   <property name="text">
+    <string>Importer des tâches...</string>
+   </property>
+   <property name="toolTip">
+    <string>Importer des tâches depuis un fichier JSON</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionExportCsv">
+   <property name="text">
+    <string>Exporter en CSV...</string>
+   </property>
+   <property name="toolTip">
+    <string>Exporter toutes les tâches au format CSV</string>
+   </property>
+  </action>
+  <action name="actionExportMarkdown">
+   <property name="text">
+    <string>Exporter en Markdown...</string>
+   </property>
+   <property name="toolTip">
+    <string>Exporter toutes les tâches au format Markdown</string>
    </property>
   </action>
   <action name="actionQuit">

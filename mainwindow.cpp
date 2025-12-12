@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "taskitemdelegate.h"
 #include "persistencemanager.h"
+#include "undocommands.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QFileInfo>
@@ -49,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->splitter->setSizes(QList<int>() << 600 << 400);
 
     // Configure la TreeView
-    ui->taskTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->taskTreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     ui->taskTreeView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
     ui->taskTreeView->setRootIsDecorated(true); // Afficher les icônes +/- pour les branches
     ui->taskTreeView->expandAll();
@@ -75,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_statsDock->setObjectName("statsDock");
     m_statsDock->setWidget(m_statisticsWidget);
     m_statsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    m_statsDock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     addDockWidget(Qt::RightDockWidgetArea, m_statsDock);
     
     // Cacher le dock par défaut
@@ -82,6 +84,82 @@ MainWindow::MainWindow(QWidget *parent)
     
     // Ajouter l'action toggle dans le menu View
     ui->menuView->addAction(m_statsDock->toggleViewAction());
+    
+    // ========================================
+    // Configuration du widget Pomodoro
+    // ========================================
+    m_pomodoroWidget = new PomodoroTimer(this);
+    m_pomodoroDock = new QDockWidget(tr("Pomodoro"), this);
+    m_pomodoroDock->setObjectName("pomodoroDock");
+    m_pomodoroDock->setWidget(m_pomodoroWidget);
+    m_pomodoroDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    m_pomodoroDock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    addDockWidget(Qt::RightDockWidgetArea, m_pomodoroDock);
+    
+    // Cacher le dock par défaut
+    m_pomodoroDock->setVisible(false);
+    
+    // Ajouter l'action toggle dans le menu View
+    ui->menuView->addAction(m_pomodoroDock->toggleViewAction());
+    
+    // Connexions du Pomodoro pour notifications dans la barre de statut
+    connect(m_pomodoroWidget, &PomodoroTimer::pomodoroCompleted, this, [this]() {
+        statusBar()->showMessage(tr("🍅 Pomodoro terminé ! Temps de faire une pause."), 5000);
+    });
+    connect(m_pomodoroWidget, &PomodoroTimer::breakCompleted, this, [this]() {
+        statusBar()->showMessage(tr("✓ Pause terminée ! Prêt pour un nouveau Pomodoro."), 5000);
+    });
+    
+    // ========================================
+    // Configuration du widget Graphiques
+    // ========================================
+    m_chartsWidget = new ChartsWidget(m_taskModel, this);
+    m_chartsDock = new QDockWidget(tr("Graphiques"), this);
+    m_chartsDock->setObjectName("chartsDock");
+    m_chartsDock->setWidget(m_chartsWidget);
+    m_chartsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    m_chartsDock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    addDockWidget(Qt::RightDockWidgetArea, m_chartsDock);
+    
+    // Cacher le dock par défaut
+    m_chartsDock->setVisible(false);
+    
+    // Ajouter l'action toggle dans le menu View
+    ui->menuView->addAction(m_chartsDock->toggleViewAction());
+    
+    // ========================================
+    // Configuration du widget Timeline
+    // ========================================
+    m_timelineWidget = new TimelineWidget(m_taskModel, this);
+    m_timelineDock = new QDockWidget(tr("Calendrier"), this);
+    m_timelineDock->setObjectName("timelineDock");
+    m_timelineDock->setWidget(m_timelineWidget);
+    m_timelineDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    m_timelineDock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    addDockWidget(Qt::RightDockWidgetArea, m_timelineDock);
+    
+    // Cacher le dock par défaut
+    m_timelineDock->setVisible(false);
+    
+    // Ajouter l'action toggle dans le menu View
+    ui->menuView->addAction(m_timelineDock->toggleViewAction());
+    
+    // ========================================
+    // Configuration du widget Burndown
+    // ========================================
+    m_burndownWidget = new BurndownWidget(m_taskModel, this);
+    m_burndownDock = new QDockWidget(tr("Graphique d'avancement"), this);
+    m_burndownDock->setObjectName("burndownDock");
+    m_burndownDock->setWidget(m_burndownWidget);
+    m_burndownDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    m_burndownDock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    addDockWidget(Qt::RightDockWidgetArea, m_burndownDock);
+    
+    // Cacher le dock par défaut
+    m_burndownDock->setVisible(false);
+    
+    // Ajouter l'action toggle dans le menu View
+    ui->menuView->addAction(m_burndownDock->toggleViewAction());
 
     // ========================================
     // Initialisation précoce (avant setupConnections)
@@ -206,12 +284,18 @@ void MainWindow::setupConnections()
     
     // Créer les actions d'export PDF et d'impression
     QAction *exportPdfAction = new QAction(tr("Exporter en PDF..."), this);
-    exportPdfAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_E));
+    exportPdfAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_E));
     connect(exportPdfAction, &QAction::triggered, this, &MainWindow::onExportPdf);
     
     QAction *printAction = new QAction(tr("Imprimer..."), this);
     printAction->setShortcut(QKeySequence::Print);
     connect(printAction, &QAction::triggered, this, &MainWindow::onPrintTasks);
+    
+    // Connecter les actions d'export/import
+    connect(ui->actionExportSelected, &QAction::triggered, this, &MainWindow::onExportSelected);
+    connect(ui->actionImportTasks, &QAction::triggered, this, &MainWindow::onImportTasks);
+    connect(ui->actionExportCsv, &QAction::triggered, this, &MainWindow::onExportCsv);
+    connect(ui->actionExportMarkdown, &QAction::triggered, this, &MainWindow::onExportMarkdown);
     
     // Insérer avant l'action de sortie (Quit)
     QAction *beforeAction = nullptr;
@@ -329,7 +413,8 @@ void MainWindow::onTaskSelectionChanged(const QModelIndex &current, const QModel
 void MainWindow::onAddTask()
 {
     Task *t = new Task(tr("Nouvelle tâche"));
-    m_taskModel->insertTask(t, nullptr);
+    AddTaskCommand *cmd = new AddTaskCommand(m_taskModel, t, nullptr);
+    m_undoStack->push(cmd);
     
     // Sélectionne la nouvelle tâche
     QModelIndex idx = m_taskModel->index(m_taskModel->rootTasks().size() - 1, 0, QModelIndex());
@@ -352,7 +437,8 @@ void MainWindow::onAddSubtask()
     if (!parent) return;
     
     Task *t = new Task(tr("Nouvelle sous-tâche"));
-    m_taskModel->insertTask(t, parent);
+    AddTaskCommand *cmd = new AddTaskCommand(m_taskModel, t, parent);
+    m_undoStack->push(cmd);
     
     // Développe le parent et sélectionne la nouvelle sous-tâche
     ui->taskTreeView->expand(cur);
@@ -373,7 +459,8 @@ void MainWindow::onDeleteTask()
     
     // Si l'utilisateur a désactivé la confirmation, supprimer directement
     if (!m_askDeleteConfirmation) {
-        m_taskModel->removeTask(src);
+        RemoveTaskCommand *cmd = new RemoveTaskCommand(m_taskModel, t);
+        m_undoStack->push(cmd);
         m_detailWidget->setTask(nullptr);
         return;
     }
@@ -401,7 +488,8 @@ void MainWindow::onDeleteTask()
     }
     
     if (ret == QMessageBox::Yes) {
-        m_taskModel->removeTask(src);
+        RemoveTaskCommand *cmd = new RemoveTaskCommand(m_taskModel, t);
+        m_undoStack->push(cmd);
         m_detailWidget->setTask(nullptr);
     }
 }
@@ -797,6 +885,10 @@ void MainWindow::setLanguage(const QString &lang)
     // Forcer la mise à jour des en-têtes du modèle
     emit m_taskModel->headerDataChanged(Qt::Horizontal, 0, m_taskModel->columnCount(QModelIndex()) - 1);
     
+    // Forcer la mise à jour de toutes les cellules du tableau pour retraduire les priorités et statuts
+    // (incluant les sous-tâches de manière récursive)
+    m_taskModel->refreshAllData();
+    
     // Forcer le rafraîchissement du header de la vue
     ui->taskTreeView->header()->reset();
     ui->taskTreeView->header()->update();
@@ -1090,5 +1182,128 @@ void MainWindow::onPrintTasks()
         document.print(&printer);
         
         statusBar()->showMessage(tr("Impression effectuée"), 2000);
+    }
+}
+
+void MainWindow::onExportSelected()
+{
+    // Récupérer les tâches sélectionnées
+    QModelIndexList selectedIndexes = ui->taskTreeView->selectionModel()->selectedRows();
+    
+    if (selectedIndexes.isEmpty()) {
+        QMessageBox::information(this, tr("Export"), 
+                                 tr("Veuillez sélectionner au moins une tâche à exporter."));
+        return;
+    }
+    
+    // Convertir les index proxy en index source et récupérer les tâches
+    QList<Task*> selectedTasks;
+    for (const QModelIndex &proxyIndex : selectedIndexes) {
+        QModelIndex sourceIndex = m_proxyModel->mapToSource(proxyIndex);
+        if (sourceIndex.isValid()) {
+            Task *task = static_cast<Task*>(sourceIndex.internalPointer());
+            if (task) {
+                selectedTasks.append(task);
+            }
+        }
+    }
+    
+    // Demander le chemin de destination
+    QString fileName = QFileDialog::getSaveFileName(
+        this,
+        tr("Exporter les tâches sélectionnées"),
+        QDir::homePath(),
+        tr("Fichiers JSON (*.json)")
+    );
+    
+    if (fileName.isEmpty()) {
+        return;
+    }
+    
+    // Exporter
+    if (PersistenceManager::exportSelectedToJson(fileName, selectedTasks)) {
+        statusBar()->showMessage(tr("Export réussi: %1 tâche(s) exportée(s)").arg(selectedTasks.size()), 3000);
+    } else {
+        QMessageBox::critical(this, tr("Erreur"), 
+                              tr("Impossible d'exporter les tâches vers: %1").arg(fileName));
+    }
+}
+
+void MainWindow::onImportTasks()
+{
+    QString fileName = QFileDialog::getOpenFileName(
+        this,
+        tr("Importer des tâches"),
+        QDir::homePath(),
+        tr("Fichiers JSON (*.json)")
+    );
+    
+    if (fileName.isEmpty()) {
+        return;
+    }
+    
+    // Importer les tâches
+    QList<Task*> importedTasks = PersistenceManager::importFromJson(fileName);
+    
+    if (importedTasks.isEmpty()) {
+        QMessageBox::warning(this, tr("Import"), 
+                             tr("Aucune tâche n'a pu être importée depuis: %1").arg(fileName));
+        return;
+    }
+    
+    // Ajouter les tâches importées au modèle
+    for (Task *task : importedTasks) {
+        m_taskModel->insertTask(task);
+    }
+    
+    statusBar()->showMessage(tr("Import réussi: %1 tâche(s) importée(s)").arg(importedTasks.size()), 3000);
+    updateStatusBar();
+}
+
+void MainWindow::onExportCsv()
+{
+    QString fileName = QFileDialog::getSaveFileName(
+        this,
+        tr("Exporter en CSV"),
+        QDir::homePath(),
+        tr("Fichiers CSV (*.csv)")
+    );
+    
+    if (fileName.isEmpty()) {
+        return;
+    }
+    
+    // Récupérer toutes les tâches du modèle
+    const QList<Task*>& allTasks = m_taskModel->rootTasks();
+    
+    if (PersistenceManager::exportToCsv(fileName, allTasks)) {
+        statusBar()->showMessage(tr("Export CSV réussi: %1").arg(fileName), 3000);
+    } else {
+        QMessageBox::critical(this, tr("Erreur"), 
+                              tr("Impossible d'exporter vers: %1").arg(fileName));
+    }
+}
+
+void MainWindow::onExportMarkdown()
+{
+    QString fileName = QFileDialog::getSaveFileName(
+        this,
+        tr("Exporter en Markdown"),
+        QDir::homePath(),
+        tr("Fichiers Markdown (*.md)")
+    );
+    
+    if (fileName.isEmpty()) {
+        return;
+    }
+    
+    // Récupérer toutes les tâches du modèle
+    const QList<Task*>& allTasks = m_taskModel->rootTasks();
+    
+    if (PersistenceManager::exportToMarkdown(fileName, allTasks)) {
+        statusBar()->showMessage(tr("Export Markdown réussi: %1").arg(fileName), 3000);
+    } else {
+        QMessageBox::critical(this, tr("Erreur"), 
+                              tr("Impossible d'exporter vers: %1").arg(fileName));
     }
 }

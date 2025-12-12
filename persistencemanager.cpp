@@ -107,3 +107,137 @@ bool PersistenceManager::saveToJson(const QString &filePath, const QList<Task*> 
     f.close();
     return true;
 }
+
+bool PersistenceManager::exportSelectedToJson(const QString &filePath, const QList<Task*> &tasks)
+{
+    // Réutiliser la même logique que saveToJson
+    return saveToJson(filePath, tasks);
+}
+
+QList<Task*> PersistenceManager::importFromJson(const QString &filePath)
+{
+    // Réutiliser la même logique que loadFromJson
+    return loadFromJson(filePath);
+}
+
+bool PersistenceManager::exportToCsv(const QString &filePath, const QList<Task*> &tasks)
+{
+    QFile f(filePath);
+    if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return false;
+    }
+    
+    QTextStream out(&f);
+    
+    // En-têtes CSV
+    out << "Titre,Description,Date d'échéance,Priorité,Statut,Tags\n";
+    
+    // Fonction récursive pour exporter les tâches et sous-tâches
+    std::function<void(Task*, int)> exportTask = [&](Task *t, int level) {
+        QString indent = QString(level * 2, ' ');
+        
+        // Échapper les virgules et guillemets
+        auto escape = [](const QString &str) -> QString {
+            QString escaped = str;
+            escaped.replace("\"", "\"\"");
+            if (escaped.contains(',') || escaped.contains('\n') || escaped.contains('"')) {
+                return "\"" + escaped + "\"";
+            }
+            return escaped;
+        };
+        
+        out << escape(indent + t->title()) << ","
+            << escape(t->description()) << ","
+            << (t->dueDate().isValid() ? t->dueDate().toString(Qt::ISODate) : "") << ","
+            << escape(priorityToString(t->priority())) << ","
+            << escape(statusToString(t->status())) << ","
+            << escape(t->tags().join("; ")) << "\n";
+        
+        // Exporter les sous-tâches
+        for (Task *st : t->subtasks()) {
+            exportTask(st, level + 1);
+        }
+    };
+    
+    // Exporter toutes les tâches
+    for (Task *task : tasks) {
+        exportTask(task, 0);
+    }
+    
+    f.close();
+    return true;
+}
+
+bool PersistenceManager::exportToMarkdown(const QString &filePath, const QList<Task*> &tasks)
+{
+    QFile f(filePath);
+    if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return false;
+    }
+    
+    QTextStream out(&f);
+    
+    // En-tête Markdown
+    out << "# Liste de tâches\n\n";
+    
+    // Fonction récursive pour exporter les tâches et sous-tâches
+    std::function<void(Task*, int)> exportTask = [&](Task *t, int level) {
+        QString indent = QString(level * 2, ' ');
+        
+        // Checkbox selon le statut
+        QString checkbox = (t->status() == Status::COMPLETED) ? "[x]" : "[ ]";
+        
+        // Titre avec indentation
+        out << indent << "- " << checkbox << " **" << t->title() << "**";
+        
+        // Priorité et statut
+        if (t->priority() != Priority::MEDIUM || t->status() != Status::NOTSTARTED) {
+            out << " (";
+            if (t->priority() != Priority::MEDIUM) {
+                out << priorityToString(t->priority());
+            }
+            if (t->status() != Status::NOTSTARTED) {
+                if (t->priority() != Priority::MEDIUM) out << ", ";
+                out << statusToString(t->status());
+            }
+            out << ")";
+        }
+        out << "\n";
+        
+        // Description
+        if (!t->description().isEmpty()) {
+            QStringList descLines = t->description().split('\n');
+            for (const QString &line : descLines) {
+                out << indent << "  > " << line << "\n";
+            }
+        }
+        
+        // Date d'échéance
+        if (t->dueDate().isValid()) {
+            out << indent << "  📅 Échéance: " << t->dueDate().toString("dd/MM/yyyy") << "\n";
+        }
+        
+        // Tags
+        if (!t->tags().isEmpty()) {
+            out << indent << "  🏷️ Tags: " << t->tags().join(", ") << "\n";
+        }
+        
+        // Ligne vide après chaque tâche principale
+        if (level == 0) {
+            out << "\n";
+        }
+        
+        // Exporter les sous-tâches
+        for (Task *st : t->subtasks()) {
+            exportTask(st, level + 1);
+        }
+    };
+    
+    // Exporter toutes les tâches
+    for (Task *task : tasks) {
+        exportTask(task, 0);
+    }
+    
+    f.close();
+    return true;
+}

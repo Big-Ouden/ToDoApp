@@ -4,6 +4,7 @@
 #include <QMimeData>
 #include <QDataStream>
 #include <QIODevice>
+#include <functional>
 
 /**
  * @file taskmodel.cpp
@@ -95,8 +96,8 @@ QVariant TaskModel::data(const QModelIndex &index, int role) const
         switch (index.column()) {
         case 0: return t->title();
         case 1: return t->dueDate().isValid() ? t->dueDate().toString(Qt::ISODate) : QString();
-        case 2: return priorityToString(t->priority());
-        case 3: return statusToString(t->status());
+        case 2: return tr(priorityToString(t->priority()).toUtf8().constData());
+        case 3: return tr(statusToString(t->status()).toUtf8().constData());
         case 4: return t->tags().join(", ");
         default: return {};
         }
@@ -494,4 +495,29 @@ void TaskModel::setDarkMode(bool dark)
         QModelIndex bottomRight = index(rowCount(QModelIndex())-1, 3, QModelIndex());
         emit dataChanged(topLeft, bottomRight);
     }
+}
+
+void TaskModel::refreshAllData()
+{
+    // Fonction récursive pour mettre à jour toutes les lignes incluant les sous-tâches
+    std::function<void(const QModelIndex&)> refreshRecursive;
+    refreshRecursive = [&](const QModelIndex& parent) {
+        int rows = rowCount(parent);
+        if (rows > 0) {
+            QModelIndex topLeft = index(0, 0, parent);
+            QModelIndex bottomRight = index(rows - 1, columnCount(QModelIndex()) - 1, parent);
+            emit dataChanged(topLeft, bottomRight);
+            
+            // Mettre à jour récursivement les enfants
+            for (int i = 0; i < rows; ++i) {
+                QModelIndex child = index(i, 0, parent);
+                if (rowCount(child) > 0) {
+                    refreshRecursive(child);
+                }
+            }
+        }
+    };
+    
+    // Commencer par la racine
+    refreshRecursive(QModelIndex());
 }

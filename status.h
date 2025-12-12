@@ -15,12 +15,12 @@ enum class Status
 
 inline QString statusToString(Status s) {
     switch(s) {
-    case Status::NOTSTARTED: return QCoreApplication::translate("Status", "Not started");
-    case Status::INPROGRESS: return QCoreApplication::translate("Status", "In progress");
-    case Status::COMPLETED: return QCoreApplication::translate("Status", "Completed");
-    case Status::CANCELLED: return QCoreApplication::translate("Status", "Cancelled");
+    case Status::NOTSTARTED: return QCoreApplication::translate("MainWindow", "Not started");
+    case Status::INPROGRESS: return QCoreApplication::translate("MainWindow", "In progress");
+    case Status::COMPLETED: return QCoreApplication::translate("MainWindow", "Completed");
+    case Status::CANCELLED: return QCoreApplication::translate("MainWindow", "Cancelled");
     }
-    return QCoreApplication::translate("Status", "Unknown");
+    return QCoreApplication::translate("MainWindow", "Unknown");
 }
 
 inline Status stringToStatus(const QString &s) {
