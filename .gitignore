@@ -83,3 +83,4 @@ CMakeLists.txt.user*
 /doc/*
 
 generate_listing.cmake
+.vscode
