@@ -12,4 +12,8 @@
         <file>icons/about.png</file>
         <file>icons/app.png</file>
     </qresource>
+    <qresource prefix="/themes">
+        <file>themes/light.qss</file>
+        <file>themes/dark.qss</file>
+    </qresource>
 </RCC>

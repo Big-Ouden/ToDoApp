@@ -3,7 +3,6 @@
 #include <QEvent>
 #include <QLocale>
 #include <QApplication>
-#include <QDebug>
 #include <QFileDialog>
 #include <QDesktopServices>
 
@@ -154,10 +153,6 @@ void TaskDetailWidget::onApplyClicked()
 
 void TaskDetailWidget::updateTranslations()
 {
-    qDebug() << "TaskDetailWidget::updateTranslations() appelée";
-    qDebug() << "  QLocale actuelle:" << QLocale().name();
-    qDebug() << "  Traducteur français:" << qApp->translate("TaskDetailWidget", "Titre :");
-    
     // Forcer la mise à jour manuelle des labels SANS tr() - utiliser directement les textes
     QLocale currentLocale = QLocale();
     if (currentLocale.language() == QLocale::French) {
@@ -185,9 +180,6 @@ void TaskDetailWidget::updateTranslations()
         ui->tagsEdit->setPlaceholderText("Add a tag (press Enter to validate)");
         ui->addAttachmentButton->setText("Add file");
     }
-    
-    qDebug() << "  labelTitle après setText:" << ui->labelTitle->text();
-    qDebug() << "  labelDate après setText:" << ui->labelDate->text();
     
     // Mettre à jour les combos
     updateComboTranslations();

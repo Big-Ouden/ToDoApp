@@ -49,6 +49,35 @@ cmake --build . --config Release
 .\Release\ToDoApp.exe
 ```
 
+## Options en ligne de commande
+
+L'application supporte plusieurs options CLI pour le débogage :
+
+```bash
+# Afficher l'aide
+./ToDoApp --help
+
+# Afficher la version
+./ToDoApp --version
+
+# Activer le mode debug (affiche les opérations importantes)
+./ToDoApp --debug
+./ToDoApp -d
+
+# Activer le mode verbeux (affiche tous les détails)
+./ToDoApp --verbose
+```
+
+Le mode debug affiche :
+- Chargement des traductions
+- Opérations de sauvegarde/chargement de fichiers
+- Suppression de tâches
+- Nombre de tâches chargées
+
+Le mode verbeux affiche en plus :
+- Détails de chaque tâche chargée/supprimée
+- Informations système au démarrage
+
 ### Qt Creator
 
 1. Ouvrir le fichier `CMakeLists.txt`

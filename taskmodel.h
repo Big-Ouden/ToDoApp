@@ -75,6 +75,20 @@ public:
     void removeTask(const QModelIndex &index);
     
     /**
+     * @brief Supprime une tâche du modèle par son pointeur.
+     * @param task Pointeur vers la tâche à supprimer
+     * @return true si la tâche a été trouvée et supprimée
+     */
+    bool removeTaskByPointer(Task *task);
+    
+    /**
+     * @brief Détache une tâche du modèle sans la supprimer (pour Undo/Redo).
+     * @param task Pointeur vers la tâche à détacher
+     * @return true si la tâche a été trouvée et détachée
+     */
+    bool detachTaskByPointer(Task *task);
+    
+    /**
      * @brief Promouvoir une sous-tâche au même niveau que son parent.
      * @param index Index de la tâche à promouvoir
      */
@@ -102,6 +116,9 @@ public:
     
     /** @brief Supprime toutes les tâches du modèle */
     void clear();
+    
+    /** @brief Active/désactive le mode sombre pour les couleurs */
+    void setDarkMode(bool dark);
 
 signals:
     void taskAdded(Task*);
@@ -111,6 +128,7 @@ signals:
 private:
     QList<Task*> m_rootTasks;
     QList<Category*> m_categories;
+    bool m_isDarkMode = false;
 };
 
 

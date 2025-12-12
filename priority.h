@@ -2,6 +2,7 @@
 #define PRIORITY_H
 
 #include <QString>
+#include <QCoreApplication>
 
 /// Niveaux de priorité d'une tâche
 enum class Priority
@@ -14,12 +15,12 @@ enum class Priority
 
 inline QString priorityToString(Priority p) {
     switch(p) {
-    case Priority::LOW: return "Low";
-    case Priority::MEDIUM: return "Medium";
-    case Priority::HIGH: return "High";
-    case Priority::CRITICAL: return "Critical";
+    case Priority::LOW: return QCoreApplication::translate("Priority", "Low");
+    case Priority::MEDIUM: return QCoreApplication::translate("Priority", "Medium");
+    case Priority::HIGH: return QCoreApplication::translate("Priority", "High");
+    case Priority::CRITICAL: return QCoreApplication::translate("Priority", "Critical");
     }
-    return "Unknown";
+    return QCoreApplication::translate("Priority", "Unknown");
 }
 
 inline Priority stringToPriority(const QString &s) {

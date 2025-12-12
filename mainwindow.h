@@ -7,11 +7,19 @@
 #include <QTranslator>
 #include <QSettings>
 #include <QActionGroup>
+#include <QTimer>
+#include <QUndoStack>
+
+class QComboBox;
+class QLineEdit;
 
 #include "taskmodel.h"
 #include "taskfilterproxymodel.h"
 #include "taskdetailwidget.h"
 #include "pdfexporttemplate.h"
+#include "themesmanager.h"
+#include "statisticswidget.h"
+#include <QDockWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,6 +35,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    
+    QUndoStack* undoStack() { return m_undoStack; }
 
 private slots:
     void onTaskSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
@@ -47,6 +57,7 @@ private slots:
     void onStatusFilterChanged(int index);
     void onExportPdf();
     void onPrintTasks();
+    void onAutoSave();
     
 private:
     void loadPreferences();
@@ -66,13 +77,23 @@ private:
     TaskModel *m_taskModel;
     TaskFilterProxyModel *m_proxyModel;
     TaskDetailWidget *m_detailWidget;
+    StatisticsWidget *m_statisticsWidget;
+    QDockWidget *m_statsDock;
     bool m_showCompleted;
     bool m_askDeleteConfirmation;
+    QTimer *m_autoSaveTimer;
+    QUndoStack *m_undoStack;
 
     QTranslator m_translator;
     QString m_currentFilePath;
     QString m_currentLanguage;
     QActionGroup *m_languageGroup;
+    bool m_isDarkMode;
+    
+    // Widgets ajoutés dynamiquement dans la toolbar
+    QLineEdit *m_searchLineEdit;
+    QComboBox *m_priorityFilterCombo;
+    QComboBox *m_statusFilterCombo;
 };
 
 #endif // MAINWINDOW_H

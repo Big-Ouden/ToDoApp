@@ -1,5 +1,4 @@
 #include "task.h"
-#include <QDebug>
 
 /**
  * @file task.cpp

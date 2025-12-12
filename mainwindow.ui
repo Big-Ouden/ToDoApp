@@ -14,7 +14,7 @@
    <string>ToDoApp - Gestionnaire de tâches</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="ressource.qrc">
     <normaloff>:/icons/app.png</normaloff>:/icons/app.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -59,215 +59,6 @@
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item>
-         <widget class="QWidget" name="topBar" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <property name="spacing">
-            <number>8</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QLineEdit" name="searchLineEdit">
-             <property name="placeholderText">
-              <string>Rechercher une tâche...</string>
-             </property>
-             <property name="clearButtonEnabled">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="labelPriorityFilter">
-             <property name="text">
-              <string>Priorité:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="priorityFilterCombo">
-             <property name="toolTip">
-              <string>Filtrer par priorité</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>Toutes</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Low</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Medium</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>High</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Critical</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="labelStatusFilter">
-             <property name="text">
-              <string>Statut:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="statusFilterCombo">
-             <property name="toolTip">
-              <string>Filtrer par statut</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>Tous</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Not started</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>In progress</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Completed</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Cancelled</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="addTaskButton">
-             <property name="toolTip">
-              <string>Ajouter une nouvelle tâche principale (Ctrl+N)</string>
-             </property>
-             <property name="text">
-              <string>Ajouter tâche</string>
-             </property>
-             <property name="icon">
-              <iconset>
-               <normaloff>:/icons/add.png</normaloff>:/icons/add.png</iconset>
-             </property>
-             <property name="shortcut">
-              <string>Ctrl+N</string>
-             </property>
-             <property name="toolButtonStyle">
-              <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="addSubtaskButton">
-             <property name="toolTip">
-              <string>Ajouter une sous-tâche à la tâche sélectionnée (Ctrl+Shift+N)</string>
-             </property>
-             <property name="text">
-              <string>Ajouter sous-tâche</string>
-             </property>
-             <property name="icon">
-              <iconset>
-               <normaloff>:/icons/add_subtask.png</normaloff>:/icons/add_subtask.png</iconset>
-             </property>
-             <property name="shortcut">
-              <string>Ctrl+Shift+N</string>
-             </property>
-             <property name="toolButtonStyle">
-              <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QToolButton" name="deleteTaskButton">
-             <property name="toolTip">
-              <string>Supprimer la tâche sélectionnée (Del)</string>
-             </property>
-             <property name="text">
-              <string>Supprimer</string>
-             </property>
-             <property name="icon">
-              <iconset>
-               <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
-             </property>
-             <property name="shortcut">
-              <string>Del</string>
-             </property>
-             <property name="toolButtonStyle">
-              <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="line">
-             <property name="orientation">
-              <enum>Qt::Orientation::Vertical</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="markCompletedButton">
-             <property name="toolTip">
-              <string>Marquer la tâche sélectionnée comme complétée (Ctrl+D)</string>
-             </property>
-             <property name="text">
-              <string>Marquer complétée</string>
-             </property>
-             <property name="icon">
-              <iconset>
-               <normaloff>:/icons/check.png</normaloff>:/icons/check.png</iconset>
-             </property>
-             <property name="shortcut">
-              <string>Ctrl+D</string>
-             </property>
-             <property name="toolButtonStyle">
-              <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
         <item>
          <widget class="QTreeView" name="taskTreeView">
           <property name="alternatingRowColors">
@@ -371,6 +162,9 @@
     <property name="title">
      <string>&amp;Édition</string>
     </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
     <addaction name="actionAddTask"/>
     <addaction name="actionAddSubtask"/>
     <addaction name="actionDeleteTask"/>
@@ -387,6 +181,8 @@
     <addaction name="actionCollapseAll"/>
     <addaction name="separator"/>
     <addaction name="actionShowCompleted"/>
+    <addaction name="separator"/>
+    <addaction name="actionDarkMode"/>
    </widget>
    <widget class="QMenu" name="menuLanguage">
     <property name="title">
@@ -418,12 +214,12 @@
    </property>
    <property name="iconSize">
     <size>
-     <width>24</width>
-     <height>24</height>
+     <width>20</width>
+     <height>20</height>
     </size>
    </property>
    <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonStyle::ToolButtonTextUnderIcon</enum>
+    <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -436,13 +232,14 @@
    <addaction name="actionSave"/>
    <addaction name="separator"/>
    <addaction name="actionAddTask"/>
+   <addaction name="actionAddSubtask"/>
    <addaction name="actionDeleteTask"/>
    <addaction name="separator"/>
    <addaction name="actionMarkCompleted"/>
   </widget>
   <action name="actionNew">
    <property name="icon">
-    <iconset>
+    <iconset resource="ressource.qrc">
      <normaloff>:/icons/new.png</normaloff>:/icons/new.png</iconset>
    </property>
    <property name="text">
@@ -452,12 +249,12 @@
     <string>Créer un nouveau fichier de tâches</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+N</string>
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="actionOpen">
    <property name="icon">
-    <iconset>
+    <iconset resource="ressource.qrc">
      <normaloff>:/icons/open.png</normaloff>:/icons/open.png</iconset>
    </property>
    <property name="text">
@@ -472,7 +269,7 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset>
+    <iconset resource="ressource.qrc">
      <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
    </property>
    <property name="text">
@@ -487,7 +284,7 @@
   </action>
   <action name="actionSaveAs">
    <property name="icon">
-    <iconset>
+    <iconset resource="ressource.qrc">
      <normaloff>:/icons/save_as.png</normaloff>:/icons/save_as.png</iconset>
    </property>
    <property name="text">
@@ -502,7 +299,7 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset>
+    <iconset resource="ressource.qrc">
      <normaloff>:/icons/quit.png</normaloff>:/icons/quit.png</iconset>
    </property>
    <property name="text">
@@ -517,7 +314,7 @@
   </action>
   <action name="actionAddTask">
    <property name="icon">
-    <iconset>
+    <iconset resource="ressource.qrc">
      <normaloff>:/icons/add.png</normaloff>:/icons/add.png</iconset>
    </property>
    <property name="text">
@@ -532,7 +329,7 @@
   </action>
   <action name="actionAddSubtask">
    <property name="icon">
-    <iconset>
+    <iconset resource="ressource.qrc">
      <normaloff>:/icons/add_subtask.png</normaloff>:/icons/add_subtask.png</iconset>
    </property>
    <property name="text">
@@ -547,7 +344,7 @@
   </action>
   <action name="actionDeleteTask">
    <property name="icon">
-    <iconset>
+    <iconset resource="ressource.qrc">
      <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
    </property>
    <property name="text">
@@ -562,7 +359,7 @@
   </action>
   <action name="actionMarkCompleted">
    <property name="icon">
-    <iconset>
+    <iconset resource="ressource.qrc">
      <normaloff>:/icons/check.png</normaloff>:/icons/check.png</iconset>
    </property>
    <property name="text">
@@ -582,6 +379,9 @@
    <property name="toolTip">
     <string>Développer toutes les tâches</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
   </action>
   <action name="actionCollapseAll">
    <property name="text">
@@ -589,6 +389,9 @@
    </property>
    <property name="toolTip">
     <string>Réduire toutes les tâches</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="actionShowCompleted">
@@ -607,7 +410,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset>
+    <iconset resource="ressource.qrc">
      <normaloff>:/icons/about.png</normaloff>:/icons/about.png</iconset>
    </property>
    <property name="text">
@@ -655,8 +458,43 @@
     <string>&amp;English</string>
    </property>
   </action>
+  <action name="actionUndo">
+   <property name="icon">
+    <iconset theme="edit-undo"/>
+   </property>
+   <property name="text">
+    <string>&amp;Annuler</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="icon">
+    <iconset theme="edit-redo"/>
+   </property>
+   <property name="text">
+    <string>&amp;Refaire</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionDarkMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Mode &amp;sombre</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+D</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="ressource.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionQuit</sender>

@@ -66,7 +66,7 @@ int TaskModel::rowCount(const QModelIndex &parent) const
 
 int TaskModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return 6; // Title, DueDate, Priority, Status, Category, Tags
+    return 5; // Title, DueDate, Priority, Status, Tags
 }
 
 QVariant TaskModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -77,8 +77,7 @@ QVariant TaskModel::headerData(int section, Qt::Orientation orientation, int rol
         case 1: return tr("Date d'échéance");
         case 2: return tr("Priorité");
         case 3: return tr("Statut");
-        case 4: return tr("Catégorie");
-        case 5: return tr("Étiquettes");
+        case 4: return tr("Étiquettes");
         default: return {};
         }
     }
@@ -98,29 +97,46 @@ QVariant TaskModel::data(const QModelIndex &index, int role) const
         case 1: return t->dueDate().isValid() ? t->dueDate().toString(Qt::ISODate) : QString();
         case 2: return priorityToString(t->priority());
         case 3: return statusToString(t->status());
-        case 4: return QString(); // category name resolution omitted for brevity
-        case 5: return t->tags().join(", ");
+        case 4: return t->tags().join(", ");
         default: return {};
         }
     }
 
     if (role == Qt::BackgroundRole && index.column() == 3) {
-        // Colorer le status
-        switch (t->status()) {
-        case Status::NOTSTARTED: return QBrush(QColor(220, 220, 220)); // Gris clair
-        case Status::INPROGRESS: return QBrush(QColor(173, 216, 230)); // Bleu clair
-        case Status::COMPLETED: return QBrush(QColor(144, 238, 144)); // Vert clair
-        case Status::CANCELLED: return QBrush(QColor(255, 200, 200)); // Rouge clair
+        // Colorer le status selon le thème
+        if (m_isDarkMode) {
+            switch (t->status()) {
+            case Status::NOTSTARTED: return QBrush(QColor(70, 70, 70)); // Gris foncé
+            case Status::INPROGRESS: return QBrush(QColor(37, 99, 235)); // Bleu foncé
+            case Status::COMPLETED: return QBrush(QColor(34, 139, 34)); // Vert foncé
+            case Status::CANCELLED: return QBrush(QColor(153, 27, 27)); // Rouge foncé
+            }
+        } else {
+            switch (t->status()) {
+            case Status::NOTSTARTED: return QBrush(QColor(220, 220, 220)); // Gris clair
+            case Status::INPROGRESS: return QBrush(QColor(173, 216, 230)); // Bleu clair
+            case Status::COMPLETED: return QBrush(QColor(144, 238, 144)); // Vert clair
+            case Status::CANCELLED: return QBrush(QColor(255, 200, 200)); // Rouge clair
+            }
         }
     }
     
     if (role == Qt::BackgroundRole && index.column() == 2) {
-        // Colorer la priorité
-        switch (t->priority()) {
-        case Priority::LOW: return QBrush(QColor(200, 255, 200)); // Vert pâle
-        case Priority::MEDIUM: return QBrush(QColor(255, 255, 200)); // Jaune pâle
-        case Priority::HIGH: return QBrush(QColor(255, 220, 180)); // Orange pâle
-        case Priority::CRITICAL: return QBrush(QColor(255, 180, 180)); // Rouge pâle
+        // Colorer la priorité selon le thème
+        if (m_isDarkMode) {
+            switch (t->priority()) {
+            case Priority::LOW: return QBrush(QColor(34, 139, 34)); // Vert foncé
+            case Priority::MEDIUM: return QBrush(QColor(184, 134, 11)); // Jaune/or foncé
+            case Priority::HIGH: return QBrush(QColor(255, 140, 0)); // Orange
+            case Priority::CRITICAL: return QBrush(QColor(220, 38, 38)); // Rouge vif
+            }
+        } else {
+            switch (t->priority()) {
+            case Priority::LOW: return QBrush(QColor(200, 255, 200)); // Vert pâle
+            case Priority::MEDIUM: return QBrush(QColor(255, 255, 200)); // Jaune pâle
+            case Priority::HIGH: return QBrush(QColor(255, 220, 180)); // Orange pâle
+            case Priority::CRITICAL: return QBrush(QColor(255, 180, 180)); // Rouge pâle
+            }
         }
     }
     
@@ -225,6 +241,80 @@ void TaskModel::removeTask(const QModelIndex &index)
             delete t;
         }
     }
+}
+
+bool TaskModel::removeTaskByPointer(Task *task)
+{
+    if (!task) return false;
+    
+    Task *parentTask = task->parentTask();
+    
+    if (!parentTask) {
+        // Tâche racine
+        int row = m_rootTasks.indexOf(task);
+        if (row >= 0) {
+            beginRemoveRows(QModelIndex(), row, row);
+            m_rootTasks.removeAt(row);
+            endRemoveRows();
+            emit taskRemoved(task);
+            delete task;
+            return true;
+        }
+    } else {
+        // Sous-tâche
+        int row = parentTask->subtasks().indexOf(task);
+        if (row >= 0) {
+            QModelIndex pidx = createIndex(
+                (parentTask->parentTask() ? parentTask->parentTask()->subtasks().indexOf(parentTask) : m_rootTasks.indexOf(parentTask)), 
+                0, 
+                parentTask
+            );
+            beginRemoveRows(pidx, row, row);
+            parentTask->removeSubtask(task);
+            endRemoveRows();
+            emit taskRemoved(task);
+            delete task;
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+bool TaskModel::detachTaskByPointer(Task *task)
+{
+    if (!task) return false;
+    
+    Task *parentTask = task->parentTask();
+    
+    if (!parentTask) {
+        // Tâche racine
+        int row = m_rootTasks.indexOf(task);
+        if (row >= 0) {
+            beginRemoveRows(QModelIndex(), row, row);
+            m_rootTasks.removeAt(row);
+            endRemoveRows();
+            // Ne PAS delete la tâche - elle est détachée pour Undo/Redo
+            return true;
+        }
+    } else {
+        // Sous-tâche
+        int row = parentTask->subtasks().indexOf(task);
+        if (row >= 0) {
+            QModelIndex pidx = createIndex(
+                (parentTask->parentTask() ? parentTask->parentTask()->subtasks().indexOf(parentTask) : m_rootTasks.indexOf(parentTask)), 
+                0, 
+                parentTask
+            );
+            beginRemoveRows(pidx, row, row);
+            parentTask->removeSubtask(task);
+            endRemoveRows();
+            // Ne PAS delete la tâche - elle est détachée pour Undo/Redo
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 Task *TaskModel::getTask(const QModelIndex &index) const
@@ -393,4 +483,15 @@ bool TaskModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
     
     emit taskUpdated(draggedTask);
     return true;
+}
+
+void TaskModel::setDarkMode(bool dark)
+{
+    m_isDarkMode = dark;
+    // Forcer la mise à jour de toutes les cellules colorées
+    if (!m_rootTasks.isEmpty()) {
+        QModelIndex topLeft = index(0, 2, QModelIndex());
+        QModelIndex bottomRight = index(rowCount(QModelIndex())-1, 3, QModelIndex());
+        emit dataChanged(topLeft, bottomRight);
+    }
 }

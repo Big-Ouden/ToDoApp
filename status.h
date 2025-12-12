@@ -2,6 +2,7 @@
 #define STATUS_H
 
 #include <QString>
+#include <QCoreApplication>
 
 /// États possibles d'une tâche
 enum class Status
@@ -14,12 +15,12 @@ enum class Status
 
 inline QString statusToString(Status s) {
     switch(s) {
-    case Status::NOTSTARTED: return "Not started";
-    case Status::INPROGRESS: return "In progress";
-    case Status::COMPLETED: return "Completed";
-    case Status::CANCELLED: return "Cancelled";
+    case Status::NOTSTARTED: return QCoreApplication::translate("Status", "Not started");
+    case Status::INPROGRESS: return QCoreApplication::translate("Status", "In progress");
+    case Status::COMPLETED: return QCoreApplication::translate("Status", "Completed");
+    case Status::CANCELLED: return QCoreApplication::translate("Status", "Cancelled");
     }
-    return "Unknown";
+    return QCoreApplication::translate("Status", "Unknown");
 }
 
 inline Status stringToStatus(const QString &s) {

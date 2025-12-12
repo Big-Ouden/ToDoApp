@@ -16,6 +16,11 @@
 #include <QPageSize>
 #include <QPageLayout>
 #include <QInputDialog>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QLabel>
+#include <QHBoxLayout>
 
 /**
  * @file mainwindow.cpp
@@ -46,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Configure la TreeView
     ui->taskTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->taskTreeView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
+    ui->taskTreeView->setRootIsDecorated(true); // Afficher les icônes +/- pour les branches
     ui->taskTreeView->expandAll();
     
     // Activer drag & drop
@@ -55,32 +61,119 @@ MainWindow::MainWindow(QWidget *parent)
     ui->taskTreeView->setDragDropMode(QAbstractItemView::InternalMove);
     
     // Ajuster la largeur des colonnes
-    ui->taskTreeView->setColumnWidth(0, 300); // Titre - plus large
-    ui->taskTreeView->setColumnWidth(1, 120); // Date d'échéance
-    ui->taskTreeView->setColumnWidth(2, 100); // Priorité
-    ui->taskTreeView->setColumnWidth(3, 100); // Statut
-    ui->taskTreeView->setColumnWidth(4, 100); // Catégorie
-    ui->taskTreeView->setColumnWidth(5, 200); // Étiquettes
+    ui->taskTreeView->setColumnWidth(0, 350); // Titre - plus large
+    ui->taskTreeView->setColumnWidth(1, 130); // Date d'échéance
+    ui->taskTreeView->setColumnWidth(2, 110); // Priorité
+    ui->taskTreeView->setColumnWidth(3, 110); // Statut
+    ui->taskTreeView->setColumnWidth(4, 220); // Étiquettes
 
     // ========================================
-    // Connexions des signaux - TreeView
+    // Widget de statistiques dans un dock
     // ========================================
+    m_statisticsWidget = new StatisticsWidget(this);
+    m_statsDock = new QDockWidget(this);
+    m_statsDock->setObjectName("statsDock");
+    m_statsDock->setWidget(m_statisticsWidget);
+    m_statsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::RightDockWidgetArea, m_statsDock);
+    
+    // Cacher le dock par défaut
+    m_statsDock->setVisible(false);
+    
+    // Ajouter l'action toggle dans le menu View
+    ui->menuView->addAction(m_statsDock->toggleViewAction());
+
+    // ========================================
+    // Initialisation précoce (avant setupConnections)
+    // ========================================
+    m_showCompleted = true;
+    m_currentLanguage = "fr";
+    
+    // Configurer la sauvegarde automatique (5 minutes par défaut)
+    m_autoSaveTimer = new QTimer(this);
+    connect(m_autoSaveTimer, &QTimer::timeout, this, &MainWindow::onAutoSave);
+    
+    // Configurer l'undo stack AVANT setupConnections qui en a besoin
+    m_undoStack = new QUndoStack(this);
+    ui->actionUndo->setEnabled(false);
+    ui->actionRedo->setEnabled(false);
+    connect(m_undoStack, &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
+    connect(m_undoStack, &QUndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
+
+    // ========================================
+    // Ajouter les widgets dans la toolbar
+    // ========================================
+    ui->mainToolBar->addSeparator();
+    
+    // Ajouter le champ de recherche dans la toolbar
+    QWidget *searchWidget = new QWidget(this);
+    QHBoxLayout *searchLayout = new QHBoxLayout(searchWidget);
+    searchLayout->setContentsMargins(8, 0, 8, 0);
+    searchLayout->setSpacing(8);
+    
+    m_searchLineEdit = new QLineEdit(this);
+    m_searchLineEdit->setObjectName("searchLineEdit");
+    m_searchLineEdit->setPlaceholderText(tr("Rechercher une tâche..."));
+    m_searchLineEdit->setClearButtonEnabled(true);
+    m_searchLineEdit->setMinimumWidth(150);
+    m_searchLineEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    searchLayout->addWidget(m_searchLineEdit);
+    
+    ui->mainToolBar->addWidget(searchWidget);
+    ui->mainToolBar->addSeparator();
+    
+    // Ajouter les filtres de priorité et statut
+    QLabel *labelPriority = new QLabel(tr("Priorité:"), this);
+    labelPriority->setObjectName("labelPriorityFilter");
+    ui->mainToolBar->addWidget(labelPriority);
+    
+    m_priorityFilterCombo = new QComboBox(this);
+    m_priorityFilterCombo->setObjectName("priorityFilterCombo");
+    m_priorityFilterCombo->addItem(tr("Toutes"));
+    m_priorityFilterCombo->addItem("Low");
+    m_priorityFilterCombo->addItem("Medium");
+    m_priorityFilterCombo->addItem("High");
+    m_priorityFilterCombo->addItem("Critical");
+    ui->mainToolBar->addWidget(m_priorityFilterCombo);
+    
+    ui->mainToolBar->addSeparator();
+    
+    QLabel *labelStatus = new QLabel(tr("Statut:"), this);
+    labelStatus->setObjectName("labelStatusFilter");
+    ui->mainToolBar->addWidget(labelStatus);
+    
+    m_statusFilterCombo = new QComboBox(this);
+    m_statusFilterCombo->setObjectName("statusFilterCombo");
+    m_statusFilterCombo->addItem(tr("Tous"));
+    m_statusFilterCombo->addItem("Not started");
+    m_statusFilterCombo->addItem("In progress");
+    m_statusFilterCombo->addItem("Completed");
+    m_statusFilterCombo->addItem("Cancelled");
+    ui->mainToolBar->addWidget(m_statusFilterCombo);
+    
+    // Connecter les widgets de recherche et filtres
+    connect(m_searchLineEdit, &QLineEdit::textChanged, this, &MainWindow::onSearchTextChanged);
+    connect(m_priorityFilterCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &MainWindow::onPriorityFilterChanged);
+    connect(m_statusFilterCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &MainWindow::onStatusFilterChanged);
+
     // ========================================
     // Configuration des connexions
     // ========================================
     setupConnections();
-
-    // ========================================
-    // Initialisation
-    // ========================================
-    m_showCompleted = true;
-    m_currentLanguage = "fr";
     
     // Charger les préférences avant de définir la locale
     loadPreferences();
     
     // Appliquer la langue chargée depuis les préférences
     setLanguage(m_currentLanguage);
+    
+    // Définir le titre du dock (après setLanguage pour que tr() fonctionne)
+    m_statsDock->setWindowTitle(tr("Statistiques"));
+    
+    // Initialiser le mode sombre
+    m_isDarkMode = false;
     
     updateStatusBar();
     setWindowTitle(tr("ToDoApp - Nouveau fichier"));
@@ -100,13 +193,8 @@ void MainWindow::setupConnections()
     connect(ui->taskTreeView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &MainWindow::onTaskSelectionChanged);
 
-    // ========================================
-    // Connexions des signaux - Boutons de la barre d'outils
-    // ========================================
-    connect(ui->addTaskButton, &QToolButton::clicked, this, &MainWindow::onAddTask);
-    connect(ui->addSubtaskButton, &QToolButton::clicked, this, &MainWindow::onAddSubtask);
-    connect(ui->deleteTaskButton, &QToolButton::clicked, this, &MainWindow::onDeleteTask);
-    connect(ui->markCompletedButton, &QToolButton::clicked, this, &MainWindow::onMarkCompleted);
+    // Note: Les boutons de la barre d'outils personnalisée ont été supprimés.
+    // Les actions sont maintenant uniquement dans la toolbar principale et le menu.
 
     // ========================================
     // Connexions des signaux - Actions du menu
@@ -150,8 +238,18 @@ void MainWindow::setupConnections()
     connect(ui->actionMarkCompleted, &QAction::triggered, this, &MainWindow::onMarkCompleted);
     connect(ui->actionPromoteTask, &QAction::triggered, this, &MainWindow::onPromoteTask);
     
+    connect(ui->actionUndo, &QAction::triggered, m_undoStack, &QUndoStack::undo);
+    connect(ui->actionRedo, &QAction::triggered, m_undoStack, &QUndoStack::redo);
+    
     connect(ui->actionExpandAll, &QAction::triggered, ui->taskTreeView, &QTreeView::expandAll);
     connect(ui->actionCollapseAll, &QAction::triggered, ui->taskTreeView, &QTreeView::collapseAll);
+    
+    // Dark mode toggle
+    connect(ui->actionDarkMode, &QAction::toggled, this, [this](bool checked) {
+        m_isDarkMode = checked;
+        ThemesManager::applyTheme(checked ? ThemesManager::Dark : ThemesManager::Light);
+        m_taskModel->setDarkMode(checked);
+    });
     
     // Groupe pour langues mutuellement exclusives
     if (!m_languageGroup) {
@@ -165,26 +263,9 @@ void MainWindow::setupConnections()
     
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::onAbout);
     connect(ui->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
-
-    // ========================================
-    // Connexions des signaux - Recherche
-    // ========================================
-    ui->searchLineEdit->setPlaceholderText(tr("Rechercher (essayez: tag:, priority:, status:, date:)"));
-    ui->searchLineEdit->setToolTip(tr("Recherche avancée:\n"
-                                       "• tag:urgent - Rechercher par étiquette\n"
-                                       "• priority:high - Rechercher par priorité\n"
-                                       "• status:completed - Rechercher par statut\n"
-                                       "• date:2024-12 - Rechercher par date\n"
-                                       "• Texte simple - Recherche dans titre et description"));
-    connect(ui->searchLineEdit, &QLineEdit::textChanged, this, &MainWindow::onSearchTextChanged);
     
-    // ========================================
-    // Connexions des signaux - Filtres
-    // ========================================
-    connect(ui->priorityFilterCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), 
-            this, &MainWindow::onPriorityFilterChanged);
-    connect(ui->statusFilterCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), 
-            this, &MainWindow::onStatusFilterChanged);
+    // Note: Les widgets de recherche et filtres sont maintenant ajoutés directement dans la toolbar
+    // et connectés dans le constructeur, pas ici.
 
     // ========================================
     // Connexions des signaux - TaskDetailWidget
@@ -398,6 +479,16 @@ void MainWindow::onSaveFile()
     }
 }
 
+void MainWindow::onAutoSave()
+{
+    // Sauvegarde automatique silencieuse (pas de message si vide)
+    if (!m_currentFilePath.isEmpty()) {
+        if (PersistenceManager::saveToJson(m_currentFilePath, m_taskModel->rootTasks())) {
+            statusBar()->showMessage(tr("Sauvegarde automatique effectuée"), 2000);
+        }
+    }
+}
+
 void MainWindow::onSaveFileAs()
 {
     QString fname = QFileDialog::getSaveFileName(
@@ -539,6 +630,11 @@ void MainWindow::onAbout()
 
 void MainWindow::updateStatusBar()
 {
+    // Mettre à jour le widget de statistiques
+    if (m_statisticsWidget) {
+        m_statisticsWidget->updateStatistics(m_taskModel);
+    }
+    
     int total = 0;
     int done = 0;
     int overdue = 0;
@@ -663,23 +759,27 @@ void MainWindow::setLanguage(const QString &lang)
     // Recharger l'interface avec les nouvelles traductions
     ui->retranslateUi(this);
     
+    // Mettre à jour le titre du dock de statistiques
+    if (m_statsDock) {
+        m_statsDock->setWindowTitle(tr("Statistiques"));
+    }
+    
     // Forcer la mise à jour de TOUS les textes des widgets
     // en fermant et rouvrant les combos pour recharger leurs items
     QStringList priorityItems;
-    priorityItems << tr("Tous") << tr("Très faible") << tr("Faible") 
-                  << tr("Moyen") << tr("Élevé") << tr("Urgent");
-    int currentPriority = ui->priorityFilterCombo->currentIndex();
-    ui->priorityFilterCombo->clear();
-    ui->priorityFilterCombo->addItems(priorityItems);
-    ui->priorityFilterCombo->setCurrentIndex(currentPriority);
+    priorityItems << tr("Toutes") << "Low" << "Medium" << "High" << "Critical";
+    int currentPriority = m_priorityFilterCombo->currentIndex();
+    m_priorityFilterCombo->clear();
+    m_priorityFilterCombo->addItems(priorityItems);
+    m_priorityFilterCombo->setCurrentIndex(currentPriority);
     
     QStringList statusItems;
-    statusItems << tr("Tous") << tr("Non démarrée") << tr("En cours") 
-                << tr("Complétée") << tr("Annulée");
-    int currentStatus = ui->statusFilterCombo->currentIndex();
-    ui->statusFilterCombo->clear();
-    ui->statusFilterCombo->addItems(statusItems);
-    ui->statusFilterCombo->setCurrentIndex(currentStatus);
+    statusItems << tr("Tous") << "Not started" << "In progress" 
+                << "Completed" << "Cancelled";
+    int currentStatus = m_statusFilterCombo->currentIndex();
+    m_statusFilterCombo->clear();
+    m_statusFilterCombo->addItems(statusItems);
+    m_statusFilterCombo->setCurrentIndex(currentStatus);
     
     // Forcer la mise à jour du TaskDetailWidget directement
     m_detailWidget->updateTranslations();
@@ -767,6 +867,19 @@ void MainWindow::loadPreferences()
     // Confirmation de suppression
     m_askDeleteConfirmation = settings.value("askDeleteConfirmation", true).toBool();
     
+    // Thème sombre
+    bool darkMode = settings.value("darkMode", false).toBool();
+    ui->actionDarkMode->setChecked(darkMode);
+    m_isDarkMode = darkMode;
+    ThemesManager::applyTheme(darkMode ? ThemesManager::Dark : ThemesManager::Light);
+    m_taskModel->setDarkMode(darkMode);
+    
+    // Sauvegarde automatique (intervalle en minutes, 5 par défaut, 0 = désactivé)
+    int autoSaveInterval = settings.value("autoSaveInterval", 5).toInt();
+    if (autoSaveInterval > 0) {
+        m_autoSaveTimer->start(autoSaveInterval * 60 * 1000); // Convertir minutes en millisecondes
+    }
+    
     // Charger le dernier fichier si disponible
     if (!m_currentFilePath.isEmpty() && QFile::exists(m_currentFilePath)) {
         QList<Task*> tasks = PersistenceManager::loadFromJson(m_currentFilePath);
@@ -790,6 +903,11 @@ void MainWindow::savePreferences()
     settings.setValue("lastFile", m_currentFilePath);
     settings.setValue("showCompleted", m_showCompleted);
     settings.setValue("askDeleteConfirmation", m_askDeleteConfirmation);
+    settings.setValue("darkMode", ui->actionDarkMode->isChecked());
+    
+    // Sauvegarder l'intervalle d'auto-save (en minutes)
+    int intervalMinutes = m_autoSaveTimer->isActive() ? (m_autoSaveTimer->interval() / 60000) : 5;
+    settings.setValue("autoSaveInterval", intervalMinutes);
 }
 
 // ========================================
