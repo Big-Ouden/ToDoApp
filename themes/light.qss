@@ -204,16 +204,6 @@ QTreeView::item:selected {
     color: #1976d2;
 }
 
-QTreeView::branch:has-children:!has-siblings:closed,
-QTreeView::branch:closed:has-children:has-siblings {
-    image: url(:/icons/branch-closed.png);
-}
-
-QTreeView::branch:open:has-children:!has-siblings,
-QTreeView::branch:open:has-children:has-siblings {
-    image: url(:/icons/branch-open.png);
-}
-
 QHeaderView::section {
     background-color: #f5f5f5;
     color: #333333;

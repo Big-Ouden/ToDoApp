@@ -208,18 +208,8 @@ QTreeView::item:hover {
 }
 
 QTreeView::item:selected {
-    background-color: #094771;
+    background-color: #264f78;
     color: #ffffff;
-}
-
-QTreeView::branch:has-children:!has-siblings:closed,
-QTreeView::branch:closed:has-children:has-siblings {
-    image: url(:/icons/branch-closed-light.png);
-}
-
-QTreeView::branch:open:has-children:!has-siblings,
-QTreeView::branch:open:has-children:has-siblings {
-    image: url(:/icons/branch-open-light.png);
 }
 
 QHeaderView::section {
