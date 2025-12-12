@@ -29,439 +29,412 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="14"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="398"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="285"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="285"/>
         <source>ToDoApp - Gestionnaire de tâches</source>
         <translation>ToDoApp - Task Manager</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="509"/>
         <location filename="mainwindow.cpp" line="116"/>
         <source>Rechercher une tâche...</source>
         <translation>Search for a task...</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="510"/>
         <location filename="mainwindow.cpp" line="126"/>
-        <location filename="mainwindow.cpp" line="950"/>
+        <location filename="mainwindow.cpp" line="954"/>
         <source>Priorité:</source>
         <translation>Priority:</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="518"/>
         <source>Filtrer par priorité</source>
-        <translation>Filter by priority</translation>
+        <translation type="vanished">Filter by priority</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="511"/>
         <location filename="mainwindow.cpp" line="132"/>
         <location filename="mainwindow.cpp" line="770"/>
         <source>Toutes</source>
         <translation>All</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="512"/>
         <source>Low</source>
-        <translation>Low</translation>
+        <translation type="vanished">Low</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="513"/>
         <source>Medium</source>
-        <translation>Medium</translation>
+        <translation type="vanished">Medium</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="514"/>
         <source>High</source>
-        <translation>High</translation>
+        <translation type="vanished">High</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="515"/>
         <source>Critical</source>
-        <translation>Critical</translation>
+        <translation type="vanished">Critical</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="520"/>
         <location filename="mainwindow.cpp" line="141"/>
-        <location filename="mainwindow.cpp" line="952"/>
+        <location filename="mainwindow.cpp" line="956"/>
         <source>Statut:</source>
         <translation>Status:</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="528"/>
         <source>Filtrer par statut</source>
-        <translation>Filter by status</translation>
+        <translation type="vanished">Filter by status</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="521"/>
         <location filename="mainwindow.cpp" line="147"/>
         <location filename="mainwindow.cpp" line="777"/>
         <source>Tous</source>
         <translation>All</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="522"/>
         <source>Not started</source>
-        <translation>Not started</translation>
+        <translation type="vanished">Not started</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="523"/>
         <source>In progress</source>
-        <translation>In progress</translation>
+        <translation type="vanished">In progress</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="524"/>
         <source>Completed</source>
-        <translation>Completed</translation>
+        <translation type="vanished">Completed</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="525"/>
         <source>Cancelled</source>
-        <translation>Cancelled</translation>
+        <translation type="vanished">Cancelled</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="531"/>
         <source>Ajouter une nouvelle tâche principale (Ctrl+N)</source>
-        <translation>Add a new main task (Ctrl+N)</translation>
+        <translation type="vanished">Add a new main task (Ctrl+N)</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="533"/>
         <source>Ajouter tâche</source>
-        <translation>Add task</translation>
+        <translation type="vanished">Add task</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="252"/>
         <location filename="mainwindow.ui" line="327"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="439"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="535"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="291"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="326"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="291"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="326"/>
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="538"/>
         <source>Ajouter une sous-tâche à la tâche sélectionnée (Ctrl+Shift+N)</source>
-        <translation>Add a subtask to the selected task (Ctrl+Shift+N)</translation>
+        <translation type="vanished">Add a subtask to the selected task (Ctrl+Shift+N)</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="540"/>
         <source>Ajouter sous-tâche</source>
-        <translation>Add subtask</translation>
+        <translation type="vanished">Add subtask</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="342"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="404"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="446"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="542"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="333"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="333"/>
         <source>Ctrl+Shift+N</source>
         <translation>Ctrl+Shift+N</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="545"/>
         <source>Supprimer la tâche sélectionnée (Del)</source>
-        <translation>Delete the selected task (Del)</translation>
+        <translation type="vanished">Delete the selected task (Del)</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="547"/>
         <source>Supprimer</source>
-        <translation>Delete</translation>
+        <translation type="vanished">Delete</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="357"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="453"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="549"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="340"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="340"/>
         <source>Del</source>
         <translation>Del</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="552"/>
         <source>Marquer la tâche sélectionnée comme complétée (Ctrl+D)</source>
-        <translation>Mark the selected task as completed (Ctrl+D)</translation>
+        <translation type="vanished">Mark the selected task as completed (Ctrl+D)</translation>
     </message>
     <message>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="554"/>
         <source>Marquer complétée</source>
-        <translation>Mark completed</translation>
+        <translation type="vanished">Mark completed</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="372"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="460"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="556"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="347"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="347"/>
         <source>Ctrl+D</source>
         <translation>Ctrl+D</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="121"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="558"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="396"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="396"/>
         <source>Sélectionnez une tâche pour voir les détails</source>
         <translation>Select a task to see details</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="151"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="559"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="397"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="397"/>
         <source>&amp;Fichier</source>
         <translation>&amp;File</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="163"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="560"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="398"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="398"/>
         <source>&amp;Édition</source>
         <translation>&amp;Edit</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="178"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="561"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="399"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="399"/>
         <source>&amp;Affichage</source>
         <translation>&amp;View</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="189"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="562"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="400"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="400"/>
         <source>&amp;Langue</source>
         <translation>&amp;Language</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="196"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="563"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="401"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="401"/>
         <source>&amp;Aide</source>
         <translation>&amp;Help</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="210"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="564"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="402"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="402"/>
         <source>Barre d&apos;outils</source>
         <translation>Toolbar</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="246"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="399"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="286"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="286"/>
         <source>&amp;Nouveau</source>
         <translation>&amp;New</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="249"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="401"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="288"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="288"/>
         <source>Créer un nouveau fichier de tâches</source>
         <translation>Create a new task file</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="261"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="406"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="293"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="293"/>
         <source>&amp;Ouvrir...</source>
         <translation>&amp;Open...</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="264"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="408"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="295"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="295"/>
         <source>Ouvrir un fichier de tâches existant</source>
         <translation>Open an existing task file</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="267"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="411"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="298"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="298"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="276"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="413"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="300"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="300"/>
         <source>&amp;Enregistrer</source>
         <translation>&amp;Save</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="279"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="415"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="302"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="302"/>
         <source>Enregistrer le fichier de tâches</source>
         <translation>Save the task file</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="282"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="418"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="305"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="305"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="291"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="420"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="307"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="307"/>
         <source>Enregistrer &amp;sous...</source>
         <translation>Save &amp;As...</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="294"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="422"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="309"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="309"/>
         <source>Enregistrer sous un nouveau nom</source>
         <translation>Save under a new name</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="297"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="425"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="312"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="312"/>
         <source>Ctrl+Shift+S</source>
         <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="306"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="427"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="314"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="314"/>
         <source>&amp;Quitter</source>
         <translation>&amp;Quit</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="309"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="429"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="316"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="316"/>
         <source>Quitter l&apos;application</source>
         <translation>Quit the application</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="312"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="432"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="319"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="319"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="321"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="434"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="321"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="321"/>
         <source>&amp;Ajouter tâche</source>
         <translation>&amp;Add task</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="324"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="436"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="323"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="323"/>
         <source>Ajouter une nouvelle tâche</source>
         <translation>Add a new task</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="336"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="441"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="328"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="328"/>
         <source>Ajouter &amp;sous-tâche</source>
         <translation>Add &amp;subtask</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="339"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="443"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="330"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="330"/>
         <source>Ajouter une sous-tâche</source>
         <translation>Add a subtask</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="351"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="448"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="335"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="335"/>
         <source>&amp;Supprimer</source>
         <translation>&amp;Delete</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="354"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="450"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="337"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="337"/>
         <source>Supprimer la tâche sélectionnée</source>
         <translation>Delete the selected task</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="366"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="455"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="342"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="342"/>
         <source>&amp;Marquer complétée</source>
         <translation>&amp;Mark completed</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="369"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="457"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="344"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="344"/>
         <source>Marquer comme complétée</source>
         <translation>Mark as completed</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="377"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="462"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="349"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="349"/>
         <source>&amp;Tout développer</source>
         <translation>&amp;Expand All</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="380"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="464"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="351"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="351"/>
         <source>Développer toutes les tâches</source>
         <translation>Expand all tasks</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="383"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="467"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="354"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="354"/>
         <source>Ctrl+E</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="388"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="469"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="356"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="356"/>
         <source>&amp;Tout réduire</source>
         <translation>&amp;Collapse All</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="391"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="471"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="358"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="358"/>
         <source>Réduire toutes les tâches</source>
         <translation>Collapse all tasks</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="394"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="474"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="361"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="361"/>
         <source>Ctrl+R</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="405"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="476"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="363"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="363"/>
         <source>&amp;Afficher les tâches complétées</source>
         <translation>&amp;Show completed tasks</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="408"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="478"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="365"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="365"/>
         <source>Afficher ou masquer les tâches complétées</source>
         <translation>Show or hide completed tasks</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="417"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="480"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="367"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="367"/>
         <source>À &amp;propos...</source>
         <translation>&amp;About...</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="420"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="482"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="369"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="369"/>
         <location filename="mainwindow.cpp" line="628"/>
         <source>À propos de ToDoApp</source>
@@ -469,91 +442,91 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="425"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="484"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="371"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="371"/>
         <source>À propos de &amp;Qt...</source>
         <translation>About &amp;Qt...</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="428"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="486"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="373"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="373"/>
         <source>À propos de Qt</source>
         <translation>About Qt</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="433"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="488"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="375"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="375"/>
         <source>&amp;Promouvoir au niveau parent</source>
         <translation>&amp;Promote to parent level</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="436"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="490"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="377"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="377"/>
         <source>Transformer la sous-tâche en tâche de même niveau que son parent</source>
         <translation>Transform subtask into task at same level as parent</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="439"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="493"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="380"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="380"/>
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="450"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="495"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="382"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="382"/>
         <source>&amp;Français</source>
         <translation>&amp;French</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="458"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="496"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="383"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="383"/>
         <source>&amp;English</source>
         <translation>&amp;English</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="466"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="497"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="384"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="384"/>
         <source>&amp;Annuler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="469"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="499"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="386"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="386"/>
         <source>Ctrl+Z</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="477"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="501"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="388"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="388"/>
         <source>&amp;Refaire</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="480"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="503"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="390"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="390"/>
         <source>Ctrl+Y</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="488"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="505"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="392"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="392"/>
         <source>Mode &amp;sombre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="491"/>
-        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="507"/>
+        <location filename="build/Desktop-Debug/ToDoApp_autogen/include/ui_mainwindow.h" line="394"/>
         <location filename="build/ToDoApp_autogen/include/ui_mainwindow.h" line="394"/>
         <source>Ctrl+Shift+D</source>
         <translation type="unfinished"></translation>
@@ -691,7 +664,7 @@ Cette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).</so
     <message>
         <location filename="mainwindow.cpp" line="474"/>
         <location filename="mainwindow.cpp" line="549"/>
-        <location filename="mainwindow.cpp" line="891"/>
+        <location filename="mainwindow.cpp" line="895"/>
         <source>ToDoApp - %1</source>
         <translation>ToDoApp - %1</translation>
     </message>
@@ -769,63 +742,63 @@ Cette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).</so
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="925"/>
+        <location filename="mainwindow.cpp" line="929"/>
         <source>Liste des tâches</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="926"/>
+        <location filename="mainwindow.cpp" line="930"/>
         <source>Généré le %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="946"/>
+        <location filename="mainwindow.cpp" line="950"/>
         <source>Échéance:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="956"/>
+        <location filename="mainwindow.cpp" line="960"/>
         <source>Étiquettes:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1005"/>
-        <location filename="mainwindow.cpp" line="1062"/>
+        <location filename="mainwindow.cpp" line="1009"/>
+        <location filename="mainwindow.cpp" line="1066"/>
         <source>Choisir un template</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1006"/>
+        <location filename="mainwindow.cpp" line="1010"/>
         <source>Sélectionnez le style d&apos;export:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1028"/>
+        <location filename="mainwindow.cpp" line="1032"/>
         <source>Exporter en PDF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1030"/>
+        <location filename="mainwindow.cpp" line="1034"/>
         <source>Fichiers PDF (*.pdf)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1047"/>
+        <location filename="mainwindow.cpp" line="1051"/>
         <source>PDF exporté avec succès: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1063"/>
+        <location filename="mainwindow.cpp" line="1067"/>
         <source>Sélectionnez le style d&apos;impression:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1085"/>
+        <location filename="mainwindow.cpp" line="1089"/>
         <source>Imprimer les tâches</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1092"/>
+        <location filename="mainwindow.cpp" line="1096"/>
         <source>Impression effectuée</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1401,7 +1374,7 @@ Cette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).</so
 <context>
     <name>TaskModel</name>
     <message>
-        <location filename="taskmodel.cpp" line="76"/>
+        <location filename="taskmodel.cpp" line="77"/>
         <source>Titre</source>
         <translation>Title</translation>
     </message>
@@ -1410,22 +1383,22 @@ Cette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).</so
         <translation type="vanished">Description</translation>
     </message>
     <message>
-        <location filename="taskmodel.cpp" line="77"/>
+        <location filename="taskmodel.cpp" line="78"/>
         <source>Date d&apos;échéance</source>
         <translation>Due Date</translation>
     </message>
     <message>
-        <location filename="taskmodel.cpp" line="78"/>
+        <location filename="taskmodel.cpp" line="79"/>
         <source>Priorité</source>
         <translation>Priority</translation>
     </message>
     <message>
-        <location filename="taskmodel.cpp" line="79"/>
+        <location filename="taskmodel.cpp" line="80"/>
         <source>Statut</source>
         <translation>Status</translation>
     </message>
     <message>
-        <location filename="taskmodel.cpp" line="80"/>
+        <location filename="taskmodel.cpp" line="81"/>
         <source>Étiquettes</source>
         <translation type="unfinished"></translation>
     </message>
