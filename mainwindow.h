@@ -9,6 +9,9 @@
 #include <QActionGroup>
 #include <QTimer>
 #include <QUndoStack>
+#include <QStackedWidget>
+#include <QToolBar>
+#include <QButtonGroup>
 
 class QComboBox;
 class QLineEdit;
@@ -86,15 +89,10 @@ private:
     TaskFilterProxyModel *m_proxyModel;
     TaskDetailWidget *m_detailWidget;
     StatisticsWidget *m_statisticsWidget;
-    QDockWidget *m_statsDock;
     PomodoroTimer *m_pomodoroWidget;
-    QDockWidget *m_pomodoroDock;
     ChartsWidget *m_chartsWidget;
-    QDockWidget *m_chartsDock;
     TimelineWidget *m_timelineWidget;
-    QDockWidget *m_timelineDock;
     BurndownWidget *m_burndownWidget;
-    QDockWidget *m_burndownDock;
     bool m_showCompleted;
     bool m_askDeleteConfirmation;
     QTimer *m_autoSaveTimer;
@@ -110,6 +108,16 @@ private:
     QLineEdit *m_searchLineEdit;
     QComboBox *m_priorityFilterCombo;
     QComboBox *m_statusFilterCombo;
+    
+    // Barre verticale de sélection des vues
+    QWidget *m_rightPanel;
+    QStackedWidget *m_viewStack;
+    QToolBar *m_viewToolBar;
+    QButtonGroup *m_viewButtonGroup;
+    QList<int> m_savedSplitterSizes;  // Pour sauvegarder les tailles du splitter
+    
+    void setupRightPanel();
+    void showView(int index);
 };
 
 #endif // MAINWINDOW_H

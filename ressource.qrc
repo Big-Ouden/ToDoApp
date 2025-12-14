@@ -11,6 +11,21 @@
         <file>icons/quit.png</file>
         <file>icons/about.png</file>
         <file>icons/app.png</file>
+        <file>icons/stats.png</file>
+        <file>icons/pomodoro.png</file>
+        <file>icons/charts.png</file>
+        <file>icons/calendar.png</file>
+        <file>icons/burndown.png</file>
+        <file>icons/hide_panel.png</file>
+        <file>icons/show_panel.png</file>
+        <file>icons/bold.png</file>
+        <file>icons/italic.png</file>
+        <file>icons/code.png</file>
+        <file>icons/link.png</file>
+        <file>icons/list.png</file>
+        <file>icons/text_edit.png</file>
+        <file>icons/eye_preview.png</file>
+        <file>icons/split_view.png</file>
     </qresource>
     <qresource prefix="/themes">
         <file>themes/light.qss</file>

@@ -38,38 +38,39 @@
          <item>
           <widget class="QToolButton" name="boldButton">
            <property name="text">
-            <string>B</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="ressource.qrc">
+             <normaloff>:/icons/bold.png</normaloff>:/icons/bold.png</iconset>
            </property>
            <property name="toolTip">
             <string>Gras (Ctrl+B)</string>
-           </property>
-           <property name="font">
-            <font>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QToolButton" name="italicButton">
            <property name="text">
-            <string>I</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="ressource.qrc">
+             <normaloff>:/icons/italic.png</normaloff>:/icons/italic.png</iconset>
            </property>
            <property name="toolTip">
             <string>Italique (Ctrl+I)</string>
-           </property>
-           <property name="font">
-            <font>
-             <italic>true</italic>
-            </font>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QToolButton" name="codeButton">
            <property name="text">
-            <string>&lt;/&gt;</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="ressource.qrc">
+             <normaloff>:/icons/code.png</normaloff>:/icons/code.png</iconset>
            </property>
            <property name="toolTip">
             <string>Code inline</string>
@@ -79,7 +80,11 @@
          <item>
           <widget class="QToolButton" name="linkButton">
            <property name="text">
-            <string>🔗</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="ressource.qrc">
+             <normaloff>:/icons/link.png</normaloff>:/icons/link.png</iconset>
            </property>
            <property name="toolTip">
             <string>Lien</string>
@@ -89,7 +94,11 @@
          <item>
           <widget class="QToolButton" name="listButton">
            <property name="text">
-            <string>• </string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="ressource.qrc">
+             <normaloff>:/icons/list.png</normaloff>:/icons/list.png</iconset>
            </property>
            <property name="toolTip">
             <string>Liste</string>
@@ -112,7 +121,11 @@
          <item>
           <widget class="QToolButton" name="textOnlyButton">
            <property name="text">
-            <string>📝</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="ressource.qrc">
+             <normaloff>:/icons/text_edit.png</normaloff>:/icons/text_edit.png</iconset>
            </property>
            <property name="toolTip">
             <string>Texte uniquement</string>
@@ -128,7 +141,11 @@
          <item>
           <widget class="QToolButton" name="previewOnlyButton">
            <property name="text">
-            <string>👁</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="ressource.qrc">
+             <normaloff>:/icons/eye_preview.png</normaloff>:/icons/eye_preview.png</iconset>
            </property>
            <property name="toolTip">
             <string>Aperçu uniquement (double-clic pour éditer)</string>
@@ -141,7 +158,11 @@
          <item>
           <widget class="QToolButton" name="splitViewButton">
            <property name="text">
-            <string>⚏</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="ressource.qrc">
+             <normaloff>:/icons/split_view.png</normaloff>:/icons/split_view.png</iconset>
            </property>
            <property name="toolTip">
             <string>Vue divisée</string>

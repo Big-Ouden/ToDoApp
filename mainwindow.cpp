@@ -22,6 +22,11 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QStackedWidget>
+#include <QToolButton>
+#include <QButtonGroup>
+#include <QToolBar>
 
 /**
  * @file mainwindow.cpp
@@ -45,10 +50,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Install delegate pour l'édition in-place
     ui->taskTreeView->setItemDelegate(new TaskItemDelegate(this));
 
-    // Place le widget de détail dans le panneau de droite
-    ui->splitter->replaceWidget(1, m_detailWidget);
-    ui->splitter->setSizes(QList<int>() << 600 << 400);
-
     // Configure la TreeView
     ui->taskTreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     ui->taskTreeView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
@@ -68,39 +69,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->taskTreeView->setColumnWidth(3, 110); // Statut
     ui->taskTreeView->setColumnWidth(4, 220); // Étiquettes
 
-    // ========================================
-    // Widget de statistiques dans un dock
-    // ========================================
+    // Créer les widgets pour le panneau de droite
     m_statisticsWidget = new StatisticsWidget(this);
-    m_statsDock = new QDockWidget(this);
-    m_statsDock->setObjectName("statsDock");
-    m_statsDock->setWidget(m_statisticsWidget);
-    m_statsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    m_statsDock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    addDockWidget(Qt::RightDockWidgetArea, m_statsDock);
-    
-    // Cacher le dock par défaut
-    m_statsDock->setVisible(false);
-    
-    // Ajouter l'action toggle dans le menu View
-    ui->menuView->addAction(m_statsDock->toggleViewAction());
-    
-    // ========================================
-    // Configuration du widget Pomodoro
-    // ========================================
     m_pomodoroWidget = new PomodoroTimer(this);
-    m_pomodoroDock = new QDockWidget(tr("Pomodoro"), this);
-    m_pomodoroDock->setObjectName("pomodoroDock");
-    m_pomodoroDock->setWidget(m_pomodoroWidget);
-    m_pomodoroDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    m_pomodoroDock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    addDockWidget(Qt::RightDockWidgetArea, m_pomodoroDock);
+    m_chartsWidget = new ChartsWidget(m_taskModel, this);
+    m_timelineWidget = new TimelineWidget(m_taskModel, this);
+    m_burndownWidget = new BurndownWidget(m_taskModel, this);
     
-    // Cacher le dock par défaut
-    m_pomodoroDock->setVisible(false);
-    
-    // Ajouter l'action toggle dans le menu View
-    ui->menuView->addAction(m_pomodoroDock->toggleViewAction());
+    // Configuration du panneau de droite avec barre verticale
+    setupRightPanel();
     
     // Connexions du Pomodoro pour notifications dans la barre de statut
     connect(m_pomodoroWidget, &PomodoroTimer::pomodoroCompleted, this, [this]() {
@@ -109,57 +86,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_pomodoroWidget, &PomodoroTimer::breakCompleted, this, [this]() {
         statusBar()->showMessage(tr("✓ Pause terminée ! Prêt pour un nouveau Pomodoro."), 5000);
     });
-    
-    // ========================================
-    // Configuration du widget Graphiques
-    // ========================================
-    m_chartsWidget = new ChartsWidget(m_taskModel, this);
-    m_chartsDock = new QDockWidget(tr("Graphiques"), this);
-    m_chartsDock->setObjectName("chartsDock");
-    m_chartsDock->setWidget(m_chartsWidget);
-    m_chartsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    m_chartsDock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    addDockWidget(Qt::RightDockWidgetArea, m_chartsDock);
-    
-    // Cacher le dock par défaut
-    m_chartsDock->setVisible(false);
-    
-    // Ajouter l'action toggle dans le menu View
-    ui->menuView->addAction(m_chartsDock->toggleViewAction());
-    
-    // ========================================
-    // Configuration du widget Timeline
-    // ========================================
-    m_timelineWidget = new TimelineWidget(m_taskModel, this);
-    m_timelineDock = new QDockWidget(tr("Calendrier"), this);
-    m_timelineDock->setObjectName("timelineDock");
-    m_timelineDock->setWidget(m_timelineWidget);
-    m_timelineDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    m_timelineDock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    addDockWidget(Qt::RightDockWidgetArea, m_timelineDock);
-    
-    // Cacher le dock par défaut
-    m_timelineDock->setVisible(false);
-    
-    // Ajouter l'action toggle dans le menu View
-    ui->menuView->addAction(m_timelineDock->toggleViewAction());
-    
-    // ========================================
-    // Configuration du widget Burndown
-    // ========================================
-    m_burndownWidget = new BurndownWidget(m_taskModel, this);
-    m_burndownDock = new QDockWidget(tr("Graphique d'avancement"), this);
-    m_burndownDock->setObjectName("burndownDock");
-    m_burndownDock->setWidget(m_burndownWidget);
-    m_burndownDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    m_burndownDock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    addDockWidget(Qt::RightDockWidgetArea, m_burndownDock);
-    
-    // Cacher le dock par défaut
-    m_burndownDock->setVisible(false);
-    
-    // Ajouter l'action toggle dans le menu View
-    ui->menuView->addAction(m_burndownDock->toggleViewAction());
 
     // ========================================
     // Initialisation précoce (avant setupConnections)
@@ -246,9 +172,6 @@ MainWindow::MainWindow(QWidget *parent)
     
     // Appliquer la langue chargée depuis les préférences
     setLanguage(m_currentLanguage);
-    
-    // Définir le titre du dock (après setLanguage pour que tr() fonctionne)
-    m_statsDock->setWindowTitle(tr("Statistiques"));
     
     // Initialiser le mode sombre
     m_isDarkMode = false;
@@ -847,11 +770,6 @@ void MainWindow::setLanguage(const QString &lang)
     // Recharger l'interface avec les nouvelles traductions
     ui->retranslateUi(this);
     
-    // Mettre à jour le titre du dock de statistiques
-    if (m_statsDock) {
-        m_statsDock->setWindowTitle(tr("Statistiques"));
-    }
-    
     // Forcer la mise à jour de TOUS les textes des widgets
     // en fermant et rouvrant les combos pour recharger leurs items
     QStringList priorityItems;
@@ -1305,5 +1223,159 @@ void MainWindow::onExportMarkdown()
     } else {
         QMessageBox::critical(this, tr("Erreur"), 
                               tr("Impossible d'exporter vers: %1").arg(fileName));
+    }
+}
+
+void MainWindow::setupRightPanel()
+{
+    // Créer un widget conteneur principal pour la partie droite du splitter
+    QWidget *rightContainer = new QWidget(this);
+    QHBoxLayout *rightLayout = new QHBoxLayout(rightContainer);
+    rightLayout->setContentsMargins(0, 0, 0, 0);
+    rightLayout->setSpacing(0);
+    
+    // Créer le panneau de contenu (qui sera caché/affiché)
+    m_rightPanel = new QWidget(rightContainer);
+    QVBoxLayout *panelLayout = new QVBoxLayout(m_rightPanel);
+    panelLayout->setContentsMargins(0, 0, 0, 0);
+    panelLayout->setSpacing(0);
+    
+    // Créer le stack de vues
+    m_viewStack = new QStackedWidget(m_rightPanel);
+    m_viewStack->addWidget(m_detailWidget);        // Index 0
+    m_viewStack->addWidget(m_statisticsWidget);    // Index 1
+    m_viewStack->addWidget(m_pomodoroWidget);      // Index 2
+    m_viewStack->addWidget(m_chartsWidget);        // Index 3
+    m_viewStack->addWidget(m_timelineWidget);      // Index 4
+    m_viewStack->addWidget(m_burndownWidget);      // Index 5
+    
+    panelLayout->addWidget(m_viewStack);
+    
+    // Créer la barre verticale à droite (reste toujours visible)
+    m_viewToolBar = new QToolBar(rightContainer);
+    m_viewToolBar->setObjectName("viewToolBar");  // Pour cibler avec le CSS
+    m_viewToolBar->setOrientation(Qt::Vertical);
+    m_viewToolBar->setMovable(false);
+    m_viewToolBar->setFloatable(false);
+    m_viewToolBar->setIconSize(QSize(32, 32));
+    m_viewToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    m_viewToolBar->setFixedWidth(80);  // Largeur fixe pour la barre
+    
+    // Créer le groupe de boutons pour l'exclusivité
+    m_viewButtonGroup = new QButtonGroup(this);
+    m_viewButtonGroup->setExclusive(true);
+    
+    // Créer les boutons de vue avec icônes
+    QToolButton *btnDetails = new QToolButton();
+    btnDetails->setIcon(QIcon(":/icons/about.png"));
+    btnDetails->setText(tr("Détails"));
+    btnDetails->setCheckable(true);
+    btnDetails->setChecked(true);
+    btnDetails->setToolTip(tr("Afficher les détails de la tâche"));
+    m_viewButtonGroup->addButton(btnDetails, 0);
+    
+    QToolButton *btnStats = new QToolButton();
+    btnStats->setIcon(QIcon(":/icons/stats.png"));
+    btnStats->setText(tr("Stats"));
+    btnStats->setCheckable(true);
+    btnStats->setToolTip(tr("Afficher les statistiques"));
+    m_viewButtonGroup->addButton(btnStats, 1);
+    
+    QToolButton *btnPomodoro = new QToolButton();
+    btnPomodoro->setIcon(QIcon(":/icons/pomodoro.png"));
+    btnPomodoro->setText(tr("Timer"));
+    btnPomodoro->setCheckable(true);
+    btnPomodoro->setToolTip(tr("Timer Pomodoro"));
+    m_viewButtonGroup->addButton(btnPomodoro, 2);
+    
+    QToolButton *btnCharts = new QToolButton();
+    btnCharts->setIcon(QIcon(":/icons/charts.png"));
+    btnCharts->setText(tr("Charts"));
+    btnCharts->setCheckable(true);
+    btnCharts->setToolTip(tr("Graphiques"));
+    m_viewButtonGroup->addButton(btnCharts, 3);
+    
+    QToolButton *btnTimeline = new QToolButton();
+    btnTimeline->setIcon(QIcon(":/icons/calendar.png"));
+    btnTimeline->setText(tr("Cal."));
+    btnTimeline->setCheckable(true);
+    btnTimeline->setToolTip(tr("Calendrier"));
+    m_viewButtonGroup->addButton(btnTimeline, 4);
+    
+    QToolButton *btnBurndown = new QToolButton();
+    btnBurndown->setIcon(QIcon(":/icons/burndown.png"));
+    btnBurndown->setText(tr("Avanc."));
+    btnBurndown->setCheckable(true);
+    btnBurndown->setToolTip(tr("Avancement"));
+    m_viewButtonGroup->addButton(btnBurndown, 5);
+    
+    // Bouton pour réduire/masquer le panneau
+    QToolButton *btnHide = new QToolButton();
+    btnHide->setIcon(QIcon(":/icons/hide_panel.png"));
+    btnHide->setText(tr("◀"));
+    btnHide->setToolTip(tr("Masquer le panneau"));
+    connect(btnHide, &QToolButton::clicked, this, [this, btnHide, rightContainer]() {
+        if (m_rightPanel->isVisible()) {
+            // Sauvegarder les tailles actuelles
+            m_savedSplitterSizes = ui->splitter->sizes();
+            
+            // Masquer le panneau de contenu
+            m_rightPanel->hide();
+            btnHide->setIcon(QIcon(":/icons/show_panel.png"));
+            btnHide->setText(tr("▶"));
+            btnHide->setToolTip(tr("Afficher le panneau"));
+            
+            // Réduire le rightContainer à sa taille minimale (juste la toolbar)
+            int toolbarWidth = m_viewToolBar->sizeHint().width();
+            QList<int> sizes = ui->splitter->sizes();
+            int totalWidth = sizes[0] + sizes[1];
+            ui->splitter->setSizes(QList<int>() << (totalWidth - toolbarWidth) << toolbarWidth);
+        } else {
+            // Afficher le panneau de contenu
+            m_rightPanel->show();
+            btnHide->setIcon(QIcon(":/icons/hide_panel.png"));
+            btnHide->setText(tr("◀"));
+            btnHide->setToolTip(tr("Masquer le panneau"));
+            
+            // Restaurer les tailles sauvegardées
+            if (!m_savedSplitterSizes.isEmpty()) {
+                ui->splitter->setSizes(m_savedSplitterSizes);
+            }
+        }
+    });
+    
+    // Ajouter les boutons à la toolbar
+    m_viewToolBar->addWidget(btnDetails);
+    m_viewToolBar->addWidget(btnStats);
+    m_viewToolBar->addWidget(btnPomodoro);
+    m_viewToolBar->addWidget(btnCharts);
+    m_viewToolBar->addWidget(btnTimeline);
+    m_viewToolBar->addWidget(btnBurndown);
+    m_viewToolBar->addSeparator();
+    m_viewToolBar->addWidget(btnHide);
+    
+    // Connecter les changements de bouton au changement de vue
+    connect(m_viewButtonGroup, QOverload<int>::of(&QButtonGroup::idClicked),
+            this, &MainWindow::showView);
+    
+    // Assembler le conteneur de droite: toolbar à gauche + panneau de contenu à droite
+    rightLayout->addWidget(m_viewToolBar, 0);  // La toolbar reste fixe à gauche
+    rightLayout->addWidget(m_rightPanel, 1);  // Le panneau prend l'espace restant
+    
+    // Remplacer le widget du splitter
+    ui->splitter->replaceWidget(1, rightContainer);
+    
+    // Configurer le splitter pour que la partie gauche soit étirable
+    ui->splitter->setStretchFactor(0, 1);  // La liste des tâches s'étire
+    ui->splitter->setStretchFactor(1, 0);  // Le panneau de droite garde sa taille
+    
+    // Définir les tailles initiales du splitter
+    ui->splitter->setSizes(QList<int>() << 700 << 500);
+}
+
+void MainWindow::showView(int index)
+{
+    if (index >= 0 && index < m_viewStack->count()) {
+        m_viewStack->setCurrentIndex(index);
     }
 }

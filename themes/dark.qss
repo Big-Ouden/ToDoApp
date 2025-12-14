@@ -91,6 +91,29 @@ QToolButton:pressed {
     background-color: #4e4e52;
 }
 
+QToolButton:checked {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #45a049;
+}
+
+/* Barre verticale de sélection des vues */
+QToolBar#viewToolBar {
+    background-color: #2d2d30;
+    border-left: 1px solid #3e3e42;
+    border-bottom: none;
+    spacing: 5px;
+    padding: 5px;
+}
+
+QToolBar#viewToolBar QToolButton {
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    min-width: 60px;
+    color: #d4d4d4;
+}
+
 /* Status Bar */
 QStatusBar {
     background-color: #007acc;
