@@ -44,6 +44,7 @@ private slots:
     void onStartPauseClicked();
     void onResetClicked();
     void onSkipClicked();
+    void onInterruptionClicked();
 
 private:
     void setState(State newState);
@@ -59,11 +60,13 @@ private:
     QPushButton *m_skipButton;
     QProgressBar *m_progressBar;
     QComboBox *m_sessionCombo;
+    QPushButton *m_interruptionButton;
     
     State m_state;
     int m_remainingSeconds;
     int m_totalSeconds;
     int m_completedPomodoros;
+    int m_interruptionCount;
     
     // Durées par défaut (en minutes)
     static const int WORK_DURATION = 25;

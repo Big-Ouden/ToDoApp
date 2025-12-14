@@ -7,6 +7,7 @@
 #include <QComboBox>
 #include <QFont>
 #include <QApplication>
+#include <QPalette>
 
 PomodoroTimer::PomodoroTimer(QWidget *parent)
     : QWidget(parent),
@@ -14,7 +15,8 @@ PomodoroTimer::PomodoroTimer(QWidget *parent)
       m_state(State::Idle),
       m_remainingSeconds(WORK_DURATION * 60),
       m_totalSeconds(WORK_DURATION * 60),
-      m_completedPomodoros(0)
+      m_completedPomodoros(0),
+      m_interruptionCount(0)
 {
     // Layout principal
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -82,6 +84,11 @@ PomodoroTimer::PomodoroTimer(QWidget *parent)
     m_skipButton->setMinimumHeight(40);
     buttonLayout->addWidget(m_skipButton);
     
+    m_interruptionButton = new QPushButton(tr("⚠ Interruption"), this);
+    m_interruptionButton->setMinimumHeight(40);
+    m_interruptionButton->setObjectName("interruptionButton");
+    buttonLayout->addWidget(m_interruptionButton);
+    
     mainLayout->addLayout(buttonLayout);
     
     // Label statistiques
@@ -97,6 +104,7 @@ PomodoroTimer::PomodoroTimer(QWidget *parent)
     connect(m_startPauseButton, &QPushButton::clicked, this, &PomodoroTimer::onStartPauseClicked);
     connect(m_resetButton, &QPushButton::clicked, this, &PomodoroTimer::onResetClicked);
     connect(m_skipButton, &QPushButton::clicked, this, &PomodoroTimer::onSkipClicked);
+    connect(m_interruptionButton, &QPushButton::clicked, this, &PomodoroTimer::onInterruptionClicked);
     connect(m_sessionCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this](int index) {
         if (m_state == State::Idle) {
             int minutes = m_sessionCombo->itemData(index).toInt();
@@ -111,26 +119,30 @@ void PomodoroTimer::setState(State newState)
 {
     m_state = newState;
     
+    // Detect dark theme for appropriate colors
+    QPalette palette = qApp->palette();
+    bool isDarkTheme = palette.color(QPalette::Window).lightness() < 128;
+    
     switch (m_state) {
     case State::Idle:
         m_stateLabel->setText(tr("Prêt à commencer"));
-        m_stateLabel->setStyleSheet("color: #666666;");
+        m_stateLabel->setStyleSheet(isDarkTheme ? "color: #a0a0a0;" : "color: #666666;");
         break;
     case State::Working:
         m_stateLabel->setText(tr("🍅 Session de travail"));
-        m_stateLabel->setStyleSheet("color: #d32f2f;");
+        m_stateLabel->setStyleSheet(isDarkTheme ? "color: #ef5350;" : "color: #d32f2f;");
         m_totalSeconds = WORK_DURATION * 60;
         m_remainingSeconds = m_totalSeconds;
         break;
     case State::ShortBreak:
         m_stateLabel->setText(tr("☕ Pause courte"));
-        m_stateLabel->setStyleSheet("color: #388e3c;");
+        m_stateLabel->setStyleSheet(isDarkTheme ? "color: #66bb6a;" : "color: #388e3c;");
         m_totalSeconds = SHORT_BREAK * 60;
         m_remainingSeconds = m_totalSeconds;
         break;
     case State::LongBreak:
         m_stateLabel->setText(tr("🎉 Pause longue"));
-        m_stateLabel->setStyleSheet("color: #1976d2;");
+        m_stateLabel->setStyleSheet(isDarkTheme ? "color: #42a5f5;" : "color: #1976d2;");
         m_totalSeconds = LONG_BREAK * 60;
         m_remainingSeconds = m_totalSeconds;
         break;
@@ -150,10 +162,14 @@ void PomodoroTimer::updateDisplay()
     }
     m_progressBar->setValue(progress);
     
-    // Mettre à jour les statistiques
+    // Mettre à jour les statistiques avec interruptions
     QLabel *statsLabel = findChild<QLabel*>("statsLabel");
     if (statsLabel) {
-        statsLabel->setText(tr("Pomodoros complétés: %1").arg(m_completedPomodoros));
+        QString stats = tr("Pomodoros complétés: %1").arg(m_completedPomodoros);
+        if (m_interruptionCount > 0) {
+            stats += tr(" | ⚠ Interruptions: %1").arg(m_interruptionCount);
+        }
+        statsLabel->setText(stats);
     }
 }
 
@@ -225,6 +241,9 @@ void PomodoroTimer::onResetClicked()
     m_remainingSeconds = minutes * 60;
     m_totalSeconds = m_remainingSeconds;
     
+    // Réinitialiser aussi le compteur d'interruptions
+    m_interruptionCount = 0;
+    
     m_startPauseButton->setText(tr("Démarrer"));
     updateDisplay();
 }
@@ -247,4 +266,24 @@ void PomodoroTimer::onSkipClicked()
     
     m_startPauseButton->setText(tr("Démarrer"));
     updateDisplay();
+}
+
+void PomodoroTimer::onInterruptionClicked()
+{
+    // Enregistrer l'interruption uniquement si on est en session de travail active
+    if (m_state == State::Working && m_timer->isActive()) {
+        m_interruptionCount++;
+        updateDisplay();
+        
+        // Effet visuel temporaire (changement de propriété)
+        m_interruptionButton->setProperty("flashing", true);
+        m_interruptionButton->style()->unpolish(m_interruptionButton);
+        m_interruptionButton->style()->polish(m_interruptionButton);
+        
+        QTimer::singleShot(200, this, [this]() {
+            m_interruptionButton->setProperty("flashing", false);
+            m_interruptionButton->style()->unpolish(m_interruptionButton);
+            m_interruptionButton->style()->polish(m_interruptionButton);
+        });
+    }
 }

@@ -149,7 +149,9 @@ QLineEdit {
     border: 1px solid #c0c0c0;
     border-radius: 3px;
     padding: 4px 8px;
+    color: #333333;
     selection-background-color: #90caf9;
+    selection-color: #000000;
 }
 
 QLineEdit:focus {
@@ -166,7 +168,16 @@ QTextEdit, QPlainTextEdit {
     background-color: #ffffff;
     border: 1px solid #c0c0c0;
     border-radius: 3px;
+    color: #333333;
     selection-background-color: #90caf9;
+    selection-color: #000000;
+}
+
+/* Text Browser (for previews) */
+QTextBrowser {
+    background-color: #ffffff;
+    border: 1px solid #c0c0c0;
+    color: #333333;
 }
 
 /* Combo Box */
@@ -176,6 +187,7 @@ QComboBox {
     border-radius: 3px;
     padding: 4px 8px;
     padding-right: 20px;
+    color: #333333;
 }
 
 QComboBox:hover {
@@ -200,6 +212,7 @@ QComboBox::down-arrow {
 QComboBox QAbstractItemView {
     background-color: #ffffff;
     border: 1px solid #c0c0c0;
+    color: #333333;
     selection-background-color: #e3f2fd;
     selection-color: #1976d2;
 }
@@ -207,14 +220,16 @@ QComboBox QAbstractItemView {
 /* Tree View */
 QTreeView {
     background-color: #ffffff;
-    alternate-background-color: #f9f9f9;
+    alternate-background-color: #f5f5f5;
     border: 1px solid #d0d0d0;
+    color: #333333;
     selection-background-color: #e3f2fd;
     selection-color: #1976d2;
 }
 
 QTreeView::item {
     padding: 4px;
+    color: #333333;
 }
 
 QTreeView::item:hover {
@@ -222,6 +237,30 @@ QTreeView::item:hover {
 }
 
 QTreeView::item:selected {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+/* List Widget */
+QListWidget {
+    background-color: #ffffff;
+    alternate-background-color: #f5f5f5;
+    border: 1px solid #d0d0d0;
+    color: #333333;
+    selection-background-color: #e3f2fd;
+    selection-color: #1976d2;
+}
+
+QListWidget::item {
+    padding: 4px;
+    color: #333333;
+}
+
+QListWidget::item:hover {
+    background-color: #f0f0f0;
+}
+
+QListWidget::item:selected {
     background-color: #e3f2fd;
     color: #1976d2;
 }
@@ -396,6 +435,7 @@ QSpinBox, QDoubleSpinBox, QDateEdit, QTimeEdit, QDateTimeEdit {
     border: 1px solid #c0c0c0;
     border-radius: 3px;
     padding: 4px;
+    color: #333333;
 }
 
 QSpinBox:focus, QDoubleSpinBox:focus, QDateEdit:focus, QTimeEdit:focus, QDateTimeEdit:focus {
@@ -444,4 +484,26 @@ QToolTip {
     border: 1px solid #c0c0c0;
     padding: 4px;
     border-radius: 2px;
+}
+
+/* Pomodoro Timer - Interruption Button */
+QPushButton#interruptionButton {
+    background-color: #fb923c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+QPushButton#interruptionButton:hover {
+    background-color: #f97316;
+}
+
+QPushButton#interruptionButton:pressed {
+    background-color: #ea580c;
+}
+
+QPushButton#interruptionButton[flashing="true"] {
+    background-color: #ef4444;
+    color: white;
 }

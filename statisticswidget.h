@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "taskmodel.h"
+#include "streakscalculator.h"
 
 namespace Ui {
 class StatisticsWidget;

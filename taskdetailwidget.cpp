@@ -45,6 +45,12 @@ TaskDetailWidget::TaskDetailWidget(QWidget *parent)
     connect(ui->tagsEdit, &QLineEdit::returnPressed, this, &TaskDetailWidget::onTagsEditReturnPressed);
     connect(ui->tagsListWidget, &QListWidget::itemDoubleClicked, this, &TaskDetailWidget::onTagItemDoubleClicked);
     
+    // Gestion du temps
+    connect(ui->estimatedHoursSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &TaskDetailWidget::onUserEdited);
+    connect(ui->estimatedMinutesSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &TaskDetailWidget::onUserEdited);
+    connect(ui->actualHoursSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &TaskDetailWidget::onUserEdited);
+    connect(ui->actualMinutesSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &TaskDetailWidget::onUserEdited);
+    
     // Markdown toolbar
     connect(ui->boldButton, &QToolButton::clicked, this, &TaskDetailWidget::onBoldClicked);
     connect(ui->italicButton, &QToolButton::clicked, this, &TaskDetailWidget::onItalicClicked);
@@ -102,6 +108,23 @@ void TaskDetailWidget::setTask(Task *task)
     // Mettre à jour status
     ui->statusCombo->setCurrentIndex(static_cast<int>(m_task->status()));
     
+    // Mettre à jour le temps
+    int estimatedMins = m_task->estimatedMinutes();
+    ui->estimatedHoursSpinBox->blockSignals(true);
+    ui->estimatedMinutesSpinBox->blockSignals(true);
+    ui->estimatedHoursSpinBox->setValue(estimatedMins / 60);
+    ui->estimatedMinutesSpinBox->setValue(estimatedMins % 60);
+    ui->estimatedHoursSpinBox->blockSignals(false);
+    ui->estimatedMinutesSpinBox->blockSignals(false);
+    
+    int actualMins = m_task->actualMinutes();
+    ui->actualHoursSpinBox->blockSignals(true);
+    ui->actualMinutesSpinBox->blockSignals(true);
+    ui->actualHoursSpinBox->setValue(actualMins / 60);
+    ui->actualMinutesSpinBox->setValue(actualMins % 60);
+    ui->actualHoursSpinBox->blockSignals(false);
+    ui->actualMinutesSpinBox->blockSignals(false);
+    
     // Mettre à jour les tags
     updateTagsList();
     
@@ -147,6 +170,13 @@ void TaskDetailWidget::onApplyClicked()
     m_task->setDueDate(ui->dateEdit->date());
     m_task->setPriority(static_cast<Priority>(ui->priorityCombo->currentIndex()));
     m_task->setStatus(static_cast<Status>(ui->statusCombo->currentIndex()));
+    
+    // Mettre à jour les temps
+    int estimatedMinutes = ui->estimatedHoursSpinBox->value() * 60 + ui->estimatedMinutesSpinBox->value();
+    m_task->setEstimatedMinutes(estimatedMinutes);
+    
+    int actualMinutes = ui->actualHoursSpinBox->value() * 60 + ui->actualMinutesSpinBox->value();
+    m_task->setActualMinutes(actualMinutes);
     
     emit taskModified(m_task);
 }

@@ -188,6 +188,8 @@
     <addaction name="separator"/>
     <addaction name="actionShowCompleted"/>
     <addaction name="separator"/>
+    <addaction name="actionFocusMode"/>
+    <addaction name="separator"/>
     <addaction name="actionDarkMode"/>
    </widget>
    <widget class="QMenu" name="menuLanguage">
@@ -533,6 +535,17 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+D</string>
+   </property>
+  </action>
+  <action name="actionFocusMode">
+   <property name="text">
+    <string>Mode &amp;Focus</string>
+   </property>
+   <property name="toolTip">
+    <string>Afficher uniquement la tâche sélectionnée</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
    </property>
   </action>
  </widget>

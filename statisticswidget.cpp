@@ -37,6 +37,34 @@ void StatisticsWidget::updateStatistics(TaskModel *model)
     int percentage = stats.total > 0 ? (stats.completed * 100 / stats.total) : 0;
     ui->progressBar->setValue(percentage);
     ui->labelProgressText->setText(tr("%1 / %2 tâches complétées").arg(stats.completed).arg(stats.total));
+    
+    // Calcul et affichage des streaks
+    QList<Task*> allTasks;
+    for (Task *task : model->rootTasks()) {
+        allTasks.append(task);
+    }
+    
+    StreaksCalculator::StreakInfo streaks = StreaksCalculator::calculateStreaks(allTasks);
+    
+    // Afficher le streak actuel
+    if (streaks.currentStreak > 0) {
+        ui->labelCurrentStreak->setText(QString("🔥 %1 %2")
+            .arg(streaks.currentStreak)
+            .arg(streaks.currentStreak > 1 ? tr("jours") : tr("jour")));
+    } else {
+        ui->labelCurrentStreak->setText(tr("🔥 0 jour (commencez aujourd'hui!)"));
+    }
+    
+    // Afficher le record
+    if (streaks.longestStreak > 0) {
+        ui->labelLongestStreak->setText(QString("🏆 %1 %2 (%3 - %4)")
+            .arg(streaks.longestStreak)
+            .arg(streaks.longestStreak > 1 ? tr("jours") : tr("jour"))
+            .arg(streaks.longestStreakStart.toString("dd/MM/yy"))
+            .arg(streaks.longestStreakEnd.toString("dd/MM/yy")));
+    } else {
+        ui->labelLongestStreak->setText(tr("🏆 Aucun record"));
+    }
 }
 
 StatisticsWidget::TaskStats StatisticsWidget::calculateStats(TaskModel *model)

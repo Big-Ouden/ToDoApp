@@ -11,7 +11,8 @@ class ThemesManager
 public:
     enum Theme {
         Light,
-        Dark
+        Dark,
+        Warm
     };
     
     /**
@@ -23,6 +24,11 @@ public:
      * @brief Retourne le stylesheet pour le thème sombre.
      */
     static QString darkTheme();
+    
+    /**
+     * @brief Retourne le stylesheet pour le thème chaud (crème/orange).
+     */
+    static QString warmTheme();
     
     /**
      * @brief Applique un thème à l'application.

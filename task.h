@@ -29,6 +29,10 @@ class Task : public QObject
     Q_PROPERTY(Status status READ status WRITE setStatus NOTIFY statusChanged)
     Q_PROPERTY(QStringList tags READ tags WRITE setTags NOTIFY tagsChanged)
     Q_PROPERTY(QList<QUrl> attachments READ attachments WRITE setAttachments NOTIFY attachmentsChanged)
+    Q_PROPERTY(int estimatedMinutes READ estimatedMinutes WRITE setEstimatedMinutes NOTIFY estimatedMinutesChanged)
+    Q_PROPERTY(int actualMinutes READ actualMinutes WRITE setActualMinutes NOTIFY actualMinutesChanged)
+    Q_PROPERTY(QDate completionDate READ completionDate WRITE setCompletionDate NOTIFY completionDateChanged)
+    Q_PROPERTY(QString linkedIssueId READ linkedIssueId WRITE setLinkedIssueId NOTIFY linkedIssueIdChanged)
 
 public:
     /**
@@ -145,6 +149,58 @@ public:
     /** @return true si la tâche est en retard */
     bool isOverdue() const;
     
+    /// Gestion du temps
+    
+    /** @return Temps estimé en minutes */
+    int estimatedMinutes() const;
+    
+    /** @return Temps réel passé en minutes */
+    int actualMinutes() const;
+    
+    /**
+     * @brief Définit le temps estimé.
+     * @param minutes Temps estimé en minutes
+     */
+    void setEstimatedMinutes(int minutes);
+    
+    /**
+     * @brief Définit le temps réel passé.
+     * @param minutes Temps réel en minutes
+     */
+    void setActualMinutes(int minutes);
+    
+    /**
+     * @brief Ajoute du temps au temps réel passé.
+     * @param minutes Minutes à ajouter
+     */
+    void addActualMinutes(int minutes);
+    
+    /** @return Date de complétion de la tâche */
+    const QDate &completionDate() const;
+    
+    /**
+     * @brief Définit la date de complétion.
+     * @param date Date de complétion
+     */
+    void setCompletionDate(const QDate &date);
+    
+    /// Liaison avec issues Git
+    
+    /** @return ID de l'issue Git liée (format: "owner/repo#123") */
+    const QString &linkedIssueId() const;
+    
+    /**
+     * @brief Définit l'ID de l'issue Git liée.
+     * @param issueId ID au format "owner/repo#123" ou vide pour aucune liaison
+     */
+    void setLinkedIssueId(const QString &issueId);
+    
+    /**
+     * @brief Vérifie si la tâche est liée à une issue Git.
+     * @return true si linkedIssueId n'est pas vide
+     */
+    bool hasLinkedIssue() const;
+    
     /** @return Pourcentage de complétion (0-100) */
     int completionPercentage() const;
 
@@ -187,6 +243,10 @@ signals:
     void statusChanged();
     void tagsChanged();
     void attachmentsChanged();
+    void estimatedMinutesChanged();
+    void actualMinutesChanged();
+    void completionDateChanged();
+    void linkedIssueIdChanged();
     void taskModified();
 
     void subtaskAdded(Task*);
@@ -201,6 +261,10 @@ private:
     Status m_status;
     QStringList m_tags;
     QList<QUrl> m_attachments;
+    int m_estimatedMinutes;
+    int m_actualMinutes;
+    QDate m_completionDate;
+    QString m_linkedIssueId;
 
     Task *m_parentTask;
     QList<Task*> m_subtasks;

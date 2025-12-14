@@ -9,6 +9,11 @@ ToDoApp est une application de gestion de tâches permettant de créer, organise
 ## Fonctionnalités principales
 
 * Gestion hiérarchique des tâches et sous-tâches
+* **Intégration Git/Issues** : Synchronisation avec GitHub/GitLab/Gitea
+  * Mode Personnel : tâches quotidiennes classiques
+  * Mode Git : suivi d'issues de projets externes
+  * Multi-repos : gérez plusieurs dépôts simultanément
+  * Liaison tâches ↔ issues pour workflow hybride
 * Système de priorités (Low, Medium, High, Critical)
 * Suivi du statut (Not started, In progress, Completed, Cancelled)
 * Étiquettes (tags) pour catégoriser les tâches
@@ -22,7 +27,7 @@ ToDoApp est une application de gestion de tâches permettant de créer, organise
 
 ## Prérequis
 
-* Qt 5.15 ou Qt 6.2+ (composants : Widgets, Core, PrintSupport, LinguistTools)
+* Qt 5.15 ou Qt 6.2+ (composants : Widgets, Core, PrintSupport, LinguistTools, Network)
 * CMake >= 3.16
 * Compilateur C++17 compatible (GCC, Clang, MSVC)
 * Doxygen >= 1.9 (optionnel, pour générer la documentation)
@@ -182,6 +187,47 @@ Utiliser les préfixes dans le champ de recherche :
 1. Menu Fichier > Exporter en PDF
 2. Choisir un template (Default, Minimal, Detailed, Colorful)
 3. Sélectionner l'emplacement et enregistrer
+
+## Intégration Git/Issues
+
+ToDoApp peut se connecter à **GitHub, GitLab et Gitea** pour synchroniser les issues de vos projets.
+
+### Démarrage rapide
+
+1. **Basculer en Mode Git** : Menu → Vue → Mode Git/Issues
+2. **Ajouter un dépôt** : Bouton "Ajouter"
+   - Plateforme : GitHub ou GitLab
+   - Owner/Repo : `torvalds/linux`
+   - Token : Votre Personal Access Token
+3. **Synchroniser** : Cliquez sur "Synchroniser"
+4. **Créer une tâche liée** : Sélectionnez une issue → "Créer tâche liée"
+5. **Revenir en Mode Personnel** : La tâche apparaît dans votre liste
+
+### Génération des tokens
+
+**GitHub** :
+- https://github.com/settings/tokens → Generate token → Scope `repo`
+
+**GitLab** :
+- https://gitlab.com/-/profile/personal_access_tokens → Scope `api`
+
+### Multi-repos
+
+Vous pouvez configurer plusieurs dépôts (GitHub + GitLab) et basculer entre eux via la liste déroulante.
+
+### Documentation complète
+
+Consultez **GIT_USER_GUIDE.md** pour :
+- Configuration détaillée
+- Workflow recommandés
+- Sécurité et bonnes pratiques
+- Dépannage
+- Exemples concrets
+
+Consultez **GIT_INTEGRATION.md** pour :
+- Architecture technique
+- API documentation
+- Contribution au code
 
 ## Licence
 

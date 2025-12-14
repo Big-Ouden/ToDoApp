@@ -26,6 +26,11 @@ class QLineEdit;
 #include "chartswidget.h"
 #include "timelinewidget.h"
 #include "burndownwidget.h"
+#include "kanbanview.h"
+#include "heatmapwidget.h"
+#include "focusmodedialog.h"
+#include "repositorymanager.h"
+#include "gitprojectwidget.h"
 #include <QDockWidget>
 
 QT_BEGIN_NAMESPACE
@@ -40,6 +45,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    // Mode view (Personal ou Git)
+    enum ViewMode { PersonalMode, GitMode };
+    
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     
@@ -69,6 +77,16 @@ private slots:
     void onImportTasks();
     void onExportCsv();
     void onExportMarkdown();
+    void onFocusMode();
+    
+    // Git integration
+    void onSwitchToPersonalMode();
+    void onSwitchToGitMode();
+    void onTaskCreatedFromIssue(GitIssueTask *issue);
+    void onGitSyncRequested(GitRepository *repo);
+    void switchViewMode(ViewMode mode);
+    void saveRepositories();
+    void loadRepositories();
     
 private:
     void loadPreferences();
@@ -93,6 +111,10 @@ private:
     ChartsWidget *m_chartsWidget;
     TimelineWidget *m_timelineWidget;
     BurndownWidget *m_burndownWidget;
+    KanbanView *m_kanbanView;
+    HeatmapWidget *m_heatmapWidget;
+    RepositoryManager *m_repositoryManager;
+    GitProjectWidget *m_gitProjectWidget;
     bool m_showCompleted;
     bool m_askDeleteConfirmation;
     QTimer *m_autoSaveTimer;
@@ -116,8 +138,25 @@ private:
     QButtonGroup *m_viewButtonGroup;
     QList<int> m_savedSplitterSizes;  // Pour sauvegarder les tailles du splitter
     
+    // Boutons des vues (pour retranslation)
+    QToolButton *m_btnDetails;
+    QToolButton *m_btnStats;
+    QToolButton *m_btnPomodoro;
+    QToolButton *m_btnCharts;
+    QToolButton *m_btnTimeline;
+    QToolButton *m_btnBurndown;
+    QToolButton *m_btnKanban;
+    QToolButton *m_btnHeatmap;
+    QToolButton *m_btnHide;
+    
+    ViewMode m_viewMode;
+    QWidget *m_personalView;  // Vue actuelle (liste de tâches)
+    QAction *m_personalModeAction;
+    QAction *m_gitModeAction;
+    
     void setupRightPanel();
     void showView(int index);
+    void retranslateViewButtons();
 };
 
 #endif // MAINWINDOW_H

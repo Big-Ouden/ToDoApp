@@ -45,6 +45,22 @@ public:
     void setModelData(QWidget *editor,
                       QAbstractItemModel *model,
                       const QModelIndex &index) const override;
+
+    /**
+     * @brief Gère l'affichage d'aide (tooltip enrichi).
+     * @param event Événement
+     * @param view Vue
+     * @param option Options de style
+     * @param index Index de la cellule
+     * @return true si l'événement est géré
+     */
+    bool helpEvent(QHelpEvent *event,
+                   QAbstractItemView *view,
+                   const QStyleOptionViewItem &option,
+                   const QModelIndex &index) override;
+
+private:
+    QString generateRichTooltip(const QModelIndex &index) const;
 };
 
 #endif // TASKITEMDELEGATE_H

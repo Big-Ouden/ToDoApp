@@ -12,6 +12,8 @@ Task::Task(const QString &title, QObject *parent)
     m_dueDate(),
     m_priority(Priority::LOW),
     m_status(Status::NOTSTARTED),
+    m_estimatedMinutes(0),
+    m_actualMinutes(0),
     m_parentTask(nullptr)
 {
 }
@@ -86,12 +88,24 @@ void Task::setPriority(Priority p)
 Status Task::status() const { return m_status; }
 
 /**
- * @brief Définit le statut et notifie.
+ * @brief Définit le statut.
  */
 void Task::setStatus(Status s)
 {
     if (m_status == s) return;
     m_status = s;
+    
+    // Si la tâche devient terminée, enregistrer la date de complétion
+    if (m_status == Status::COMPLETED && !m_completionDate.isValid()) {
+        m_completionDate = QDate::currentDate();
+        emit completionDateChanged();
+    }
+    // Si la tâche n'est plus terminée, réinitialiser la date
+    else if (m_status != Status::COMPLETED && m_completionDate.isValid()) {
+        m_completionDate = QDate();
+        emit completionDateChanged();
+    }
+    
     emit statusChanged();
     emit taskModified();
 }
@@ -284,3 +298,74 @@ void Task::removeAttachment(const QUrl &url)
         emit taskModified();
     }
 }
+
+// ========================================
+// Gestion du temps
+// ========================================
+
+int Task::estimatedMinutes() const
+{
+    return m_estimatedMinutes;
+}
+
+int Task::actualMinutes() const
+{
+    return m_actualMinutes;
+}
+
+void Task::setEstimatedMinutes(int minutes)
+{
+    if (m_estimatedMinutes != minutes) {
+        m_estimatedMinutes = qMax(0, minutes);
+        emit estimatedMinutesChanged();
+        emit taskModified();
+    }
+}
+
+void Task::setActualMinutes(int minutes)
+{
+    if (m_actualMinutes != minutes) {
+        m_actualMinutes = qMax(0, minutes);
+        emit actualMinutesChanged();
+        emit taskModified();
+    }
+}
+
+void Task::addActualMinutes(int minutes)
+{
+    setActualMinutes(m_actualMinutes + minutes);
+}
+
+const QDate &Task::completionDate() const
+{
+    return m_completionDate;
+}
+
+void Task::setCompletionDate(const QDate &date)
+{
+    if (m_completionDate != date) {
+        m_completionDate = date;
+        emit completionDateChanged();
+        emit taskModified();
+    }
+}
+
+const QString &Task::linkedIssueId() const
+{
+    return m_linkedIssueId;
+}
+
+void Task::setLinkedIssueId(const QString &issueId)
+{
+    if (m_linkedIssueId != issueId) {
+        m_linkedIssueId = issueId;
+        emit linkedIssueIdChanged();
+        emit taskModified();
+    }
+}
+
+bool Task::hasLinkedIssue() const
+{
+    return !m_linkedIssueId.isEmpty();
+}
+

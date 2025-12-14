@@ -261,13 +261,115 @@
      </item>
 
      <item row="6" column="0">
+      <widget class="QLabel" name="labelEstimatedTime">
+       <property name="text">
+        <string>Temps estimé :</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <layout class="QHBoxLayout" name="estimatedTimeLayout">
+       <item>
+        <widget class="QSpinBox" name="estimatedHoursSpinBox">
+         <property name="suffix">
+          <string> h</string>
+         </property>
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>999</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="estimatedMinutesSpinBox">
+         <property name="suffix">
+          <string> min</string>
+         </property>
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>59</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="estimatedTimeSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+
+     <item row="7" column="0">
+      <widget class="QLabel" name="labelActualTime">
+       <property name="text">
+        <string>Temps réel :</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <layout class="QHBoxLayout" name="actualTimeLayout">
+       <item>
+        <widget class="QSpinBox" name="actualHoursSpinBox">
+         <property name="suffix">
+          <string> h</string>
+         </property>
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>999</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="actualMinutesSpinBox">
+         <property name="suffix">
+          <string> min</string>
+         </property>
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>59</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="actualTimeSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+
+     <item row="8" column="0">
       <widget class="QLabel" name="labelAttachments">
        <property name="text">
         <string>Pièces jointes :</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="8" column="1">
       <layout class="QVBoxLayout" name="attachmentsLayout">
        <item>
         <layout class="QHBoxLayout" name="attachmentsButtonsLayout">

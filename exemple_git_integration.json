@@ -1,0 +1,107 @@
+{
+    "tasks": [
+        {
+            "attachments": [
+            ],
+            "description": "Issue liée: #42\n\nCette tâche est liée à l'issue GitHub torvalds/linux#42.\nVous pouvez créer des sous-tâches, suivre le temps, etc.",
+            "dueDate": "",
+            "id": "{663ed812-4fbb-413c-89bd-5a46bc14b771}",
+            "priority": "Low",
+            "status": "Completed",
+            "subtasks": [
+                {
+                    "attachments": [
+                    ],
+                    "description": "",
+                    "dueDate": "",
+                    "id": "{bcb6c642-134d-4714-ad95-87b6b6d6934e}",
+                    "priority": "Low",
+                    "status": "Completed",
+                    "subtasks": [
+                    ],
+                    "tags": [
+                    ],
+                    "title": "Reproduire le bug localement"
+                },
+                {
+                    "attachments": [
+                    ],
+                    "description": "",
+                    "dueDate": "",
+                    "id": "{55bd9e41-1f78-4601-b6b6-913ad8fc8a12}",
+                    "priority": "Low",
+                    "status": "Completed",
+                    "subtasks": [
+                    ],
+                    "tags": [
+                    ],
+                    "title": "Identifier la cause root"
+                },
+                {
+                    "attachments": [
+                    ],
+                    "description": "",
+                    "dueDate": "",
+                    "id": "{78926c4a-5671-46a2-a105-306aa4d629e3}",
+                    "priority": "Low",
+                    "status": "Completed",
+                    "subtasks": [
+                    ],
+                    "tags": [
+                    ],
+                    "title": "Écrire le fix et tests"
+                }
+            ],
+            "tags": [
+                "bug",
+                "kernel",
+                "high-priority"
+            ],
+            "title": "Exemple de tâche liée à une issue GitHub"
+        },
+        {
+            "attachments": [
+            ],
+            "description": "Cette tâche n'est pas liée à une issue externe.\nC'est une tâche purement personnelle.",
+            "dueDate": "",
+            "id": "{1d3e9984-1a03-4a84-84fc-1b625486b794}",
+            "priority": "Low",
+            "status": "Completed",
+            "subtasks": [
+            ],
+            "tags": [
+                "personnel",
+                "formation"
+            ],
+            "title": "Tâche personnelle sans lien issue"
+        },
+        {
+            "attachments": [
+            ],
+            "description": "Issue liée: #3750\n\n## Display the version number of the available update\r\nI wanted to know ahead, which version number is available when the 'update available' module appears in the waybar.\r\n\r\nSince the `omarchy-update-available` command already returns a string like `Omarchy update available (v3.2.2)`, might as well just use it instead of hard coding the string without the version number.\r\n\r\nPreview:\r\n<img width=\"429\" height=\"129\" alt=\"screenshot-2025-12-03_11-20-07\" src=\"https://github.com/user-attachments/assets/9c15f16a-d661-4826-9a5d-e8c94a5fe859\" />\r\n\r\n## Open the GitHub releases page when right clicking the module\r\nAlso, since I always read the release notes (as you should) before updating, I wanted a quick way to do it. So I added a right-click function to the update module that opens `https://github.com/basecamp/omarchy/releases`.\r\n\r\nOriginally brought up here: https://github.com/basecamp/omarchy/discussions/3324",
+            "dueDate": "",
+            "id": "{ad29d4a8-7b91-4546-ba3f-5f4ed5d4055a}",
+            "priority": "Low",
+            "status": "Completed",
+            "subtasks": [
+            ],
+            "tags": [
+            ],
+            "title": "Travail sur: Small improvements to the 'update available' waybar module"
+        },
+        {
+            "attachments": [
+            ],
+            "description": "Issue liée: #3873\n\nScreensaver launch is broken when Walker is open: It will fail to go fullscreen and exits right after input read's first iteration, due to the screensaver_in_focus() check. See https://github.com/basecamp/omarchy/issues/2992 for an example report.\r\n\r\nThis addition will silently quit an opened Walker menu before launching the screensaver terminal. It is mildly intrusive, alas, as a return from screensaver will not present the pre-screensaver state exactly.",
+            "dueDate": "",
+            "id": "{9f98e52b-4d9f-42df-a999-ce6829105abb}",
+            "priority": "Low",
+            "status": "Completed",
+            "subtasks": [
+            ],
+            "tags": [
+            ],
+            "title": "Travail sur: Quit Walker before screensaver launch"
+        }
+    ]
+}

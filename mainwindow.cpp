@@ -27,6 +27,9 @@
 #include <QToolButton>
 #include <QButtonGroup>
 #include <QToolBar>
+#include <QScrollArea>
+#include <QJsonDocument>
+#include <QJsonArray>
 
 /**
  * @file mainwindow.cpp
@@ -75,6 +78,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_chartsWidget = new ChartsWidget(m_taskModel, this);
     m_timelineWidget = new TimelineWidget(m_taskModel, this);
     m_burndownWidget = new BurndownWidget(m_taskModel, this);
+    m_kanbanView = new KanbanView(m_taskModel, this);
+    m_heatmapWidget = new HeatmapWidget(m_taskModel, this);
     
     // Configuration du panneau de droite avec barre verticale
     setupRightPanel();
@@ -167,8 +172,32 @@ MainWindow::MainWindow(QWidget *parent)
     // ========================================
     setupConnections();
     
+    // ========================================
+    // Initialiser le gestionnaire de dépôts Git
+    // ========================================
+    m_repositoryManager = new RepositoryManager(this);
+    m_gitProjectWidget = new GitProjectWidget(nullptr);  // Pas de parent pour l'instant
+    m_gitProjectWidget->setRepositoryManager(m_repositoryManager);
+    m_gitProjectWidget->hide();  // Caché par défaut
+    
+    connect(m_gitProjectWidget, &GitProjectWidget::taskCreatedFromIssue,
+            this, &MainWindow::onTaskCreatedFromIssue);
+    connect(m_gitProjectWidget, &GitProjectWidget::syncRequested,
+            this, &MainWindow::onGitSyncRequested);
+    connect(m_gitProjectWidget, &GitProjectWidget::repositoryAdded,
+            this, [this](GitRepository*) { saveRepositories(); });
+    connect(m_gitProjectWidget, &GitProjectWidget::repositoryModified,
+            this, [this](GitRepository*) { saveRepositories(); });
+    connect(m_gitProjectWidget, &GitProjectWidget::repositoryDeleted,
+            this, [this](GitRepository*) { saveRepositories(); });
+    
+    // Sauvegarder la vue personnelle actuelle
+    m_personalView = centralWidget();  // Récupérer le widget central actuel
+    m_viewMode = PersonalMode;
+    
     // Charger les préférences avant de définir la locale
     loadPreferences();
+    loadRepositories();
     
     // Appliquer la langue chargée depuis les préférences
     setLanguage(m_currentLanguage);
@@ -178,6 +207,9 @@ MainWindow::MainWindow(QWidget *parent)
     
     updateStatusBar();
     setWindowTitle(tr("ToDoApp - Nouveau fichier"));
+    
+    // Définir une taille de fenêtre par défaut plus grande
+    resize(1400, 900);
 }
 
 MainWindow::~MainWindow()
@@ -258,6 +290,17 @@ void MainWindow::setupConnections()
         m_taskModel->setDarkMode(checked);
     });
     
+    // Action pour th\u00e8me Warm (Ctrl+W)
+    QAction *warmThemeAction = new QAction(tr("Th\u00e8me Chaud"), this);
+    warmThemeAction->setShortcut(QKeySequence(tr("Ctrl+W")));
+    connect(warmThemeAction, &QAction::triggered, this, [this]() {
+        ThemesManager::applyTheme(ThemesManager::Warm);
+        m_isDarkMode = false;
+        ui->actionDarkMode->setChecked(false);
+        m_taskModel->setDarkMode(false);
+    });
+    addAction(warmThemeAction);  // Ajoute au context menu de la fenêtre
+    
     // Groupe pour langues mutuellement exclusives
     if (!m_languageGroup) {
         m_languageGroup = new QActionGroup(this);
@@ -270,6 +313,7 @@ void MainWindow::setupConnections()
     
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::onAbout);
     connect(ui->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
+    connect(ui->actionFocusMode, &QAction::triggered, this, &MainWindow::onFocusMode);
     
     // Note: Les widgets de recherche et filtres sont maintenant ajoutés directement dans la toolbar
     // et connectés dans le constructeur, pas ici.
@@ -323,6 +367,29 @@ void MainWindow::setupConnections()
     // Connexion pour le filtrage des tâches complétées
     // ========================================
     connect(ui->actionShowCompleted, &QAction::toggled, this, &MainWindow::onShowCompletedToggled);
+    
+    // ========================================
+    // Actions pour le mode Git
+    // ========================================
+    m_personalModeAction = new QAction(tr("Mode Personnel"), this);
+    m_personalModeAction->setCheckable(true);
+    m_personalModeAction->setChecked(true);
+    m_personalModeAction->setShortcut(QKeySequence(tr("Ctrl+T")));
+    connect(m_personalModeAction, &QAction::triggered, this, &MainWindow::onSwitchToPersonalMode);
+    
+    m_gitModeAction = new QAction(tr("Mode Git/Issues"), this);
+    m_gitModeAction->setCheckable(true);
+    m_gitModeAction->setShortcut(QKeySequence(tr("Ctrl+G")));
+    connect(m_gitModeAction, &QAction::triggered, this, &MainWindow::onSwitchToGitMode);
+    
+    QActionGroup *modeGroup = new QActionGroup(this);
+    modeGroup->addAction(m_personalModeAction);
+    modeGroup->addAction(m_gitModeAction);
+    
+    // Ajouter au menu Vue
+    ui->menuView->addSeparator();
+    ui->menuView->addAction(m_personalModeAction);
+    ui->menuView->addAction(m_gitModeAction);
 }
 
 void MainWindow::onTaskSelectionChanged(const QModelIndex &current, const QModelIndex & /*previous*/)
@@ -481,6 +548,7 @@ void MainWindow::onSaveFile()
     }
     
     if (PersistenceManager::saveToJson(m_currentFilePath, m_taskModel->rootTasks())) {
+        saveRepositories();  // Sauvegarder aussi les dépôts Git
         statusBar()->showMessage(tr("Fichier enregistré : %1").arg(m_currentFilePath), 3000);
         setWindowTitle(tr("ToDoApp - %1").arg(QFileInfo(m_currentFilePath).fileName()));
     } else {
@@ -495,6 +563,7 @@ void MainWindow::onAutoSave()
     // Sauvegarde automatique silencieuse (pas de message si vide)
     if (!m_currentFilePath.isEmpty()) {
         if (PersistenceManager::saveToJson(m_currentFilePath, m_taskModel->rootTasks())) {
+            saveRepositories();  // Sauvegarder aussi les dépôts Git
             statusBar()->showMessage(tr("Sauvegarde automatique effectuée"), 2000);
         }
     }
@@ -836,8 +905,10 @@ void MainWindow::setLanguage(const QString &lang)
 
 void MainWindow::changeEvent(QEvent *event)
 {
-    if (event->type() == QEvent::LanguageChange)
+    if (event->type() == QEvent::LanguageChange) {
         ui->retranslateUi(this);
+        retranslateViewButtons();
+    }
     QMainWindow::changeEvent(event);
 }
 
@@ -1226,6 +1297,31 @@ void MainWindow::onExportMarkdown()
     }
 }
 
+void MainWindow::onFocusMode()
+{
+    // Obtenir la tâche sélectionnée
+    QModelIndex proxyIndex = ui->taskTreeView->currentIndex();
+    if (!proxyIndex.isValid()) {
+        QMessageBox::information(this, tr("Mode Focus"), 
+                                 tr("Veuillez sélectionner une tâche à afficher en mode Focus."));
+        return;
+    }
+    
+    QModelIndex sourceIndex = m_proxyModel->mapToSource(proxyIndex);
+    Task *task = m_taskModel->getTask(sourceIndex);
+    
+    if (!task) {
+        return;
+    }
+    
+    // Ouvrir le dialog Focus Mode
+    FocusModeDialog dialog(task, this);
+    dialog.exec();
+    
+    // Rafraîchir l'affichage après fermeture
+    m_detailWidget->setTask(task);
+}
+
 void MainWindow::setupRightPanel()
 {
     // Créer un widget conteneur principal pour la partie droite du splitter
@@ -1234,10 +1330,18 @@ void MainWindow::setupRightPanel()
     rightLayout->setContentsMargins(0, 0, 0, 0);
     rightLayout->setSpacing(0);
     
+    // Créer un QScrollArea pour le panneau de contenu
+    QScrollArea *scrollArea = new QScrollArea(rightContainer);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    
     // Créer le panneau de contenu (qui sera caché/affiché)
-    m_rightPanel = new QWidget(rightContainer);
+    m_rightPanel = new QWidget();
+    m_rightPanel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     QVBoxLayout *panelLayout = new QVBoxLayout(m_rightPanel);
-    panelLayout->setContentsMargins(0, 0, 0, 0);
+    panelLayout->setContentsMargins(5, 5, 5, 5);
     panelLayout->setSpacing(0);
     
     // Créer le stack de vues
@@ -1248,8 +1352,17 @@ void MainWindow::setupRightPanel()
     m_viewStack->addWidget(m_chartsWidget);        // Index 3
     m_viewStack->addWidget(m_timelineWidget);      // Index 4
     m_viewStack->addWidget(m_burndownWidget);      // Index 5
+    m_viewStack->addWidget(m_kanbanView);          // Index 6
+    m_viewStack->addWidget(m_heatmapWidget);       // Index 7
     
     panelLayout->addWidget(m_viewStack);
+    
+    // Définir une largeur minimale pour le contenu
+    m_rightPanel->setMinimumWidth(400);
+    
+    // Ajouter le panneau au scroll area
+    scrollArea->setWidget(m_rightPanel);
+    scrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     
     // Créer la barre verticale à droite (reste toujours visible)
     m_viewToolBar = new QToolBar(rightContainer);
@@ -1265,65 +1378,80 @@ void MainWindow::setupRightPanel()
     m_viewButtonGroup = new QButtonGroup(this);
     m_viewButtonGroup->setExclusive(true);
     
-    // Créer les boutons de vue avec icônes
-    QToolButton *btnDetails = new QToolButton();
-    btnDetails->setIcon(QIcon(":/icons/about.png"));
-    btnDetails->setText(tr("Détails"));
-    btnDetails->setCheckable(true);
-    btnDetails->setChecked(true);
-    btnDetails->setToolTip(tr("Afficher les détails de la tâche"));
-    m_viewButtonGroup->addButton(btnDetails, 0);
+    // Créer les boutons de vue avec icônes (stockés comme membres pour retranslation)
+    m_btnDetails = new QToolButton();
+    m_btnDetails->setIcon(QIcon(":/icons/about.png"));
+    m_btnDetails->setText(tr("Détails"));
+    m_btnDetails->setCheckable(true);
+    m_btnDetails->setChecked(true);
+    m_btnDetails->setToolTip(tr("Afficher les détails de la tâche"));
+    m_viewButtonGroup->addButton(m_btnDetails, 0);
     
-    QToolButton *btnStats = new QToolButton();
-    btnStats->setIcon(QIcon(":/icons/stats.png"));
-    btnStats->setText(tr("Stats"));
-    btnStats->setCheckable(true);
-    btnStats->setToolTip(tr("Afficher les statistiques"));
-    m_viewButtonGroup->addButton(btnStats, 1);
+    m_btnStats = new QToolButton();
+    m_btnStats->setIcon(QIcon(":/icons/stats.png"));
+    m_btnStats->setText(tr("Stats"));
+    m_btnStats->setCheckable(true);
+    m_btnStats->setToolTip(tr("Afficher les statistiques"));
+    m_viewButtonGroup->addButton(m_btnStats, 1);
     
-    QToolButton *btnPomodoro = new QToolButton();
-    btnPomodoro->setIcon(QIcon(":/icons/pomodoro.png"));
-    btnPomodoro->setText(tr("Timer"));
-    btnPomodoro->setCheckable(true);
-    btnPomodoro->setToolTip(tr("Timer Pomodoro"));
-    m_viewButtonGroup->addButton(btnPomodoro, 2);
+    m_btnPomodoro = new QToolButton();
+    m_btnPomodoro->setIcon(QIcon(":/icons/pomodoro.png"));
+    m_btnPomodoro->setText(tr("Timer"));
+    m_btnPomodoro->setCheckable(true);
+    m_btnPomodoro->setToolTip(tr("Timer Pomodoro"));
+    m_viewButtonGroup->addButton(m_btnPomodoro, 2);
     
-    QToolButton *btnCharts = new QToolButton();
-    btnCharts->setIcon(QIcon(":/icons/charts.png"));
-    btnCharts->setText(tr("Charts"));
-    btnCharts->setCheckable(true);
-    btnCharts->setToolTip(tr("Graphiques"));
-    m_viewButtonGroup->addButton(btnCharts, 3);
+    m_btnCharts = new QToolButton();
+    m_btnCharts->setIcon(QIcon(":/icons/charts.png"));
+    m_btnCharts->setText(tr("Charts"));
+    m_btnCharts->setCheckable(true);
+    m_btnCharts->setToolTip(tr("Graphiques"));
+    m_viewButtonGroup->addButton(m_btnCharts, 3);
     
-    QToolButton *btnTimeline = new QToolButton();
-    btnTimeline->setIcon(QIcon(":/icons/calendar.png"));
-    btnTimeline->setText(tr("Cal."));
-    btnTimeline->setCheckable(true);
-    btnTimeline->setToolTip(tr("Calendrier"));
-    m_viewButtonGroup->addButton(btnTimeline, 4);
+    m_btnTimeline = new QToolButton();
+    m_btnTimeline->setIcon(QIcon(":/icons/calendar.png"));
+    m_btnTimeline->setText(tr("Cal."));
+    m_btnTimeline->setCheckable(true);
+    m_btnTimeline->setToolTip(tr("Calendrier"));
+    m_viewButtonGroup->addButton(m_btnTimeline, 4);
     
-    QToolButton *btnBurndown = new QToolButton();
-    btnBurndown->setIcon(QIcon(":/icons/burndown.png"));
-    btnBurndown->setText(tr("Avanc."));
-    btnBurndown->setCheckable(true);
-    btnBurndown->setToolTip(tr("Avancement"));
-    m_viewButtonGroup->addButton(btnBurndown, 5);
+    m_btnBurndown = new QToolButton();
+    m_btnBurndown->setIcon(QIcon(":/icons/burndown.png"));
+    m_btnBurndown->setText(tr("Avanc."));
+    m_btnBurndown->setCheckable(true);
+    m_btnBurndown->setToolTip(tr("Avancement"));
+    m_viewButtonGroup->addButton(m_btnBurndown, 5);
+    
+    m_btnKanban = new QToolButton();
+    m_btnKanban->setIcon(QIcon(":/icons/kanban.png"));
+    m_btnKanban->setText(tr("Kanban"));
+    m_btnKanban->setCheckable(true);
+    m_btnKanban->setToolTip(tr("Vue Kanban"));
+    m_viewButtonGroup->addButton(m_btnKanban, 6);
+    
+    m_btnHeatmap = new QToolButton();
+    m_btnHeatmap->setIcon(QIcon(":/icons/heatmap.png"));
+    m_btnHeatmap->setText(tr("Activity"));
+    m_btnHeatmap->setCheckable(true);
+    m_btnHeatmap->setToolTip(tr("Heatmap d'activité"));
+    m_viewButtonGroup->addButton(m_btnHeatmap, 7);
     
     // Bouton pour réduire/masquer le panneau
-    QToolButton *btnHide = new QToolButton();
-    btnHide->setIcon(QIcon(":/icons/hide_panel.png"));
-    btnHide->setText(tr("◀"));
-    btnHide->setToolTip(tr("Masquer le panneau"));
-    connect(btnHide, &QToolButton::clicked, this, [this, btnHide, rightContainer]() {
+    m_btnHide = new QToolButton();
+    m_btnHide->setIcon(QIcon(":/icons/hide_panel.png"));
+    m_btnHide->setText(tr("◀"));
+    m_btnHide->setToolTip(tr("Masquer le panneau"));
+    connect(m_btnHide, &QToolButton::clicked, this, [this, scrollArea]() {
         if (m_rightPanel->isVisible()) {
             // Sauvegarder les tailles actuelles
             m_savedSplitterSizes = ui->splitter->sizes();
             
-            // Masquer le panneau de contenu
+            // Masquer le panneau de contenu ET le scrollArea
             m_rightPanel->hide();
-            btnHide->setIcon(QIcon(":/icons/show_panel.png"));
-            btnHide->setText(tr("▶"));
-            btnHide->setToolTip(tr("Afficher le panneau"));
+            scrollArea->hide();
+            m_btnHide->setIcon(QIcon(":/icons/show_panel.png"));
+            m_btnHide->setText(tr("▶"));
+            m_btnHide->setToolTip(tr("Afficher le panneau"));
             
             // Réduire le rightContainer à sa taille minimale (juste la toolbar)
             int toolbarWidth = m_viewToolBar->sizeHint().width();
@@ -1331,11 +1459,12 @@ void MainWindow::setupRightPanel()
             int totalWidth = sizes[0] + sizes[1];
             ui->splitter->setSizes(QList<int>() << (totalWidth - toolbarWidth) << toolbarWidth);
         } else {
-            // Afficher le panneau de contenu
+            // Afficher le panneau de contenu ET le scrollArea
+            scrollArea->show();
             m_rightPanel->show();
-            btnHide->setIcon(QIcon(":/icons/hide_panel.png"));
-            btnHide->setText(tr("◀"));
-            btnHide->setToolTip(tr("Masquer le panneau"));
+            m_btnHide->setIcon(QIcon(":/icons/hide_panel.png"));
+            m_btnHide->setText(tr("◀"));
+            m_btnHide->setToolTip(tr("Masquer le panneau"));
             
             // Restaurer les tailles sauvegardées
             if (!m_savedSplitterSizes.isEmpty()) {
@@ -1345,22 +1474,28 @@ void MainWindow::setupRightPanel()
     });
     
     // Ajouter les boutons à la toolbar
-    m_viewToolBar->addWidget(btnDetails);
-    m_viewToolBar->addWidget(btnStats);
-    m_viewToolBar->addWidget(btnPomodoro);
-    m_viewToolBar->addWidget(btnCharts);
-    m_viewToolBar->addWidget(btnTimeline);
-    m_viewToolBar->addWidget(btnBurndown);
+    m_viewToolBar->addWidget(m_btnDetails);
+    m_viewToolBar->addWidget(m_btnStats);
+    m_viewToolBar->addWidget(m_btnPomodoro);
+    m_viewToolBar->addWidget(m_btnCharts);
+    m_viewToolBar->addWidget(m_btnTimeline);
+    m_viewToolBar->addWidget(m_btnBurndown);
+    m_viewToolBar->addWidget(m_btnKanban);
+    m_viewToolBar->addWidget(m_btnHeatmap);
     m_viewToolBar->addSeparator();
-    m_viewToolBar->addWidget(btnHide);
+    m_viewToolBar->addWidget(m_btnHide);
     
     // Connecter les changements de bouton au changement de vue
     connect(m_viewButtonGroup, QOverload<int>::of(&QButtonGroup::idClicked),
             this, &MainWindow::showView);
     
-    // Assembler le conteneur de droite: toolbar à gauche + panneau de contenu à droite
+    // Assembler le conteneur de droite: toolbar à gauche + scroll area à droite
     rightLayout->addWidget(m_viewToolBar, 0);  // La toolbar reste fixe à gauche
-    rightLayout->addWidget(m_rightPanel, 1);  // Le panneau prend l'espace restant
+    rightLayout->addWidget(scrollArea, 1);  // Le scroll area prend l'espace restant
+    
+    // Définir la taille policy du scroll area
+    scrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    scrollArea->setMinimumWidth(0);  // Permettre au scroll area de rétrécir complètement
     
     // Remplacer le widget du splitter
     ui->splitter->replaceWidget(1, rightContainer);
@@ -1369,8 +1504,8 @@ void MainWindow::setupRightPanel()
     ui->splitter->setStretchFactor(0, 1);  // La liste des tâches s'étire
     ui->splitter->setStretchFactor(1, 0);  // Le panneau de droite garde sa taille
     
-    // Définir les tailles initiales du splitter
-    ui->splitter->setSizes(QList<int>() << 700 << 500);
+    // Définir les tailles initiales du splitter (augmentées pour plus d'espace)
+    ui->splitter->setSizes(QList<int>() << 800 << 600);
 }
 
 void MainWindow::showView(int index)
@@ -1378,4 +1513,167 @@ void MainWindow::showView(int index)
     if (index >= 0 && index < m_viewStack->count()) {
         m_viewStack->setCurrentIndex(index);
     }
+}
+
+void MainWindow::retranslateViewButtons()
+{
+    if (m_btnDetails) {
+        m_btnDetails->setText(tr("Détails"));
+        m_btnDetails->setToolTip(tr("Afficher les détails de la tâche"));
+    }
+    if (m_btnStats) {
+        m_btnStats->setText(tr("Stats"));
+        m_btnStats->setToolTip(tr("Afficher les statistiques"));
+    }
+    if (m_btnPomodoro) {
+        m_btnPomodoro->setText(tr("Timer"));
+        m_btnPomodoro->setToolTip(tr("Timer Pomodoro"));
+    }
+    if (m_btnCharts) {
+        m_btnCharts->setText(tr("Charts"));
+        m_btnCharts->setToolTip(tr("Graphiques"));
+    }
+    if (m_btnTimeline) {
+        m_btnTimeline->setText(tr("Cal."));
+        m_btnTimeline->setToolTip(tr("Calendrier"));
+    }
+    if (m_btnBurndown) {
+        m_btnBurndown->setText(tr("Avanc."));
+        m_btnBurndown->setToolTip(tr("Avancement"));
+    }
+    if (m_btnKanban) {
+        m_btnKanban->setText(tr("Kanban"));
+        m_btnKanban->setToolTip(tr("Vue Kanban"));
+    }
+    if (m_btnHeatmap) {
+        m_btnHeatmap->setText(tr("Activity"));
+        m_btnHeatmap->setToolTip(tr("Heatmap d'activité"));
+    }
+    if (m_btnHide) {
+        // Update based on current state
+        if (m_rightPanel && m_rightPanel->isVisible()) {
+            m_btnHide->setText(tr("◀"));
+            m_btnHide->setToolTip(tr("Masquer le panneau"));
+        } else {
+            m_btnHide->setText(tr("▶"));
+            m_btnHide->setToolTip(tr("Afficher le panneau"));
+        }
+    }
+}
+
+void MainWindow::onSwitchToPersonalMode()
+{
+    switchViewMode(PersonalMode);
+}
+
+void MainWindow::onSwitchToGitMode()
+{
+    switchViewMode(GitMode);
+}
+
+void MainWindow::switchViewMode(ViewMode mode)
+{
+    if (m_viewMode == mode)
+        return;
+    
+    m_viewMode = mode;
+    
+    if (mode == PersonalMode) {
+        // Sauvegarder le widget Git et restaurer la vue personnelle
+        QWidget *currentWidget = takeCentralWidget();  // Retire sans supprimer
+        if (currentWidget && currentWidget != m_personalView) {
+            currentWidget->hide();
+        }
+        
+        if (m_personalView) {
+            setCentralWidget(m_personalView);
+            m_personalView->show();
+        }
+        ui->mainToolBar->setVisible(true);
+        statusBar()->showMessage(tr("Mode Personnel activé"), 2000);
+    } else {
+        // Sauvegarder la vue personnelle et afficher le widget Git
+        QWidget *currentWidget = takeCentralWidget();  // Retire sans supprimer
+        if (currentWidget) {
+            currentWidget->hide();
+        }
+        
+        if (m_gitProjectWidget) {
+            m_gitProjectWidget->setParent(this);  // Donner un parent temporairement
+            setCentralWidget(m_gitProjectWidget);
+            m_gitProjectWidget->show();
+        }
+        ui->mainToolBar->setVisible(false);  // Masquer la toolbar des tâches
+        statusBar()->showMessage(tr("Mode Git/Issues activé"), 2000);
+    }
+}
+
+void MainWindow::onTaskCreatedFromIssue(GitIssueTask *issue)
+{
+    if (!issue)
+        return;
+    
+    // Créer une tâche personnelle liée à cette issue
+    Task *personalTask = new Task(tr("Travail sur: %1").arg(issue->title()), this);
+    personalTask->setDescription(tr("Issue liée: #%1\n\n%2")
+                                .arg(issue->issueNumber())
+                                .arg(issue->description()));
+    personalTask->setLinkedIssueId(QString("%1/%2#%3")
+                                   .arg(issue->repositoryUrl().section("/", -2, -2))  // owner
+                                   .arg(issue->repositoryUrl().section("/", -1))      // repo
+                                   .arg(issue->issueNumber()));
+    
+    // Copier les tags
+    personalTask->setTags(issue->tags());
+    
+    // Ajouter au modèle
+    m_taskModel->insertTask(personalTask);
+    
+    // Revenir en mode personnel
+    switchViewMode(PersonalMode);
+    
+    statusBar()->showMessage(tr("Tâche personnelle créée depuis l'issue #%1").arg(issue->issueNumber()), 3000);
+}
+
+void MainWindow::onGitSyncRequested(GitRepository *repo)
+{
+    if (!repo)
+        return;
+    
+    statusBar()->showMessage(tr("Synchronisation de %1/%2...").arg(repo->owner(), repo->repoName()), 2000);
+    // La synchronisation est gérée par GitProjectWidget
+}
+
+void MainWindow::saveRepositories()
+{
+    if (!m_repositoryManager)
+        return;
+    
+    QSettings settings;
+    settings.beginGroup("GitRepositories");
+    
+    QJsonArray reposArray = m_repositoryManager->toJson();
+    QJsonDocument doc(reposArray);
+    settings.setValue("repositories", doc.toJson(QJsonDocument::Compact));
+    
+    settings.endGroup();
+}
+
+void MainWindow::loadRepositories()
+{
+    if (!m_repositoryManager)
+        return;
+    
+    QSettings settings;
+    settings.beginGroup("GitRepositories");
+    
+    QByteArray data = settings.value("repositories").toByteArray();
+    if (!data.isEmpty()) {
+        QJsonDocument doc = QJsonDocument::fromJson(data);
+        if (doc.isArray()) {
+            m_repositoryManager->fromJson(doc.array());
+        }
+    }
+    
+    settings.endGroup();
 }

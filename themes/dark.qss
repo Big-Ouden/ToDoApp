@@ -461,3 +461,165 @@ QToolTip {
     padding: 4px;
     border-radius: 2px;
 }
+
+/* Stacked Widget - ensure all views have proper background */
+QStackedWidget {
+    background-color: #1e1e1e;
+}
+
+/* Statistics Widget */
+StatisticsWidget {
+    background-color: #1e1e1e;
+}
+
+StatisticsWidget QLabel {
+    color: #d4d4d4;
+}
+
+StatisticsWidget QProgressBar {
+    background-color: #3c3c3c;
+    border: 1px solid #5a5a5a;
+}
+
+StatisticsWidget QProgressBar::chunk {
+    background-color: #4CAF50;
+}
+
+/* Pomodoro Timer */
+PomodoroTimer {
+    background-color: #1e1e1e;
+}
+
+PomodoroTimer QLabel {
+    color: #d4d4d4;
+}
+
+PomodoroTimer QComboBox {
+    background-color: #3c3c3c;
+    color: #d4d4d4;
+}
+
+/* Kanban View */
+KanbanView {
+    background-color: #1e1e1e;
+}
+
+KanbanView QLabel {
+    color: #d4d4d4;
+}
+
+KanbanView QScrollArea {
+    background-color: #1e1e1e;
+    border: none;
+}
+
+/* Heatmap Widget */
+HeatmapWidget {
+    background-color: #1e1e1e;
+}
+
+/* Focus Mode Dialog */
+FocusModeDialog {
+    background-color: #2b2b2b;
+}
+
+FocusModeDialog QLabel {
+    color: #e0e0e0;
+}
+
+FocusModeDialog QPushButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+}
+
+FocusModeDialog QPushButton:hover {
+    background-color: #45a049;
+}
+
+/* Charts Widget */
+ChartsWidget {
+    background-color: #1e1e1e;
+}
+
+/* Timeline Widget */
+TimelineWidget {
+    background-color: #1e1e1e;
+}
+
+TimelineWidget QLabel {
+    color: #d4d4d4;
+}
+
+/* Burndown Widget */
+BurndownWidget {
+    background-color: #1e1e1e;
+}
+
+/* Task Detail Widget */
+TaskDetailWidget {
+    background-color: #1e1e1e;
+}
+
+TaskDetailWidget QLabel {
+    color: #d4d4d4;
+}
+
+TaskDetailWidget QTextEdit {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    border: 1px solid #3e3e42;
+}
+
+/* Scroll Area - ensure transparent background for content */
+QScrollArea {
+    background-color: transparent;
+    border: none;
+}
+
+QScrollArea > QWidget > QWidget {
+    background-color: #1e1e1e;
+}
+
+/* Pomodoro Timer - Interruption Button */
+QPushButton#interruptionButton {
+    background-color: #d97706;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+QPushButton#interruptionButton:hover {
+    background-color: #ea580c;
+}
+
+QPushButton#interruptionButton:pressed {
+    background-color: #c2410c;
+}
+
+QPushButton#interruptionButton[flashing="true"] {
+    background-color: #dc2626;
+    color: white;
+}
+
+/* Statistics Widget - Streaks labels */
+StatisticsWidget QLabel {
+    color: #d4d4d4;
+}
+
+/* Kanban View */
+KanbanView QListWidget {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+}
+
+KanbanView QListWidget::item {
+    color: #d4d4d4;
+}
+
+/* Heatmap Widget */
+HeatmapWidget {
+    background-color: #1e1e1e;
+}

@@ -26,9 +26,12 @@
         <file>icons/text_edit.png</file>
         <file>icons/eye_preview.png</file>
         <file>icons/split_view.png</file>
+        <file>icons/kanban.png</file>
+        <file>icons/heatmap.png</file>
     </qresource>
     <qresource prefix="/themes">
         <file>themes/light.qss</file>
         <file>themes/dark.qss</file>
+        <file>themes/warm.qss</file>
     </qresource>
 </RCC>

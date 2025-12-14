@@ -34,14 +34,32 @@ QString ThemesManager::darkTheme()
     return stylesheet;
 }
 
+QString ThemesManager::warmTheme()
+{
+    QFile file(":/themes/themes/warm.qss");
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        qWarning() << "Impossible de charger le thème warm:" << file.errorString();
+        return QString();
+    }
+    
+    QTextStream stream(&file);
+    return stream.readAll();
+}
+
 void ThemesManager::applyTheme(Theme theme)
 {
     QString stylesheet;
     
-    if (theme == Light) {
-        stylesheet = lightTheme();
-    } else {
-        stylesheet = darkTheme();
+    switch (theme) {
+        case Light:
+            stylesheet = lightTheme();
+            break;
+        case Dark:
+            stylesheet = darkTheme();
+            break;
+        case Warm:
+            stylesheet = warmTheme();
+            break;
     }
     
     qApp->setStyleSheet(stylesheet);

@@ -224,6 +224,52 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="groupBoxStreaks">
+     <property name="title">
+      <string>Séries de jours consécutifs</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_4">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelCurrentStreakText">
+        <property name="text">
+         <string>Série actuelle :</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="labelCurrentStreak">
+        <property name="text">
+         <string>🔥 0 jour</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-weight: bold; font-size: 12pt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelLongestStreakText">
+        <property name="text">
+         <string>Record :</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="labelLongestStreak">
+        <property name="text">
+         <string>🏆 Aucun record</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Orientation::Vertical</enum>
