@@ -70,6 +70,8 @@ void GitProjectWidget::setRepositoryManager(RepositoryManager *manager)
                 this, &GitProjectWidget::updateRepositoryCombo);
         connect(m_repositoryManager, &RepositoryManager::repositoryRemoved,
                 this, &GitProjectWidget::updateRepositoryCombo);
+        connect(m_repositoryManager, &RepositoryManager::countChanged,
+                this, &GitProjectWidget::updateRepositoryCombo);
         connect(m_repositoryManager, &RepositoryManager::currentRepositoryChanged,
                 this, &GitProjectWidget::updateRepositoryInfo);
         
