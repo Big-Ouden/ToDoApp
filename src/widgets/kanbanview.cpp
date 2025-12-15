@@ -49,7 +49,7 @@ void KanbanView::setupUI()
         
         // En-tête de la colonne
         QLabel *header = new QLabel(title);
-        header->setStyleSheet("QLabel { font-weight: bold; font-size: 14px; padding: 8px; background-color: palette(window); border-radius: 4px; }");
+        header->setObjectName("kanbanColumnHeader");
         header->setAlignment(Qt::AlignCenter);
         columnLayout->addWidget(header);
         
@@ -62,32 +62,6 @@ void KanbanView::setupUI()
         listWidget->setSpacing(5);
         listWidget->setMinimumWidth(280);
         listWidget->setMaximumWidth(400);
-        
-        // Style adapté au thème (utilise palette pour s'adapter au thème sombre)
-        listWidget->setStyleSheet(
-            "QListWidget { "
-            "  background-color: palette(base); "
-            "  border: 1px solid palette(mid); "
-            "  border-radius: 4px; "
-            "  color: palette(text); "
-            "} "
-            "QListWidget::item { "
-            "  background-color: palette(window); "
-            "  color: palette(text); "
-            "  margin: 3px; "
-            "  padding: 8px; "
-            "  border-radius: 4px; "
-            "  border: 1px solid palette(mid); "
-            "} "
-            "QListWidget::item:hover { "
-            "  background-color: palette(midlight); "
-            "  color: palette(text); "
-            "} "
-            "QListWidget::item:selected { "
-            "  background-color: palette(highlight); "
-            "  color: palette(highlighted-text); "
-            "}"
-        );
         
         connect(listWidget, &QListWidget::itemDoubleClicked,
                 this, &KanbanView::onItemDoubleClicked);
@@ -127,27 +101,7 @@ void KanbanView::populateColumn(Status status)
             QListWidgetItem *item = new QListWidgetItem();
             item->setText(formatTaskCard(task));
             
-            // Couleur selon la priorité (adaptée au thème)
-            QPalette palette = qApp->palette();
-            bool isDarkTheme = palette.color(QPalette::Window).lightness() < 128;
-            
-            QColor bgColor;
-            if (isDarkTheme) {
-                switch (task->priority()) {
-                    case Priority::CRITICAL: bgColor = QColor(139, 50, 50, 120); break;
-                    case Priority::HIGH:     bgColor = QColor(139, 90, 43, 120); break;
-                    case Priority::MEDIUM:   bgColor = QColor(139, 139, 43, 120); break;
-                    case Priority::LOW:      bgColor = QColor(50, 100, 50, 120); break;
-                }
-            } else {
-                switch (task->priority()) {
-                    case Priority::CRITICAL: bgColor = QColor(255, 100, 100, 80); break;
-                    case Priority::HIGH:     bgColor = QColor(255, 152, 0, 80); break;
-                    case Priority::MEDIUM:   bgColor = QColor(255, 235, 59, 80); break;
-                    case Priority::LOW:      bgColor = QColor(76, 175, 80, 80); break;
-                }
-            }
-            item->setBackground(bgColor);
+            // Les couleurs de priorité seront gérées par le QSS externe
             
             column->addItem(item);
             m_itemTaskMap[item] = task;

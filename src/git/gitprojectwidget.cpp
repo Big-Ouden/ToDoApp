@@ -40,6 +40,7 @@ GitProjectWidget::GitProjectWidget(QWidget *parent)
             this, &GitProjectWidget::onCreateTaskFromIssue);
     
     // État initial
+    ui->repoComboBox->setEnabled(false);
     ui->editRepoButton->setEnabled(false);
     ui->removeRepoButton->setEnabled(false);
     ui->syncButton->setEnabled(false);
@@ -84,10 +85,14 @@ void GitProjectWidget::setRepositoryManager(RepositoryManager *manager)
  */
 void GitProjectWidget::updateRepositoryCombo()
 {
+    // Bloquer les signaux pendant la mise à jour pour éviter les changements intempestifs
+    ui->repoComboBox->blockSignals(true);
     ui->repoComboBox->clear();
     
-    if (!m_repositoryManager)
+    if (!m_repositoryManager) {
+        ui->repoComboBox->blockSignals(false);
         return;
+    }
     
     for (GitRepository *repo : m_repositoryManager->repositories()) {
         QString displayName = QString("%1 (%2/%3)")
@@ -98,9 +103,21 @@ void GitProjectWidget::updateRepositoryCombo()
     }
     
     bool hasRepos = m_repositoryManager->count() > 0;
+    ui->repoComboBox->setEnabled(hasRepos);
     ui->editRepoButton->setEnabled(hasRepos);
     ui->removeRepoButton->setEnabled(hasRepos);
     ui->syncButton->setEnabled(hasRepos);
+    
+    // Rétablir les signaux
+    ui->repoComboBox->blockSignals(false);
+    
+    // Sélectionner le dépôt actuel
+    if (hasRepos && m_repositoryManager->currentRepository()) {
+        int currentIndex = m_repositoryManager->repositories().indexOf(m_repositoryManager->currentRepository());
+        if (currentIndex >= 0) {
+            ui->repoComboBox->setCurrentIndex(currentIndex);
+        }
+    }
 }
 
 /**
@@ -136,6 +153,7 @@ void GitProjectWidget::onRepositoryChanged(int index)
 {
     if (m_repositoryManager && index >= 0) {
         m_repositoryManager->setCurrentRepository(index);
+        updateRepositoryInfo();
     }
 }
 

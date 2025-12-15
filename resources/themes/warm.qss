@@ -431,3 +431,95 @@ QTextBrowser {
     border: 1px solid #E8D4B8;
     color: #2C1810;
 }
+
+/* Kanban View - Warm Theme */
+KanbanView {
+    background-color: #FFF8E7;
+}
+
+KanbanView QWidget {
+    background-color: #FFF8E7;
+}
+
+KanbanView QScrollArea {
+    background-color: #FFF8E7;
+    border: none;
+}
+
+KanbanView QLabel {
+    background-color: transparent;
+    color: #2C1810;
+}
+
+/* Headers de colonnes Kanban */
+KanbanView QLabel#kanbanColumnHeader {
+    font-weight: bold;
+    font-size: 14px;
+    padding: 8px;
+    background-color: #FFE4C4;
+    color: #B8692B;
+    border-radius: 4px;
+    border: 1px solid #E8D4B8;
+}
+
+/* Colonnes Kanban - tons chauds */
+KanbanView QGroupBox {
+    background-color: #FFF0D8;
+    border: 2px solid #E8D4B8;
+    border-radius: 8px;
+    margin-top: 15px;
+    padding: 10px;
+    font-weight: bold;
+}
+
+KanbanView QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 4px 10px;
+    background-color: #FFFBF0;
+    color: #B8692B;
+    border: 1px solid #E8D4B8;
+    border-radius: 4px;
+}
+
+/* Cartes de tâches dans le Kanban - palette crème */
+KanbanView QFrame {
+    background-color: #FFFBF0;
+    border: 1px solid #E8D4B8;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+KanbanView QFrame:hover {
+    background-color: #FFF4DC;
+    border: 1px solid #FF9F5A;
+}
+
+KanbanView QListWidget {
+    background-color: #FFF4DC;
+    border: 1px solid #E8D4B8;
+    border-radius: 4px;
+    outline: none;
+    color: #2C1810;
+}
+
+KanbanView QListWidget::item {
+    background-color: #FFFBF0;
+    border: 1px solid #E8D4B8;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 4px;
+    color: #2C1810;
+}
+
+KanbanView QListWidget::item:hover {
+    background-color: #FFE8CC;
+    border: 1px solid #FF9F5A;
+}
+
+KanbanView QListWidget::item:selected {
+    background-color: #FFD7A8;
+    border: 1px solid #FF9F5A;
+    color: #2C1810;
+}
+

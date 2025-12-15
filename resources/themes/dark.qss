@@ -199,7 +199,7 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image: url(:/icons/arrow-down-light.png);
+    image: url(:/icons/arrow-down.svg);
     width: 12px;
     height: 12px;
 }
@@ -327,8 +327,8 @@ QTabBar::tab:hover {
 
 /* Dock Widget */
 QDockWidget {
-    titlebar-close-icon: url(:/icons/close-light.png);
-    titlebar-normal-icon: url(:/icons/undock-light.png);
+    titlebar-close-icon: url(:/icons/close.svg);
+    titlebar-normal-icon: url(:/icons/close.svg);
     color: #d4d4d4;
 }
 

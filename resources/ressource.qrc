@@ -1,0 +1,52 @@
+<!DOCTYPE RCC>
+<RCC>
+  <qresource prefix="/">
+    <file>icons/add-file.svg</file>
+    <file>icons/app.svg</file>
+    <file>icons/arrow-down.svg</file>
+    <file>icons/arrows-up-down.svg</file>
+    <file>icons/burndown.svg</file>
+    <file>icons/calendar.svg</file>
+    <file>icons/charts.svg</file>
+    <file>icons/check-tick.svg</file>
+    <file>icons/close.svg</file>
+    <file>icons/code-markup.svg</file>
+    <file>icons/eq-medium-cut.svg</file>
+    <file>icons/eye-crossed.svg</file>
+    <file>icons/format-bold.svg</file>
+    <file>icons/format-italic.svg</file>
+    <file>icons/gauge-high.svg</file>
+    <file>icons/github-fill.svg</file>
+    <file>icons/github.svg</file>
+    <file>icons/gitlab-fill.svg</file>
+    <file>icons/gitlab.svg</file>
+    <file>icons/heatmap.svg</file>
+    <file>icons/hide_panel.svg</file>
+    <file>icons/hourglass.svg</file>
+    <file>icons/info.svg</file>
+    <file>icons/items-list.svg</file>
+    <file>icons/kanban.svg</file>
+    <file>icons/link.svg</file>
+    <file>icons/new.svg</file>
+    <file>icons/open.svg</file>
+    <file>icons/pen.svg</file>
+    <file>icons/plus.svg</file>
+    <file>icons/pomodoro.svg</file>
+    <file>icons/preview.svg</file>
+    <file>icons/purcentage.svg</file>
+    <file>icons/save-all.svg</file>
+    <file>icons/save.svg</file>
+    <file>icons/separate-vertical.svg</file>
+    <file>icons/show_panel.svg</file>
+    <file>icons/stats.svg</file>
+    <file>icons/trash.svg</file>
+    <file>icons/arrow-left.svg</file>
+    <file>icons/arrow-right.svg</file>
+    <file>icons/task.svg</file>
+  </qresource>
+  <qresource prefix="/themes">
+    <file>themes/light.qss</file>
+    <file>themes/dark.qss</file>
+    <file>themes/warm.qss</file>
+  </qresource>
+</RCC>

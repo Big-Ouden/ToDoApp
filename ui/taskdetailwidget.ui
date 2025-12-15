@@ -42,7 +42,7 @@
            </property>
            <property name="icon">
             <iconset resource="ressource.qrc">
-             <normaloff>:/icons/bold.png</normaloff>:/icons/bold.png</iconset>
+             <normaloff>:/icons/format-bold.svg</normaloff>:/icons/format-bold.svg</iconset>
            </property>
            <property name="toolTip">
             <string>Gras (Ctrl+B)</string>
@@ -56,7 +56,7 @@
            </property>
            <property name="icon">
             <iconset resource="ressource.qrc">
-             <normaloff>:/icons/italic.png</normaloff>:/icons/italic.png</iconset>
+             <normaloff>:/icons/format-italic.svg</normaloff>:/icons/format-italic.svg</iconset>
            </property>
            <property name="toolTip">
             <string>Italique (Ctrl+I)</string>
@@ -70,7 +70,7 @@
            </property>
            <property name="icon">
             <iconset resource="ressource.qrc">
-             <normaloff>:/icons/code.png</normaloff>:/icons/code.png</iconset>
+             <normaloff>:/icons/code-markup.svg</normaloff>:/icons/code-markup.svg</iconset>
            </property>
            <property name="toolTip">
             <string>Code inline</string>
@@ -84,7 +84,7 @@
            </property>
            <property name="icon">
             <iconset resource="ressource.qrc">
-             <normaloff>:/icons/link.png</normaloff>:/icons/link.png</iconset>
+             <normaloff>:/icons/link.svg</normaloff>:/icons/link.svg</iconset>
            </property>
            <property name="toolTip">
             <string>Lien</string>
@@ -98,7 +98,7 @@
            </property>
            <property name="icon">
             <iconset resource="ressource.qrc">
-             <normaloff>:/icons/list.png</normaloff>:/icons/list.png</iconset>
+             <normaloff>:/icons/items-list.svg</normaloff>:/icons/items-list.svg</iconset>
            </property>
            <property name="toolTip">
             <string>Liste</string>
@@ -125,7 +125,7 @@
            </property>
            <property name="icon">
             <iconset resource="ressource.qrc">
-             <normaloff>:/icons/text_edit.png</normaloff>:/icons/text_edit.png</iconset>
+             <normaloff>:/icons/pen.svg</normaloff>:/icons/pen.svg</iconset>
            </property>
            <property name="toolTip">
             <string>Texte uniquement</string>
@@ -145,7 +145,7 @@
            </property>
            <property name="icon">
             <iconset resource="ressource.qrc">
-             <normaloff>:/icons/eye_preview.png</normaloff>:/icons/eye_preview.png</iconset>
+             <normaloff>:/icons/preview.svg</normaloff>:/icons/preview.svg</iconset>
            </property>
            <property name="toolTip">
             <string>Aperçu uniquement (double-clic pour éditer)</string>
@@ -162,7 +162,7 @@
            </property>
            <property name="icon">
             <iconset resource="ressource.qrc">
-             <normaloff>:/icons/split_view.png</normaloff>:/icons/split_view.png</iconset>
+             <normaloff>:/icons/separate-vertical.svg</normaloff>:/icons/separate-vertical.svg</iconset>
            </property>
            <property name="toolTip">
             <string>Vue divisée</string>

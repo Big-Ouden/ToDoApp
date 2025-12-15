@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="ressource.qrc">
-    <normaloff>:/icons/app.png</normaloff>:/icons/app.png</iconset>
+    <normaloff>:/icons/app.svg</normaloff>:/icons/app.svg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -248,7 +248,7 @@
   <action name="actionNew">
    <property name="icon">
     <iconset resource="ressource.qrc">
-     <normaloff>:/icons/new.png</normaloff>:/icons/new.png</iconset>
+     <normaloff>:/icons/new.svg</normaloff>:/icons/new.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Nouveau</string>
@@ -263,7 +263,7 @@
   <action name="actionOpen">
    <property name="icon">
     <iconset resource="ressource.qrc">
-     <normaloff>:/icons/open.png</normaloff>:/icons/open.png</iconset>
+     <normaloff>:/icons/open.svg</normaloff>:/icons/open.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Ouvrir...</string>
@@ -278,7 +278,7 @@
   <action name="actionSave">
    <property name="icon">
     <iconset resource="ressource.qrc">
-     <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+     <normaloff>:/icons/save.svg</normaloff>:/icons/save.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Enregistrer</string>
@@ -293,7 +293,7 @@
   <action name="actionSaveAs">
    <property name="icon">
     <iconset resource="ressource.qrc">
-     <normaloff>:/icons/save_as.png</normaloff>:/icons/save_as.png</iconset>
+     <normaloff>:/icons/save-all.svg</normaloff>:/icons/save-all.svg</iconset>
    </property>
    <property name="text">
     <string>Enregistrer &amp;sous...</string>
@@ -346,7 +346,7 @@
   <action name="actionQuit">
    <property name="icon">
     <iconset resource="ressource.qrc">
-     <normaloff>:/icons/quit.png</normaloff>:/icons/quit.png</iconset>
+     <normaloff>:/icons/close.svg</normaloff>:/icons/close.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Quitter</string>
@@ -361,7 +361,7 @@
   <action name="actionAddTask">
    <property name="icon">
     <iconset resource="ressource.qrc">
-     <normaloff>:/icons/add.png</normaloff>:/icons/add.png</iconset>
+     <normaloff>:/icons/plus.svg</normaloff>:/icons/plus.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Ajouter tâche</string>
@@ -376,7 +376,7 @@
   <action name="actionAddSubtask">
    <property name="icon">
     <iconset resource="ressource.qrc">
-     <normaloff>:/icons/add_subtask.png</normaloff>:/icons/add_subtask.png</iconset>
+     <normaloff>:/icons/add-file.svg</normaloff>:/icons/add-file.svg</iconset>
    </property>
    <property name="text">
     <string>Ajouter &amp;sous-tâche</string>
@@ -391,7 +391,7 @@
   <action name="actionDeleteTask">
    <property name="icon">
     <iconset resource="ressource.qrc">
-     <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+     <normaloff>:/icons/trash.svg</normaloff>:/icons/trash.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Supprimer</string>
@@ -406,7 +406,7 @@
   <action name="actionMarkCompleted">
    <property name="icon">
     <iconset resource="ressource.qrc">
-     <normaloff>:/icons/check.png</normaloff>:/icons/check.png</iconset>
+     <normaloff>:/icons/check-tick.svg</normaloff>:/icons/check-tick.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Marquer complétée</string>
@@ -457,7 +457,7 @@
   <action name="actionAbout">
    <property name="icon">
     <iconset resource="ressource.qrc">
-     <normaloff>:/icons/about.png</normaloff>:/icons/about.png</iconset>
+     <normaloff>:/icons/info.svg</normaloff>:/icons/info.svg</iconset>
    </property>
    <property name="text">
     <string>À &amp;propos...</string>

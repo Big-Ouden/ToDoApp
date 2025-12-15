@@ -1370,7 +1370,7 @@ void MainWindow::setupRightPanel()
     m_viewToolBar->setOrientation(Qt::Vertical);
     m_viewToolBar->setMovable(false);
     m_viewToolBar->setFloatable(false);
-    m_viewToolBar->setIconSize(QSize(32, 32));
+    m_viewToolBar->setIconSize(QSize(20, 20));
     m_viewToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     m_viewToolBar->setFixedWidth(80);  // Largeur fixe pour la barre
     
@@ -1380,7 +1380,7 @@ void MainWindow::setupRightPanel()
     
     // Créer les boutons de vue avec icônes (stockés comme membres pour retranslation)
     m_btnDetails = new QToolButton();
-    m_btnDetails->setIcon(QIcon(":/icons/about.png"));
+    m_btnDetails->setIcon(QIcon(":/icons/pen.svg"));
     m_btnDetails->setText(tr("Détails"));
     m_btnDetails->setCheckable(true);
     m_btnDetails->setChecked(true);
@@ -1388,49 +1388,49 @@ void MainWindow::setupRightPanel()
     m_viewButtonGroup->addButton(m_btnDetails, 0);
     
     m_btnStats = new QToolButton();
-    m_btnStats->setIcon(QIcon(":/icons/stats.png"));
+    m_btnStats->setIcon(QIcon(":/icons/purcentage.svg"));
     m_btnStats->setText(tr("Stats"));
     m_btnStats->setCheckable(true);
     m_btnStats->setToolTip(tr("Afficher les statistiques"));
     m_viewButtonGroup->addButton(m_btnStats, 1);
     
     m_btnPomodoro = new QToolButton();
-    m_btnPomodoro->setIcon(QIcon(":/icons/pomodoro.png"));
+    m_btnPomodoro->setIcon(QIcon(":/icons/hourglass.svg"));
     m_btnPomodoro->setText(tr("Timer"));
     m_btnPomodoro->setCheckable(true);
     m_btnPomodoro->setToolTip(tr("Timer Pomodoro"));
     m_viewButtonGroup->addButton(m_btnPomodoro, 2);
     
     m_btnCharts = new QToolButton();
-    m_btnCharts->setIcon(QIcon(":/icons/charts.png"));
+    m_btnCharts->setIcon(QIcon(":/icons/eq-medium-cut.svg"));
     m_btnCharts->setText(tr("Charts"));
     m_btnCharts->setCheckable(true);
     m_btnCharts->setToolTip(tr("Graphiques"));
     m_viewButtonGroup->addButton(m_btnCharts, 3);
     
     m_btnTimeline = new QToolButton();
-    m_btnTimeline->setIcon(QIcon(":/icons/calendar.png"));
+    m_btnTimeline->setIcon(QIcon(":/icons/calendar.svg"));
     m_btnTimeline->setText(tr("Cal."));
     m_btnTimeline->setCheckable(true);
     m_btnTimeline->setToolTip(tr("Calendrier"));
     m_viewButtonGroup->addButton(m_btnTimeline, 4);
     
     m_btnBurndown = new QToolButton();
-    m_btnBurndown->setIcon(QIcon(":/icons/burndown.png"));
+    m_btnBurndown->setIcon(QIcon(":/icons/gauge-high.svg"));
     m_btnBurndown->setText(tr("Avanc."));
     m_btnBurndown->setCheckable(true);
     m_btnBurndown->setToolTip(tr("Avancement"));
     m_viewButtonGroup->addButton(m_btnBurndown, 5);
     
     m_btnKanban = new QToolButton();
-    m_btnKanban->setIcon(QIcon(":/icons/kanban.png"));
+    m_btnKanban->setIcon(QIcon(":/icons/task.svg"));
     m_btnKanban->setText(tr("Kanban"));
     m_btnKanban->setCheckable(true);
     m_btnKanban->setToolTip(tr("Vue Kanban"));
     m_viewButtonGroup->addButton(m_btnKanban, 6);
     
     m_btnHeatmap = new QToolButton();
-    m_btnHeatmap->setIcon(QIcon(":/icons/heatmap.png"));
+    m_btnHeatmap->setIcon(QIcon(":/icons/github-fill.svg"));
     m_btnHeatmap->setText(tr("Activity"));
     m_btnHeatmap->setCheckable(true);
     m_btnHeatmap->setToolTip(tr("Heatmap d'activité"));
@@ -1438,7 +1438,7 @@ void MainWindow::setupRightPanel()
     
     // Bouton pour réduire/masquer le panneau
     m_btnHide = new QToolButton();
-    m_btnHide->setIcon(QIcon(":/icons/hide_panel.png"));
+    m_btnHide->setIcon(QIcon(":/icons/arrow-left.svg"));
     m_btnHide->setText(tr("◀"));
     m_btnHide->setToolTip(tr("Masquer le panneau"));
     connect(m_btnHide, &QToolButton::clicked, this, [this, scrollArea]() {
@@ -1449,7 +1449,7 @@ void MainWindow::setupRightPanel()
             // Masquer le panneau de contenu ET le scrollArea
             m_rightPanel->hide();
             scrollArea->hide();
-            m_btnHide->setIcon(QIcon(":/icons/show_panel.png"));
+            m_btnHide->setIcon(QIcon(":/icons/arrow-right.svg"));
             m_btnHide->setText(tr("▶"));
             m_btnHide->setToolTip(tr("Afficher le panneau"));
             
@@ -1462,7 +1462,7 @@ void MainWindow::setupRightPanel()
             // Afficher le panneau de contenu ET le scrollArea
             scrollArea->show();
             m_rightPanel->show();
-            m_btnHide->setIcon(QIcon(":/icons/hide_panel.png"));
+            m_btnHide->setIcon(QIcon(":/icons/arrow-left.svg"));
             m_btnHide->setText(tr("◀"));
             m_btnHide->setToolTip(tr("Masquer le panneau"));
             

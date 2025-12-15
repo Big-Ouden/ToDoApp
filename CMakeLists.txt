@@ -12,9 +12,18 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Ajouter les répertoires d'include
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/core)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/models)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/widgets)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/git)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/utils)
+
+# Configurer le répertoire des fichiers UI
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/ui)
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS PrintSupport)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Charts)
@@ -23,18 +32,39 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Network)
 # ========================================
 # Organisation des fichiers sources
 # ========================================
-file(GLOB HEADERS CONFIGURE_DEPENDS "*.h")
-file(GLOB SOURCES CONFIGURE_DEPENDS "*.cpp")
-file(GLOB UI_FILES CONFIGURE_DEPENDS "*.ui")
-file(GLOB RESOURCE_FILES CONFIGURE_DEPENDS "*.qrc")
+
+# Core files
+file(GLOB CORE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp")
+file(GLOB CORE_HEADERS CONFIGURE_DEPENDS "src/core/*.h")
+
+# Models
+file(GLOB MODEL_SOURCES CONFIGURE_DEPENDS "src/models/*.cpp")
+file(GLOB MODEL_HEADERS CONFIGURE_DEPENDS "src/models/*.h")
+
+# Widgets
+file(GLOB WIDGET_SOURCES CONFIGURE_DEPENDS "src/widgets/*.cpp")
+file(GLOB WIDGET_HEADERS CONFIGURE_DEPENDS "src/widgets/*.h")
+
+# Git integration
+file(GLOB GIT_SOURCES CONFIGURE_DEPENDS "src/git/*.cpp")
+file(GLOB GIT_HEADERS CONFIGURE_DEPENDS "src/git/*.h")
+
+# Utils
+file(GLOB UTIL_SOURCES CONFIGURE_DEPENDS "src/utils/*.cpp")
+file(GLOB UTIL_HEADERS CONFIGURE_DEPENDS "src/utils/*.h")
+
+# UI files
+file(GLOB UI_FILES CONFIGURE_DEPENDS "ui/*.ui")
+
+# Resources
+file(GLOB RESOURCE_FILES CONFIGURE_DEPENDS "resources/*.qrc")
 # Exclure translations.qrc de la liste automatique car on le génère dynamiquement
 list(FILTER RESOURCE_FILES EXCLUDE REGEX "translations\\.qrc$")
-file(GLOB MISC_FILES CONFIGURE_DEPENDS "misc/*")
 
 # Fichiers de traduction
 set(TS_FILES
-    ToDoApp_en_US.ts
-    ToDoApp_fr.ts
+    translations/ToDoApp_en_US.ts
+    translations/ToDoApp_fr.ts
 )
 
 # Générer les fichiers .qm dans le répertoire de build
@@ -66,28 +96,15 @@ list(APPEND RESOURCE_FILES ${TRANSLATIONS_QRC})
 # S'assurer que les fichiers .qm sont générés avant la compilation
 set_source_files_properties(${TRANSLATIONS_QRC} PROPERTIES OBJECT_DEPENDS "${QM_FILES}")
 
-# Documentation
-set(DOC_FILES
-    README.md
-    Doxyfile
-)
-
+# Tous les fichiers sources
 set(PROJECT_SOURCES
-    ${HEADERS}
-    ${SOURCES}
+    ${CORE_SOURCES} ${CORE_HEADERS}
+    ${MODEL_SOURCES} ${MODEL_HEADERS}
+    ${WIDGET_SOURCES} ${WIDGET_HEADERS}
+    ${GIT_SOURCES} ${GIT_HEADERS}
+    ${UTIL_SOURCES} ${UTIL_HEADERS}
     ${UI_FILES}
     ${TS_FILES}
-)
-
-set(MISC_FILES
-    ${MISC_FILES}
-    misc/modele_graphe.pdf
-    misc/modele_graphe.uxf
-)
-
-set(UI_FILES
-    mainwindow.ui
-    taskdetailwidget.ui
 )
 
 # ========================================
@@ -246,7 +263,7 @@ message(STATUS \"Listing généré: \${LISTING_FILE}\")
 # Mise à jour des fichiers .ts
 add_custom_target(update_translations
     COMMAND Qt${QT_VERSION_MAJOR}::lupdate
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
         -ts ${TS_FILES}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Mise à jour des fichiers de traduction (.ts)"

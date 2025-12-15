@@ -204,7 +204,7 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image: url(:/icons/arrow-down.png);
+    image: url(:/icons/arrow-down.svg);
     width: 12px;
     height: 12px;
 }
@@ -356,8 +356,8 @@ QTabBar::tab:hover {
 
 /* Dock Widget */
 QDockWidget {
-    titlebar-close-icon: url(:/icons/close.png);
-    titlebar-normal-icon: url(:/icons/undock.png);
+    titlebar-close-icon: url(:/icons/close.svg);
+    titlebar-normal-icon: url(:/icons/close.svg);
 }
 
 QDockWidget::title {
@@ -507,3 +507,95 @@ QPushButton#interruptionButton[flashing="true"] {
     background-color: #ef4444;
     color: white;
 }
+
+/* Kanban View - Light Theme */
+KanbanView {
+    background-color: #fafafa;
+}
+
+KanbanView QWidget {
+    background-color: #fafafa;
+}
+
+KanbanView QScrollArea {
+    background-color: #fafafa;
+    border: none;
+}
+
+KanbanView QLabel {
+    background-color: transparent;
+    color: #333333;
+}
+
+/* Headers de colonnes Kanban */
+KanbanView QLabel#kanbanColumnHeader {
+    font-weight: bold;
+    font-size: 14px;
+    padding: 8px;
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border-radius: 4px;
+    border: 1px solid #90caf9;
+}
+
+/* Colonnes Kanban - tons clairs et lumineux */
+KanbanView QGroupBox {
+    background-color: #f0f0f0;
+    border: 2px solid #d0d0d0;
+    border-radius: 8px;
+    margin-top: 15px;
+    padding: 10px;
+    font-weight: bold;
+}
+
+KanbanView QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 4px 10px;
+    background-color: #ffffff;
+    color: #1976d2;
+    border: 1px solid #d0d0d0;
+    border-radius: 4px;
+}
+
+/* Cartes de tâches dans le Kanban - fond blanc pur */
+KanbanView QFrame {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+KanbanView QFrame:hover {
+    background-color: #f8f9fa;
+    border: 1px solid #2196f3;
+}
+
+KanbanView QListWidget {
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    outline: none;
+    color: #333333;
+}
+
+KanbanView QListWidget::item {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 4px;
+    color: #333333;
+}
+
+KanbanView QListWidget::item:hover {
+    background-color: #e3f2fd;
+    border: 1px solid #2196f3;
+}
+
+KanbanView QListWidget::item:selected {
+    background-color: #bbdefb;
+    border: 2px solid #1976d2;
+    color: #0d47a1;
+}
+

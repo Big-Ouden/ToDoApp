@@ -144,19 +144,82 @@ ToDoApp/
 ├── Doxyfile                    # Configuration Doxygen
 ├── README.md                   # Ce fichier
 ├── LICENSE                     # Licence GPLv2
-├── main.cpp                    # Point d'entrée
-├── mainwindow.{h,cpp,ui}       # Fenêtre principale
-├── task.{h,cpp}                # Modèle de tâche
-├── taskmodel.{h,cpp}           # Modèle arborescent Qt
-├── taskfilterproxymodel.{h,cpp} # Filtrage et recherche
-├── taskdetailwidget.{h,cpp,ui} # Panneau de détails
-├── persistencemanager.{h,cpp}  # Sauvegarde/chargement JSON
-├── pdfexporttemplate.{h,cpp}   # Templates export PDF
-├── priority.h                  # Enum des priorités
-├── status.h                    # Enum des statuts
-├── ToDoApp_fr.ts               # Traduction française
-├── ToDoApp_en_US.ts            # Traduction anglaise
+│
+├── src/                        # Code source
+│   ├── core/                   # Point d'entrée
+│   │   └── main.cpp            # Main de l'application
+│   │
+│   ├── models/                 # Modèles de données
+│   │   ├── task.{h,cpp}        # Modèle de tâche
+│   │   ├── taskmodel.{h,cpp}   # Modèle arborescent Qt
+│   │   ├── taskfilterproxymodel.{h,cpp} # Filtrage et recherche
+│   │   ├── taskitemdelegate.{h,cpp} # Délégué d'affichage
+│   │   ├── priority.h          # Enum des priorités
+│   │   ├── status.h            # Enum des statuts
+│   │   └── category.{h,cpp}    # Gestion des catégories
+│   │
+│   ├── widgets/                # Widgets Qt
+│   │   ├── mainwindow.{h,cpp}  # Fenêtre principale
+│   │   ├── taskdetailwidget.{h,cpp} # Panneau de détails
+│   │   ├── statisticswidget.{h,cpp} # Statistiques
+│   │   ├── kanbanview.{h,cpp}  # Vue Kanban
+│   │   ├── heatmapwidget.{h,cpp} # Heatmap d'activité
+│   │   ├── focusmodedialog.{h,cpp} # Mode focus
+│   │   ├── pomodorotimer.{h,cpp} # Timer Pomodoro
+│   │   ├── chartswidget.{h,cpp} # Graphiques
+│   │   ├── timelinewidget.{h,cpp} # Timeline
+│   │   └── burndownwidget.{h,cpp} # Burndown chart
+│   │
+│   ├── git/                    # Intégration Git/Issues
+│   │   ├── gitrepository.{h,cpp} # Modèle de dépôt
+│   │   ├── repositorymanager.{h,cpp} # Gestionnaire multi-dépôts
+│   │   ├── githubconnector.{h,cpp} # API GitHub
+│   │   ├── gitlabconnector.{h,cpp} # API GitLab
+│   │   ├── gitissuetask.{h,cpp} # Tâche liée à une issue
+│   │   ├── gitprojectwidget.{h,cpp} # Widget de projet Git
+│   │   └── gitsyncdialog.{h,cpp} # Dialogue de synchronisation
+│   │
+│   └── utils/                  # Utilitaires
+│       ├── persistencemanager.{h,cpp} # Sauvegarde/chargement JSON
+│       ├── pdfexporttemplate.{h,cpp} # Export PDF
+│       ├── themesmanager.{h,cpp} # Gestion des thèmes
+│       ├── streakscalculator.{h,cpp} # Calcul de séries
+│       ├── undocommands.{h,cpp} # Système Undo/Redo
+│       └── debug.h              # Macros de débogage
+│
+├── ui/                         # Fichiers d'interface Qt Designer
+│   ├── mainwindow.ui
+│   ├── taskdetailwidget.ui
+│   ├── gitprojectwidget.ui
+│   └── statisticswidget.ui
+│
+├── resources/                  # Ressources
+│   ├── ressource.qrc           # Fichier de ressources Qt
+│   ├── icons/                  # Icônes PNG
+│   └── themes/                 # Thèmes QSS
+│       ├── light.qss           # Thème clair
+│       ├── dark.qss            # Thème sombre
+│       └── warm.qss            # Thème chaud (crème/orange)
+│
+├── translations/               # Fichiers de traduction
+│   ├── ToDoApp_fr.ts           # Français
+│   └── ToDoApp_en_US.ts        # Anglais
+│
+├── docs/                       # Documentation
+│   ├── GIT_INTEGRATION.md      # Guide technique Git
+│   ├── GIT_USER_GUIDE.md       # Guide utilisateur Git
+│   ├── GUIDE_UTILISATEUR.md    # Guide général
+│   ├── DOCUMENTATION_COMPLETE.md # Documentation Doxygen
+│   └── *.md                    # Autres documentations
+│
+├── misc/                       # Fichiers divers
+│   ├── modele_graphe.uxf       # Diagramme UML
+│   └── todo.md                 # Notes de développement
+│
 └── build/                      # Dossier de compilation (généré)
+    ├── ToDoApp                 # Exécutable
+    ├── doc/html/               # Documentation générée
+    └── listing/                # Listing du code
 ```
 
 ## Utilisation
@@ -187,6 +250,38 @@ Utiliser les préfixes dans le champ de recherche :
 1. Menu Fichier > Exporter en PDF
 2. Choisir un template (Default, Minimal, Detailed, Colorful)
 3. Sélectionner l'emplacement et enregistrer
+
+### Thèmes visuels
+
+ToDoApp propose 3 thèmes personnalisables :
+
+1. **Thème Light (Clair)** - Fond blanc, idéal pour le jour
+2. **Thème Dark (Sombre)** - Fond noir, réduit la fatigue oculaire
+3. **Thème Warm (Chaud)** - Tons crème/orange, filtre la lumière bleue
+
+**Raccourcis clavier :**
+- **Ctrl+W** : Activer le thème Warm
+- Menu → Thèmes pour basculer entre les 3 thèmes
+
+**Personnalisation :**
+Les thèmes sont modifiables via les fichiers QSS dans `resources/themes/`:
+- `light.qss` - Thème clair
+- `dark.qss` - Thème sombre  
+- `warm.qss` - Thème chaud
+
+### Raccourcis clavier
+
+**Navigation :**
+- **Ctrl+T** : Basculer en Mode Personnel (Todo classique)
+- **Ctrl+G** : Basculer en Mode Git (Issues)
+
+**Édition :**
+- **Ctrl+N** : Nouvelle tâche
+- **Ctrl+Shift+N** : Ajouter sous-tâche
+- **Delete** : Supprimer tâche sélectionnée
+
+**Thèmes :**
+- **Ctrl+W** : Thème Warm (chaud)
 
 ## Intégration Git/Issues
 
