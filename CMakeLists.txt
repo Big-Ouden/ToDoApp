@@ -297,17 +297,56 @@ add_dependencies(translations update_translations release_translations)
 # 4. GÉNÉRATION D'ARCHIVE TRANSPORTABLE
 # ========================================
 
-set(ARCHIVE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-src")
+set(ARCHIVE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
 
 # Liste explicite des fichiers source à inclure
 set(SOURCE_DIST_FILES
-    ${HEADERS}
-    ${SOURCES}
+    ${CORE_SOURCES}
+    ${CORE_HEADERS}
+    ${MODEL_SOURCES}
+    ${MODEL_HEADERS}
+    ${WIDGET_SOURCES}
+    ${WIDGET_HEADERS}
+    ${GIT_SOURCES}
+    ${GIT_HEADERS}
+    ${UTIL_SOURCES}
+    ${UTIL_HEADERS}
     ${UI_FILES}
     ${TS_FILES}
-    ${RESOURCE_FILES}
-    ${DOC_FILES}
     CMakeLists.txt
+    README.md
+    LICENSE
+    exemple_taches.json
+    update_translations.sh
+    fill_translations.py
+    Doxyfile
+    generate_listing.cmake
+)
+
+# Ajouter tous les fichiers du répertoire resources (icônes, QSS, etc.)
+file(GLOB_RECURSE RESOURCES_ALL RELATIVE ${CMAKE_SOURCE_DIR} "resources/*")
+list(APPEND SOURCE_DIST_FILES ${RESOURCES_ALL})
+
+# Ajouter tous les fichiers du répertoire docs
+file(GLOB_RECURSE DOCS_ALL RELATIVE ${CMAKE_SOURCE_DIR} "docs/*.md")
+list(APPEND SOURCE_DIST_FILES ${DOCS_ALL})
+
+# Fichiers du rapport à inclure
+set(RAPPORT_FILES
+    rapport/rapport.tex
+    rapport/rapport.pdf
+    rapport/Makefile
+    rapport/.gitignore
+)
+
+# Récupérer tous les fichiers d'images du rapport
+file(GLOB RAPPORT_IMAGES RELATIVE ${CMAKE_SOURCE_DIR} "rapport/images/*")
+
+# Combiner tous les fichiers pour l'archive
+set(ALL_DIST_FILES
+    ${SOURCE_DIST_FILES}
+    ${RAPPORT_FILES}
+    ${RAPPORT_IMAGES}
 )
 
 # On travaille depuis le répertoire source du projet
@@ -315,23 +354,53 @@ set(SOURCE_DIST_FILES
 # (ex : ToDoApp/main.cpp)
 add_custom_target(archive-tar
     COMMAND ${CMAKE_COMMAND} -E echo "Création de l'archive ${ARCHIVE_NAME}.tar.gz..."
-    COMMAND ${CMAKE_COMMAND} -E tar czf
-        ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.gz
-        --format=gnutar
-        ${SOURCE_DIST_FILES}
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Archive TAR.GZ créée"
+    COMMAND ${CMAKE_COMMAND} -E rm -rf ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/src
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/ui ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/ui
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/resources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/translations ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/translations
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/misc ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/misc
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/rapport ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/rapport
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/CMakeLists.txt ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/exemple_taches.json ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/update_translations.sh ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/fill_translations.py ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/Doxyfile ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/generate_listing.cmake ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/.gitignore ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E tar czf ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.gz --format=gnutar ${ARCHIVE_NAME}
+    COMMAND ${CMAKE_COMMAND} -E rm -rf ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Archive TAR.GZ créée : ${ARCHIVE_NAME}.tar.gz (sources + rapport dans ${ARCHIVE_NAME}/)"
     VERBATIM
 )
 
 add_custom_target(archive-zip
     COMMAND ${CMAKE_COMMAND} -E echo "Création de l'archive ${ARCHIVE_NAME}.zip..."
-    COMMAND ${CMAKE_COMMAND} -E tar cf
-        ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.zip
-        --format=zip
-        ${SOURCE_DIST_FILES}
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Archive ZIP créée"
+    COMMAND ${CMAKE_COMMAND} -E rm -rf ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/src
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/ui ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/ui
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/resources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/translations ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/translations
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/misc ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/misc
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/rapport ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/rapport
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/CMakeLists.txt ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/exemple_taches.json ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/update_translations.sh ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/fill_translations.py ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/Doxyfile ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/generate_listing.cmake ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/.gitignore ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}/
+    COMMAND ${CMAKE_COMMAND} -E tar cf ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.zip --format=zip ${ARCHIVE_NAME}
+    COMMAND ${CMAKE_COMMAND} -E rm -rf ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Archive ZIP créée : ${ARCHIVE_NAME}.zip (sources + rapport dans ${ARCHIVE_NAME}/)"
     VERBATIM
 )
 
