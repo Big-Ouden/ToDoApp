@@ -111,6 +111,13 @@ public:
      */
     Task *getTask(const QModelIndex &index) const;
     
+    /**
+     * @brief Récupère l'index du modèle pour une tâche donnée.
+     * @param task Pointeur vers la tâche
+     * @return Index du modèle ou QModelIndex invalide si non trouvé
+     */
+    QModelIndex getIndexForTask(Task *task) const;
+    
     /** @return Liste des tâches racines */
     const QList<Task*>& rootTasks() const { return m_rootTasks; }
     

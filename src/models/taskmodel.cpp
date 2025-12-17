@@ -324,6 +324,33 @@ Task *TaskModel::getTask(const QModelIndex &index) const
     return static_cast<Task*>(index.internalPointer());
 }
 
+QModelIndex TaskModel::getIndexForTask(Task *task) const
+{
+    if (!task) return QModelIndex();
+    
+    // Fonction récursive pour chercher la tâche
+    std::function<QModelIndex(const QList<Task*>&, Task*, const QModelIndex&)> findTask;
+    findTask = [&](const QList<Task*>& tasks, Task* target, const QModelIndex& parent) -> QModelIndex {
+        for (int row = 0; row < tasks.size(); ++row) {
+            Task *t = tasks.at(row);
+            if (t == target) {
+                return index(row, 0, parent);
+            }
+            // Chercher dans les sous-tâches
+            if (!t->subtasks().isEmpty()) {
+                QModelIndex parentIdx = index(row, 0, parent);
+                QModelIndex result = findTask(t->subtasks(), target, parentIdx);
+                if (result.isValid()) {
+                    return result;
+                }
+            }
+        }
+        return QModelIndex();
+    };
+    
+    return findTask(m_rootTasks, task, QModelIndex());
+}
+
 void TaskModel::clear()
 {
     beginResetModel();

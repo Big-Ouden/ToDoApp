@@ -3,13 +3,40 @@
 
 #include <QWidget>
 #include <QMap>
+#include <QListWidget>
 #include "status.h"
 
 class TaskModel;
 class QVBoxLayout;
-class QListWidget;
 class QListWidgetItem;
 class Task;
+
+/**
+ * @brief QListWidget personnalisé qui détecte les drops pour le Kanban.
+ */
+class KanbanColumn : public QListWidget
+{
+    Q_OBJECT
+
+public:
+    explicit KanbanColumn(Status status, QWidget *parent = nullptr)
+        : QListWidget(parent), m_status(status) {}
+    
+    Status columnStatus() const { return m_status; }
+
+signals:
+    void itemDroppedInColumn(Status targetStatus);
+
+protected:
+    void dropEvent(QDropEvent *event) override
+    {
+        QListWidget::dropEvent(event);
+        emit itemDroppedInColumn(m_status);
+    }
+
+private:
+    Status m_status;
+};
 
 /**
  * @brief Vue Kanban avec colonnes par statut et drag & drop.
@@ -24,7 +51,7 @@ public:
 private slots:
     void onModelDataChanged();
     void onItemDoubleClicked(QListWidgetItem *item);
-    void onItemDropped(QListWidgetItem *item);
+    void onColumnDropped(Status targetStatus);
 
 private:
     void setupUI();
@@ -33,7 +60,7 @@ private:
     QString formatTaskCard(Task *task) const;
 
     TaskModel *m_model;
-    QMap<Status, QListWidget*> m_columns;
+    QMap<Status, KanbanColumn*> m_columns;
     QMap<QListWidgetItem*, Task*> m_itemTaskMap;
 };
 

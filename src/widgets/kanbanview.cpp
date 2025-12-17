@@ -53,8 +53,8 @@ void KanbanView::setupUI()
         header->setAlignment(Qt::AlignCenter);
         columnLayout->addWidget(header);
         
-        // Liste des tâches
-        QListWidget *listWidget = new QListWidget();
+        // Liste des tâches - utiliser notre QListWidget personnalisé
+        KanbanColumn *listWidget = new KanbanColumn(status);
         listWidget->setObjectName(QString("kanbanColumn_%1").arg(static_cast<int>(status)));
         listWidget->setDragDropMode(QAbstractItemView::DragDrop);
         listWidget->setDefaultDropAction(Qt::MoveAction);
@@ -62,9 +62,14 @@ void KanbanView::setupUI()
         listWidget->setSpacing(5);
         listWidget->setMinimumWidth(280);
         listWidget->setMaximumWidth(400);
+        listWidget->setAcceptDrops(true);
         
         connect(listWidget, &QListWidget::itemDoubleClicked,
                 this, &KanbanView::onItemDoubleClicked);
+        
+        // Connecter le signal de drop personnalisé
+        connect(listWidget, &KanbanColumn::itemDroppedInColumn,
+                this, &KanbanView::onColumnDropped);
         
         m_columns[status] = listWidget;
         columnLayout->addWidget(listWidget);
@@ -89,7 +94,7 @@ void KanbanView::refreshColumns()
 
 void KanbanView::populateColumn(Status status)
 {
-    QListWidget *column = m_columns[status];
+    KanbanColumn *column = m_columns[status];
     if (!column) return;
     
     // Parcourir toutes les tâches du modèle
@@ -100,6 +105,9 @@ void KanbanView::populateColumn(Status status)
         if (task && task->status() == status) {
             QListWidgetItem *item = new QListWidgetItem();
             item->setText(formatTaskCard(task));
+            
+            // Stocker un pointeur vers la tâche dans l'item pour le retrouver après drag&drop
+            item->setData(Qt::UserRole, QVariant::fromValue(reinterpret_cast<quintptr>(task)));
             
             // Les couleurs de priorité seront gérées par le QSS externe
             
@@ -148,8 +156,36 @@ void KanbanView::onItemDoubleClicked(QListWidgetItem *item)
     }
 }
 
-void KanbanView::onItemDropped(QListWidgetItem *item)
+void KanbanView::onColumnDropped(Status targetStatus)
 {
-    // Gérer le drag & drop entre colonnes
-    // Le changement de statut sera détecté par la colonne de destination
+    // Trouver dans quelle colonne l'item a été déposé
+    KanbanColumn *targetColumn = m_columns[targetStatus];
+    if (!targetColumn) return;
+    
+    // Parcourir tous les items de la colonne cible
+    for (int i = 0; i < targetColumn->count(); ++i) {
+        QListWidgetItem *item = targetColumn->item(i);
+        
+        // Récupérer le pointeur de la tâche stocké dans l'item
+        QVariant taskData = item->data(Qt::UserRole);
+        if (taskData.isValid()) {
+            Task *task = reinterpret_cast<Task*>(taskData.value<quintptr>());
+            
+            // Si la tâche a un statut différent, on doit la mettre à jour
+            if (task && task->status() != targetStatus) {
+                // Mettre à jour le statut
+                task->setStatus(targetStatus);
+                
+                // Notifier le modèle
+                QModelIndex idx = m_model->getIndexForTask(task);
+                if (idx.isValid()) {
+                    emit m_model->dataChanged(idx, idx);
+                }
+                
+                // Rafraîchir toutes les colonnes
+                refreshColumns();
+                return;
+            }
+        }
+    }
 }
