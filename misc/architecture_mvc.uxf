@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>8</zoom_level>
+  <help_text>Architecture MVC - ToDoApp</help_text>
+  
+  <!-- TITRE -->
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>80</x>
+      <y>40</y>
+      <w>400</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Architecture MVC - ToDoApp
+--
+Modèle (bleu): Données métier
+Proxy (orange): Filtrage
+Vue (vert): Interface utilisateur
+Contrôleur (rose): Logique métier
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <!-- ========== COUCHE MODÈLE (Bleu) ========== -->
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>80</x>
+      <y>200</y>
+      <w>280</w>
+      <h>360</h>
+    </coordinates>
+    <panel_attributes>Task
+--
+- m_id: QUuid
+- m_title: QString
+- m_description: QString
+- m_dueDate: QDate
+- m_priority: Priority
+- m_status: Status
+- m_tags: QStringList
+- m_attachments: QList&lt;QUrl&gt;
+- m_estimatedMinutes: int
+- m_actualMinutes: int
+- m_parentTask: Task*
+- m_subtasks: QList&lt;Task*&gt;
+--
++ title(): QString
++ setTitle(QString)
++ priority(): Priority
++ status(): Status
++ addSubtask(Task*)
++ isCompleted(): bool
+--
+Signals:
++ titleChanged()
++ statusChanged()
++ taskModified()
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>200</y>
+      <w>280</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>GitIssueTask
+--
+- m_issueNumber: int
+- m_repositoryUrl: QString
+- m_platform: GitPlatform
+- m_assignees: QStringList
+- m_locallyModified: bool
+--
++ issueNumber(): int
++ setIssueNumber(int)
++ platform(): GitPlatform
++ isLocallyModified(): bool
++ markLocallyModified()
+--
+Signals:
++ issueNumberChanged()
++ syncRequested()
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>80</x>
+      <y>600</y>
+      <w>280</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>Category
+--
+- m_id: QUuid
+- m_name: QString
+- m_color: QColor
+- m_tasks: QList&lt;Task*&gt;
+--
++ name(): QString
++ setName(QString)
++ addTask(Task*)
+--
+Signals:
++ nameChanged()
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>480</y>
+      <w>280</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>TaskModel
+&lt;&lt;QAbstractItemModel&gt;&gt;
+--
+- m_rootTasks: QList&lt;Task*&gt;
+- m_categories: QList&lt;Category*&gt;
+--
++ index(int, int, QModelIndex): QModelIndex
++ rowCount(QModelIndex): int
++ data(QModelIndex, int): QVariant
++ insertTask(Task*, Task*)
++ removeTask(QModelIndex)
++ getTask(QModelIndex): Task*
++ clear()
+--
+Signals:
++ taskAdded(Task*)
++ taskRemoved(Task*)
++ taskUpdated(Task*)
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>720</x>
+      <y>200</y>
+      <w>240</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>GitRepository
+--
+- m_name: QString
+- m_url: QString
+- m_platform: GitPlatform
+- m_token: QString
+--
++ name(): QString
++ url(): QString
++ token(): QString
+--
+Signals:
++ nameChanged()
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>720</x>
+      <y>400</y>
+      <w>240</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>RepositoryManager
+--
+- m_repositories: QList&lt;GitRepository*&gt;
+--
++ addRepository(GitRepository*)
++ removeRepository(GitRepository*)
+--
+Signals:
++ repositoryAdded(GitRepository*)
++ repositoryRemoved(GitRepository*)
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <!-- ========== COUCHE PROXY (Orange) ========== -->
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>80</x>
+      <y>840</y>
+      <w>320</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>TaskFilterProxyModel
+&lt;&lt;QSortFilterProxyModel&gt;&gt;
+--
+- m_searchText: QString
+- m_priorityFilter: Priority
+- m_statusFilter: Status
+- m_showCompleted: bool
+--
++ setSearchText(QString)
++ setPriorityFilter(Priority, bool)
++ setStatusFilter(Status, bool)
++ filterAcceptsRow(int, QModelIndex): bool
+bg=#FFF3E0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <!-- ========== COUCHE VUE (Vert) ========== -->
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>480</x>
+      <y>840</y>
+      <w>320</w>
+      <h>360</h>
+    </coordinates>
+    <panel_attributes>MainWindow
+&lt;&lt;QMainWindow&gt;&gt;
+--
+- m_taskModel: TaskModel*
+- m_proxyModel: TaskFilterProxyModel*
+- m_detailWidget: TaskDetailWidget*
+- m_kanbanView: KanbanView*
+- m_gitProjectWidget: GitProjectWidget*
+- m_repositoryManager: RepositoryManager*
+- m_undoStack: QUndoStack*
+- m_isDarkMode: bool
+--
++ undoStack(): QUndoStack*
++ setLanguage(QString)
+--
+Slots:
+- onAddTask()
+- onDeleteTask()
+- onSaveFile()
+- onSearchTextChanged(QString)
+- onTaskCreatedFromIssue(GitIssueTask*)
+bg=#F1F8E9</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>880</x>
+      <y>840</y>
+      <w>240</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>TaskDetailWidget
+--
+- m_currentTask: Task*
+- m_viewMode: ViewMode
+--
++ setTask(Task*)
++ clearTask()
+--
+Signals:
++ taskModified(Task*)
+--
+Slots:
+- onApplyClicked()
+bg=#F1F8E9</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>880</x>
+      <y>1040</y>
+      <w>240</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>KanbanView
+--
+- m_model: TaskModel*
+- m_columns: QMap&lt;Status, QListWidget*&gt;
+--
+- refreshColumns()
+- populateColumn(Status)
+--
+Slots:
+- onModelDataChanged()
+- onItemDropped(QListWidgetItem*)
+bg=#F1F8E9</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1200</x>
+      <y>840</y>
+      <w>280</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>GitProjectWidget
+--
+- m_repositoryManager: RepositoryManager*
+- m_displayedIssues: QList&lt;GitIssueTask*&gt;
+--
++ selectedIssue(): GitIssueTask*
+--
+Signals:
++ issueSelected(GitIssueTask*)
++ taskCreatedFromIssue(GitIssueTask*)
++ syncRequested(GitRepository*)
+--
+Slots:
+- onSyncRepository()
+- onCreateTaskFromIssue()
+- onIssuesListed(QJsonArray)
+bg=#F1F8E9</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <!-- ========== COUCHE CONTRÔLEUR (Rose) ========== -->
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>80</x>
+      <y>1120</y>
+      <w>280</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>PersistenceManager
+&lt;&lt;static&gt;&gt;
+--
++ saveToJson(QString, QList&lt;Task*&gt;): bool
++ loadFromJson(QString): QList&lt;Task*&gt;
++ exportToCsv(QString, QList&lt;Task*&gt;): bool
+--
+- taskToJson(Task*): QJsonObject
+bg=#FCE4EC</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>480</x>
+      <y>1240</y>
+      <w>200</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>UndoCommands
+--
+AddTaskCommand
+RemoveTaskCommand
+ModifyTaskCommand
+--
++ undo()
++ redo()
+bg=#FCE4EC</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1200</x>
+      <y>1120</y>
+      <w>280</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>GitHubConnector
+--
+- m_networkManager: QNetworkAccessManager*
+- m_repository: GitRepository*
+--
++ listIssues(QString)
++ createIssue(QString, QString, QStringList)
+--
+Signals:
++ issuesListed(QJsonArray)
++ apiError(QString, int)
+bg=#FCE4EC</panel_attributes>
+    <additional_attributes/>
+  </element>
+  
+  <!-- ========== RELATIONS D'HÉRITAGE ========== -->
+  
+  <!-- GitIssueTask hérite de Task -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>352</x>
+      <y>280</y>
+      <w>64</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;60.0;10.0</additional_attributes>
+  </element>
+  
+  <!-- ========== RELATIONS DE COMPOSITION ========== -->
+  
+  <!-- Task compose subtasks (boucle) -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>40</x>
+      <y>320</y>
+      <w>56</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=*
+subtasks</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;10.0;10.0;130.0;50.0;130.0</additional_attributes>
+  </element>
+  
+  <!-- TaskModel compose rootTasks -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>352</x>
+      <y>520</y>
+      <w>64</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=*</panel_attributes>
+    <additional_attributes>60.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  
+  <!-- TaskModel compose categories -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>352</x>
+      <y>660</y>
+      <w>64</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=*</panel_attributes>
+    <additional_attributes>60.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  
+  <!-- RepositoryManager compose repositories -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>840</x>
+      <y>352</y>
+      <w>72</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=*</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  
+  <!-- MainWindow compose TaskModel -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>640</x>
+      <y>752</y>
+      <w>64</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  
+  <!-- MainWindow compose TaskFilterProxyModel -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>392</x>
+      <y>920</y>
+      <w>104</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>110.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  
+  <!-- MainWindow compose TaskDetailWidget -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>792</x>
+      <y>920</y>
+      <w>104</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  
+  <!-- MainWindow compose KanbanView -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>792</x>
+      <y>1040</y>
+      <w>104</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0;50.0;80.0;110.0;80.0</additional_attributes>
+  </element>
+  
+  <!-- MainWindow compose GitProjectWidget -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>792</x>
+      <y>960</y>
+      <w>424</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;510.0;10.0</additional_attributes>
+  </element>
+  
+  <!-- ========== RELATIONS D'AGRÉGATION ========== -->
+  
+  <!-- Category agrège Task -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>200</x>
+      <y>552</y>
+      <w>72</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=*
+référence</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  
+  <!-- ========== RELATIONS D'ASSOCIATION ========== -->
+  
+  <!-- TaskFilterProxyModel observe TaskModel -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>392</x>
+      <y>740</y>
+      <w>120</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+observe</panel_attributes>
+    <additional_attributes>10.0;130.0;10.0;60.0;130.0;60.0;130.0;10.0</additional_attributes>
+  </element>
+  
+  <!-- TaskDetailWidget édite Task -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>200</x>
+      <y>400</y>
+      <w>696</w>
+      <h>464</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+édite</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0;850.0;40.0;850.0;560.0</additional_attributes>
+  </element>
+  
+  <!-- KanbanView observe TaskModel -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>672</x>
+      <y>740</y>
+      <w>320</w>
+      <h>320</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+observe</panel_attributes>
+    <additional_attributes>380.0;380.0;380.0;60.0;10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  
+  <!-- GitProjectWidget utilise RepositoryManager -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>952</x>
+      <y>520</y>
+      <w>376</w>
+      <h>336</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+utilise</panel_attributes>
+    <additional_attributes>450.0;400.0;450.0;60.0;10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  
+  <!-- PersistenceManager sérialise Task -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>200</x>
+      <y>552</y>
+      <w>96</w>
+      <h>584</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+sérialise</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;710.0</additional_attributes>
+  </element>
+  
+  <!-- UndoCommands modifie TaskModel -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>560</x>
+      <y>752</y>
+      <w>96</w>
+      <h>504</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+modifie</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;610.0</additional_attributes>
+  </element>
+  
+  <!-- GitHubConnector utilise GitRepository -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>952</x>
+      <y>280</y>
+      <w>384</w>
+      <h>856</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+utilise</panel_attributes>
+    <additional_attributes>460.0;1050.0;460.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  
+  <!-- GitHubConnector synchronise GitIssueTask -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>672</x>
+      <y>320</y>
+      <w>664</w>
+      <h>816</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+synchronise</panel_attributes>
+    <additional_attributes>10.0;10.0;810.0;10.0;810.0;1000.0</additional_attributes>
+  </element>
+  
+  <!-- MainWindow utilise RepositoryManager -->
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>792</x>
+      <y>480</y>
+      <w>216</w>
+      <h>376</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+utilise</panel_attributes>
+    <additional_attributes>10.0;450.0;250.0;450.0;250.0;10.0</additional_attributes>
+  </element>
+  
+</diagram>
