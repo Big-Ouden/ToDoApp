@@ -325,10 +325,10 @@ def fill_translations(ts_file, translations_dict):
 
 if __name__ == "__main__":
     print("=== Traductions françaises ===")
-    filled_fr = fill_translations("ToDoApp_fr.ts", translations_fr)
+    filled_fr = fill_translations("translations/ToDoApp_fr.ts", translations_fr)
     
     print("\n=== Traductions anglaises ===")
-    filled_en = fill_translations("ToDoApp_en_US.ts", translations_en)
+    filled_en = fill_translations("translations/ToDoApp_en_US.ts", translations_en)
     
     total = filled_fr + filled_en
     if total > 0:
