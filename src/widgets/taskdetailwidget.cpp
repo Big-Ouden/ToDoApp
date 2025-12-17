@@ -1,6 +1,7 @@
 #include "taskdetailwidget.h"
 #include "ui_taskdetailwidget.h"
 #include <QEvent>
+#include <QKeyEvent>
 #include <QLocale>
 #include <QApplication>
 #include <QFileDialog>
@@ -241,6 +242,20 @@ bool TaskDetailWidget::eventFilter(QObject *watched, QEvent *event)
     return QWidget::eventFilter(watched, event);
 }
 
+bool TaskDetailWidget::event(QEvent *event)
+{
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        // Ctrl+Enter pour appliquer les modifications
+        if (keyEvent->modifiers() == Qt::ControlModifier && 
+            (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter)) {
+            onApplyClicked();
+            return true;
+        }
+    }
+    return QWidget::event(event);
+}
+
 void TaskDetailWidget::updateComboTranslations()
 {
     // Sauvegarder les index actuels
@@ -253,7 +268,6 @@ void TaskDetailWidget::updateComboTranslations()
     
     // Mettre à jour les items du combo Priorité
     ui->priorityCombo->clear();
-    ui->priorityCombo->addItem(tr("Très faible"));
     ui->priorityCombo->addItem(tr("Faible"));
     ui->priorityCombo->addItem(tr("Moyenne"));
     ui->priorityCombo->addItem(tr("Élevée"));
