@@ -65,6 +65,28 @@ void TaskItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, 
     }
 }
 
+void TaskItemDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    // Agrandir la géométrie de l'éditeur pour qu'il soit plus visible
+    QRect rect = option.rect;
+    
+    if (index.column() == 0) {
+        // Pour le titre, utiliser plus de largeur
+        rect.setWidth(qMax(rect.width(), 300));
+    } else if (index.column() == 1) {
+        // Pour la date, taille fixe appropriée
+        rect.setWidth(qMax(rect.width(), 150));
+    } else if (index.column() == 2 || index.column() == 3) {
+        // Pour priorité et statut, taille minimale
+        rect.setWidth(qMax(rect.width(), 120));
+    }
+    
+    // Augmenter légèrement la hauteur pour une meilleure lisibilité
+    rect.setHeight(qMax(rect.height(), 25));
+    
+    editor->setGeometry(rect);
+}
+
 bool TaskItemDelegate::helpEvent(QHelpEvent *event,
                                   QAbstractItemView *view,
                                   const QStyleOptionViewItem &option,

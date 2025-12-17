@@ -47,6 +47,16 @@ public:
                       const QModelIndex &index) const override;
 
     /**
+     * @brief Ajuste la géométrie de l'éditeur pour améliorer la visibilité.
+     * @param editor Widget d'édition
+     * @param option Options de style
+     * @param index Index de la cellule
+     */
+    void updateEditorGeometry(QWidget *editor,
+                              const QStyleOptionViewItem &option,
+                              const QModelIndex &index) const override;
+
+    /**
      * @brief Gère l'affichage d'aide (tooltip enrichi).
      * @param event Événement
      * @param view Vue
