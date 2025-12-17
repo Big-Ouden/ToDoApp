@@ -1,0 +1,62 @@
+graph TB
+    subgraph MODELE["MODÈLE<br/>(Données et logique métier)"]
+        Task["<b>Task</b><br/>- id: QUuid<br/>- title: QString<br/>- description: QString<br/>- dueDate: QDate<br/>- priority: Priority<br/>- status: Status<br/>- tags: QStringList<br/>- estimatedMinutes: int<br/>- actualMinutes: int"]
+        GitIssueTask["<b>GitIssueTask</b><br/>extends Task<br/>- issueNumber: int<br/>- repositoryUrl: QString<br/>- platform: GitPlatform<br/>- assignees: QStringList"]
+        Category["<b>Category</b><br/>- name: QString<br/>- tasks: QList&lt;Task*&gt;<br/>+ addTask()<br/>+ removeTask()"]
+        TaskModel["<b>TaskModel</b><br/>extends QAbstractItemModel<br/>- rootTasks: QList&lt;Task*&gt;<br/>+ rowCount()<br/>+ columnCount()<br/>+ data()<br/>+ setData()<br/>+ index()<br/>+ parent()"]
+    end
+    
+    subgraph PROXY["PROXY"]
+        FilterProxy["<b>TaskFilterProxyModel</b><br/>extends QSortFilterProxyModel<br/>- searchText: QString<br/>- priorityFilter: Priority<br/>- statusFilter: Status<br/>+ filterAcceptsRow()<br/>+ setSearchText()<br/>+ setPriorityFilter()"]
+    end
+    
+    subgraph VUE["VUE<br/>(Interface graphique)"]
+        MainWindow["<b>MainWindow</b><br/>- treeView: QTreeView<br/>- detailWidget: TaskDetailWidget<br/>- toolbar: QToolBar<br/>- statusBar: QStatusBar"]
+        TreeView["<b>QTreeView</b><br/>- delegate: TaskItemDelegate<br/>- selectionModel"]
+        TaskDetail["<b>TaskDetailWidget</b><br/>- titleEdit: QLineEdit<br/>- descEdit: QTextEdit<br/>- dateEdit: QDateEdit<br/>- priorityCombo: QComboBox<br/>- statusCombo: QComboBox"]
+        KanbanView["<b>KanbanView</b><br/>- todoColumn: QListWidget<br/>- inProgressColumn: QListWidget<br/>- doneColumn: QListWidget<br/>- cancelledColumn: QListWidget"]
+        StatsWidget["<b>StatisticsWidget</b><br/>- charts: ChartsWidget<br/>- timeline: TimelineWidget<br/>- heatmap: HeatmapWidget"]
+    end
+    
+    subgraph CONTROLEUR["CONTRÔLEUR<br/>(Coordination et logique)"]
+        Signals["<b>Signaux/Slots Qt</b><br/>- taskAdded()<br/>- taskRemoved()<br/>- taskUpdated()<br/>- dataChanged()<br/>- selectionChanged()"]
+        UndoStack["<b>QUndoStack</b><br/>- AddTaskCommand<br/>- RemoveTaskCommand<br/>- ModifyTaskCommand"]
+        PersistMgr["<b>PersistenceManager</b><br/>+ saveJSON()<br/>+ loadJSON()<br/>+ exportCSV()<br/>+ exportMarkdown()<br/>+ exportPDF()"]
+        GitConnectors["<b>Git Connectors</b><br/>- GitHubConnector<br/>- GitLabConnector<br/>- GiteaConnector<br/>+ syncIssues()<br/>+ createIssue()"]
+    end
+    
+    %% Relations MODÈLE
+    Task --> TaskModel
+    GitIssueTask -.->|extends| Task
+    Category -.->|references| Task
+    TaskModel --> FilterProxy
+    
+    %% Relations PROXY -> VUE
+    FilterProxy --> TreeView
+    
+    %% Relations VUE
+    MainWindow --> TreeView
+    MainWindow --> TaskDetail
+    MainWindow --> KanbanView
+    MainWindow --> StatsWidget
+    
+    %% Relations CONTRÔLEUR -> MODÈLE
+    Signals -.->|updates| TaskModel
+    UndoStack -.->|modifies| Task
+    PersistMgr -.->|saves/loads| TaskModel
+    GitConnectors -.->|syncs| GitIssueTask
+    
+    %% Relations VUE -> CONTRÔLEUR
+    MainWindow --> Signals
+    TaskDetail --> UndoStack
+    
+    %% Annotations
+    classDef modelStyle fill:#c8e6c9,stroke:#4caf50,stroke-width:2px,color:#000
+    classDef proxyStyle fill:#fff9c4,stroke:#fbc02d,stroke-width:2px,color:#000
+    classDef viewStyle fill:#ffe0b2,stroke:#ff9800,stroke-width:2px,color:#000
+    classDef ctrlStyle fill:#ffcdd2,stroke:#f44336,stroke-width:2px,color:#000
+    
+    class Task,GitIssueTask,Category,TaskModel modelStyle
+    class FilterProxy proxyStyle
+    class MainWindow,TreeView,TaskDetail,KanbanView,StatsWidget viewStyle
+    class Signals,UndoStack,PersistMgr,GitConnectors ctrlStyle

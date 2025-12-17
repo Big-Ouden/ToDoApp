@@ -151,8 +151,6 @@ void KanbanView::onItemDoubleClicked(QListWidgetItem *item)
 {
     Task *task = m_itemTaskMap.value(item, nullptr);
     if (task) {
-        // Émettre un signal pour ouvrir les détails
-        // TODO: connecter au détail widget
     }
 }
 

@@ -122,6 +122,39 @@ make release_translations    # Compiler les fichiers .ts en .qm
 make translations           # update + release
 ```
 
+#### Scripts de traduction
+
+**`update_translations.sh`**
+Script shell qui automatise la mise à jour et compilation des traductions :
+- Extrait toutes les chaînes `tr()` du code C++ vers les fichiers `.ts`
+- Compile les fichiers `.ts` (XML) en fichiers `.qm` (binaires)
+- Copie les `.qm` générés dans le répertoire racine pour l'exécution
+
+**`fill_translations.py`**
+Script Python qui remplit automatiquement les traductions manquantes :
+- Contient un dictionnaire prédéfini de traductions FR/EN
+- Parse les fichiers `.ts` (XML) et remplit les balises `<translation>` vides
+- Supprime les marqueurs `type="unfinished"` pour les traductions complétées
+- Utile pour traduire rapidement les chaînes communes de l'interface
+
+**Workflow typique :**
+```bash
+# 1. Développeur ajoute du code avec tr("Nouveau texte")
+# 2. Extraire les nouvelles chaînes
+./update_translations.sh
+
+# 3. Remplir automatiquement les traductions connues
+cd translations/
+python3 ../fill_translations.py
+
+# 4. Éditer manuellement les traductions restantes avec Qt Linguist
+linguist ToDoApp_fr.ts ToDoApp_en_US.ts
+
+# 5. Recompiler les traductions
+cd ..
+./update_translations.sh
+```
+
 ### Archives
 
 ```bash

@@ -226,9 +226,6 @@ void MainWindow::setupConnections()
     connect(ui->taskTreeView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &MainWindow::onTaskSelectionChanged);
 
-    // Note: Les boutons de la barre d'outils personnalisée ont été supprimés.
-    // Les actions sont maintenant uniquement dans la toolbar principale et le menu.
-
     // ========================================
     // Connexions des signaux - Actions du menu
     // ========================================
@@ -314,9 +311,6 @@ void MainWindow::setupConnections()
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::onAbout);
     connect(ui->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
     connect(ui->actionFocusMode, &QAction::triggered, this, &MainWindow::onFocusMode);
-    
-    // Note: Les widgets de recherche et filtres sont maintenant ajoutés directement dans la toolbar
-    // et connectés dans le constructeur, pas ici.
 
     // ========================================
     // Connexions des signaux - TaskDetailWidget

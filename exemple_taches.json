@@ -5,7 +5,7 @@
             ],
             "description": "Planifier et organiser le prochain sprint de développement. Préparer les user stories et définir les objectifs.\n\n**Objectifs:**\n- Réunion d'équipe\n- Définition des priorités\n- Estimation du temps",
             "dueDate": "2025-12-15",
-            "id": "{fd8aebdc-865b-4317-9a2f-4e0ad3ab3c69}",
+            "id": "{144751fc-e59f-4fac-bc3e-4fb3a9459bba}",
             "priority": "Low",
             "status": "Completed",
             "subtasks": [
@@ -15,16 +15,16 @@
                 "sprint",
                 "développement"
             ],
-            "title": "🚀 Préparation Sprint Q1 2026"
+            "title": "Préparation Sprint Q1 2026"
         },
         {
             "attachments": [
             ],
             "description": "Créer des tests unitaires complets avant le refactoring",
             "dueDate": "2025-12-14",
-            "id": "{bc6eafaa-43cb-402d-b056-6f55a2cf50ba}",
+            "id": "{ddf034fb-dc78-42ce-9b52-2b2c05f947f7}",
             "priority": "Low",
-            "status": "Not started",
+            "status": "In progress",
             "subtasks": [
             ],
             "tags": [
@@ -36,7 +36,7 @@
             ],
             "description": "Rédiger la documentation technique complète du projet pour les nouveaux développeurs",
             "dueDate": "2025-12-18",
-            "id": "{c9382025-da54-4928-ab6b-2c8080229bf6}",
+            "id": "{7e5f19fc-1dc0-4652-8427-45833d14dd54}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
@@ -45,7 +45,7 @@
                     ],
                     "description": "Guide de démarrage rapide avec exemples de code",
                     "dueDate": "2025-12-14",
-                    "id": "{f74ab05e-1cee-4e7d-98df-ec970cae1ab3}",
+                    "id": "{ceafb723-6847-4d55-9387-427ab93cf9b4}",
                     "priority": "Low",
                     "status": "Not started",
                     "subtasks": [
@@ -61,9 +61,9 @@
                     ],
                     "description": "Documentation de l'architecture système et des flux de données",
                     "dueDate": "2025-12-16",
-                    "id": "{c8fd668f-3f58-4462-8484-9d52e299ab64}",
+                    "id": "{68c7ae74-67a1-4beb-959f-f2b516fa4d94}",
                     "priority": "Low",
-                    "status": "Not started",
+                    "status": "Completed",
                     "subtasks": [
                     ],
                     "tags": [
@@ -77,14 +77,14 @@
                 "documentation",
                 "onboarding"
             ],
-            "title": "📚 Documentation technique"
+            "title": "Documentation technique"
         },
         {
             "attachments": [
             ],
             "description": "**Formation sur les nouvelles technologies:**\n- React 18 avec Hooks\n- TypeScript avancé\n- Architecture microservices\n\n*Durée estimée: 2 jours*",
             "dueDate": "2025-12-22",
-            "id": "{e0f56726-5b6a-4d57-972e-5a991a26254a}",
+            "id": "{e31e1b0d-0653-4d81-877b-95d5d6cf0353}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
@@ -94,15 +94,15 @@
                 "react",
                 "typescript"
             ],
-            "title": "📖 Formation équipe dev"
+            "title": "Formation équipe dev"
         },
         {
             "attachments": [
             ],
             "description": "Corriger les bugs critiques remontés en production:\n\n1. Bug #1234 - Crash au démarrage\n2. Bug #1235 - Fuite mémoire\n3. Bug #1236 - Erreur 500 sur /api/users",
             "dueDate": "2025-12-11",
-            "id": "{d90d26e9-df6a-44ad-99eb-239c523dbf37}",
-            "priority": "High",
+            "id": "{30910d9a-6139-4d57-8409-cf517a4b6401}",
+            "priority": "Low",
             "status": "Completed",
             "subtasks": [
                 {
@@ -110,7 +110,7 @@
                     ],
                     "description": "L'application plante au démarrage sur certains devices Android",
                     "dueDate": "2025-12-11",
-                    "id": "{57d8e792-ddec-4d16-9541-ec47c693ea4d}",
+                    "id": "{0b61e50d-cd54-42d0-ab5b-fc87821fce50}",
                     "priority": "Low",
                     "status": "Completed",
                     "subtasks": [
@@ -120,14 +120,14 @@
                         "android",
                         "crash"
                     ],
-                    "title": "🐛 Fix crash au démarrage"
+                    "title": "Fix crash au démarrage"
                 },
                 {
                     "attachments": [
                     ],
                     "description": "Identifier et corriger la fuite mémoire dans le gestionnaire de cache",
                     "dueDate": "2025-12-11",
-                    "id": "{9bfffd86-f556-4884-8610-ed5de1369c5f}",
+                    "id": "{90a1fa60-718b-493e-84fa-9d6a9b0d449a}",
                     "priority": "Low",
                     "status": "Completed",
                     "subtasks": [
@@ -137,7 +137,7 @@
                         "performance",
                         "memory"
                     ],
-                    "title": "🐛 Corriger fuite mémoire"
+                    "title": "Corriger fuite mémoire"
                 }
             ],
             "tags": [
@@ -145,16 +145,16 @@
                 "production",
                 "hotfix"
             ],
-            "title": "🔥 Bugs critiques production"
+            "title": "Bugs critiques production"
         },
         {
             "attachments": [
                 "file:///home/bigouden/Documents/cours/laoa/projet/ToDoApp/exemple_taches.json"
             ],
             "description": "### Réunion mensuelle d'équipe\n\n**Ordre du jour:**\n- Bilan du mois écoulé\n- Objectifs du mois prochain\n- Points bloquants\n- Amélioration continue\n\n**Participants:** Toute l'équipe technique",
-            "dueDate": "2025-12-30",
-            "id": "{3e1abe07-4cd8-4dd1-b9b3-fbcd2242b707}",
-            "priority": "Low",
+            "dueDate": "2000-01-01",
+            "id": "{91c4df3d-7934-40c7-a740-02e8c2652c09}",
+            "priority": "Unknown",
             "status": "Not started",
             "subtasks": [
             ],
@@ -163,14 +163,14 @@
                 "retrospective",
                 "kjhk"
             ],
-            "title": "🗓️ Réunion mensuelle équipe"
+            "title": "Réunion mensuelle équipe"
         },
         {
             "attachments": [
             ],
             "description": "# Projet de refactoring\n\nRefactoriser le code legacy du module d'authentification pour améliorer:\n- La maintenabilité\n- Les performances\n- La sécurité\n\n```python\n# Exemple de nouveau pattern\nclass AuthService:\n    def __init__(self):\n        self.validator = TokenValidator()\n```",
             "dueDate": "2025-12-20",
-            "id": "{39081903-830a-4622-a70d-dad88b01f4dc}",
+            "id": "{854fca6b-138a-4288-9148-6840eb1cf28f}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
@@ -179,7 +179,7 @@
                     ],
                     "description": "Analyser le code actuel et identifier les points d'amélioration",
                     "dueDate": "2025-12-12",
-                    "id": "{1ec1cdcf-9e04-4578-9e44-8d12b3c07d5f}",
+                    "id": "{42e81094-4e85-4272-90b3-e0df86066e11}",
                     "priority": "Low",
                     "status": "Not started",
                     "subtasks": [
@@ -195,7 +195,7 @@
                     ],
                     "description": "Implémenter le nouveau système d'authentification",
                     "dueDate": "2025-12-18",
-                    "id": "{7ce19cc2-9459-4798-90d8-a0162b5c49b0}",
+                    "id": "{895f47a7-9c22-4b1a-ac19-91b3f6a45676}",
                     "priority": "Low",
                     "status": "Not started",
                     "subtasks": [
@@ -212,14 +212,14 @@
                 "backend",
                 "securite"
             ],
-            "title": "🔧 Refactoring module authentification"
+            "title": "Refactoring module authentification"
         },
         {
             "attachments": [
             ],
             "description": "Rendez-vous annulé suite à changement de planning",
             "dueDate": "2025-12-08",
-            "id": "{b8a2b523-0478-4fdd-9755-e4dd9e6facb0}",
+            "id": "{098ef615-e3f3-405f-ac3c-adfa9d09d2c3}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
@@ -228,14 +228,14 @@
                 "personnel",
                 "sante"
             ],
-            "title": "❌ Rendez-vous médecin"
+            "title": "Rendez-vous médecin"
         },
         {
             "attachments": [
             ],
             "description": "Inviter tous les membres de l'équipe et préparer l'agenda",
             "dueDate": "2025-12-11",
-            "id": "{f4dbdf3c-71f6-403c-9768-83b52dca371b}",
+            "id": "{7fdedcdc-f84e-4187-a8bd-f541bc45ca25}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
@@ -250,8 +250,8 @@
             "attachments": [
             ],
             "description": "Créer les tickets dans Jira pour le prochain sprint",
-            "dueDate": "2000-01-01",
-            "id": "{24044186-8805-42b9-94ab-d259e71ef965}",
+            "dueDate": "2025-12-13",
+            "id": "{056f2d05-42cd-4f63-b0e0-e0d51acb8d8c}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
@@ -267,7 +267,7 @@
             ],
             "description": "Optimiser les performances de l'application:\n- Réduire le temps de chargement de 30%\n- Améliorer les temps de réponse API\n- Optimiser les requêtes base de données",
             "dueDate": "2025-12-25",
-            "id": "{bc45a663-6c2b-4a31-8129-e19ddbe2a908}",
+            "id": "{517452da-2dff-4db2-a196-b0e01081db1a}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
@@ -276,7 +276,7 @@
                     ],
                     "description": "Utiliser Lighthouse et WebPageTest pour l'analyse",
                     "dueDate": "2025-12-16",
-                    "id": "{edca3583-0b75-4c72-9259-0806fc309903}",
+                    "id": "{e4fe15e7-8aaf-4239-b24f-7856e69641aa}",
                     "priority": "Low",
                     "status": "Not started",
                     "subtasks": [
@@ -292,7 +292,7 @@
                     ],
                     "description": "Mettre en cache les requêtes fréquentes et optimiser les index",
                     "dueDate": "2025-12-20",
-                    "id": "{230f8117-b20a-4da3-9d7d-3c491969b577}",
+                    "id": "{ce886b2b-d210-4cb9-8704-376aad9858a8}",
                     "priority": "Low",
                     "status": "Not started",
                     "subtasks": [
@@ -309,14 +309,14 @@
                 "performance",
                 "optimization"
             ],
-            "title": "⚡ Optimisation performances"
+            "title": "Optimisation performances"
         },
         {
             "attachments": [
             ],
             "description": "Tâche complétée - Acheter du pain, du lait et des œufs",
             "dueDate": "2025-12-09",
-            "id": "{d530aa3c-617c-4bfd-9021-5398620278ab}",
+            "id": "{5c0b8c1e-0e01-495d-b7ae-a647ab141311}",
             "priority": "Low",
             "status": "Not started",
             "subtasks": [
@@ -325,16 +325,16 @@
                 "personnel",
                 "courses"
             ],
-            "title": "✅ Courses hebdomadaires"
+            "title": "Courses hebdomadaires"
         },
         {
             "attachments": [
             ],
             "description": "Mise en place d'une pipeline CI/CD complète avec:\n- Tests automatisés\n- Déploiement automatique\n- Rollback en cas d'erreur",
-            "dueDate": "",
-            "id": "{e3192b03-1d23-491b-a6d9-c8f81ac68dcc}",
+            "dueDate": "2025-12-17",
+            "id": "{43b5aa69-cddb-4004-98e3-094d3896faa1}",
             "priority": "Low",
-            "status": "Not started",
+            "status": "Completed",
             "subtasks": [
             ],
             "tags": [
@@ -342,22 +342,7 @@
                 "ci-cd",
                 "jenkins"
             ],
-            "title": "🔄 Setup CI/CD"
-        },
-        {
-            "attachments": [
-            ],
-            "description": "Issue liée: #3908\n\n### System details\n\nOmarchy 3.2.3\n\n### What's wrong?\n\nafter update impala was unable to connect to the wireless service.\nrunning ¨sudo systemctl restart iwd¨ fixed it.\nmaybe it would be wise to restart the service once on reboot after each update in case this is seen with other users as well.\n",
-            "dueDate": "",
-            "id": "{e6c5d157-26a0-49b3-aec3-d9da7e815732}",
-            "priority": "Low",
-            "status": "Not started",
-            "subtasks": [
-            ],
-            "tags": [
-                "bug"
-            ],
-            "title": "Travail sur: iNet Wireless Daemon crash after update"
+            "title": "Setup CI/CD"
         }
     ]
 }

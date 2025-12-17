@@ -284,8 +284,6 @@ void GitSyncDialog::onTestConnection()
 
 void GitSyncDialog::onBrowseRepositories()
 {
-    // TODO: Implémenter un dialogue de navigation des dépôts
-    // Pour l'instant, juste un message
     QMessageBox::information(this, tr("Navigation"),
                             tr("Entrez manuellement owner/repository (ex: torvalds/linux)"));
 }
@@ -463,21 +461,18 @@ void GitSyncDialog::startImport()
 
 void GitSyncDialog::startExport()
 {
-    // TODO: Implémenter l'export des tâches locales vers les issues Git
     m_logText->append(tr("Export non encore implémenté."));
     onCancelSync();
 }
 
 void GitSyncDialog::startBidirectionalSync()
 {
-    // TODO: Implémenter la synchronisation bidirectionnelle
     m_logText->append(tr("Synchronisation bidirectionnelle non encore implémentée."));
     onCancelSync();
 }
 
 void GitSyncDialog::handleConflict(GitIssueTask *localTask, const QJsonObject &remoteIssue)
 {
-    // TODO: Implémenter la résolution de conflits
     ConflictResolution resolution = static_cast<ConflictResolution>(
         m_conflictResolutionCombo->currentData().toInt());
     

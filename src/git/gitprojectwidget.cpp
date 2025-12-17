@@ -230,7 +230,6 @@ void GitProjectWidget::onEditRepository()
     if (!m_repositoryManager || !m_repositoryManager->currentRepository())
         return;
     
-    // TODO: Ouvrir un dialogue d'édition
     QMessageBox::information(this, tr("Éditer"), 
         tr("Fonction d'édition de dépôt à implémenter"));
 }
@@ -468,7 +467,6 @@ GitIssueTask* GitProjectWidget::selectedIssue() const
 
 void GitProjectWidget::onCreateIssue()
 {
-    // TODO: Dialogue de création d'issue
     QMessageBox::information(this, tr("Créer une issue"),
         tr("Fonction de création d'issue à implémenter"));
 }
