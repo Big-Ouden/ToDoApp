@@ -436,28 +436,52 @@ void MainWindow::onAddSubtask()
 
 void MainWindow::onDeleteTask()
 {
-    QModelIndex cur = ui->taskTreeView->currentIndex();
-    if (!cur.isValid()) {
+    // Récupérer tous les index sélectionnés
+    QModelIndexList selectedIndexes = ui->taskTreeView->selectionModel()->selectedRows();
+    
+    if (selectedIndexes.isEmpty()) {
         QMessageBox::information(this, tr("Information"), 
                                 tr("Veuillez d'abord sélectionner une tâche à supprimer."));
         return;
     }
     
-    QModelIndex src = m_proxyModel->mapToSource(cur);
-    Task *t = m_taskModel->getTask(src);
-    if (!t) return;
+    // Convertir les index proxy en index source et récupérer les tâches
+    QList<Task*> tasksToDelete;
+    int totalSubtasks = 0;
+    
+    for (const QModelIndex &proxyIdx : selectedIndexes) {
+        QModelIndex srcIdx = m_proxyModel->mapToSource(proxyIdx);
+        Task *t = m_taskModel->getTask(srcIdx);
+        if (t) {
+            tasksToDelete.append(t);
+            totalSubtasks += t->subtasks().size();
+        }
+    }
+    
+    if (tasksToDelete.isEmpty()) return;
     
     // Si l'utilisateur a désactivé la confirmation, supprimer directement
     if (!m_askDeleteConfirmation) {
-        RemoveTaskCommand *cmd = new RemoveTaskCommand(m_taskModel, t);
-        m_undoStack->push(cmd);
+        for (Task *t : tasksToDelete) {
+            RemoveTaskCommand *cmd = new RemoveTaskCommand(m_taskModel, t);
+            m_undoStack->push(cmd);
+        }
         m_detailWidget->setTask(nullptr);
         return;
     }
     
-    QString message = tr("Êtes-vous sûr de vouloir supprimer la tâche \"%1\" ?").arg(t->title());
-    if (t->subtasks().size() > 0) {
-        message += tr("\n\nCette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).").arg(t->subtasks().size());
+    // Préparer le message de confirmation
+    QString message;
+    if (tasksToDelete.size() == 1) {
+        message = tr("Êtes-vous sûr de vouloir supprimer la tâche \"%1\" ?").arg(tasksToDelete.first()->title());
+        if (totalSubtasks > 0) {
+            message += tr("\n\nCette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).").arg(totalSubtasks);
+        }
+    } else {
+        message = tr("Êtes-vous sûr de vouloir supprimer les %1 tâches sélectionnées ?").arg(tasksToDelete.size());
+        if (totalSubtasks > 0) {
+            message += tr("\n\nCes tâches contiennent au total %1 sous-tâche(s) qui seront également supprimée(s).").arg(totalSubtasks);
+        }
     }
     
     QMessageBox msgBox(this);
@@ -478,8 +502,10 @@ void MainWindow::onDeleteTask()
     }
     
     if (ret == QMessageBox::Yes) {
-        RemoveTaskCommand *cmd = new RemoveTaskCommand(m_taskModel, t);
-        m_undoStack->push(cmd);
+        for (Task *t : tasksToDelete) {
+            RemoveTaskCommand *cmd = new RemoveTaskCommand(m_taskModel, t);
+            m_undoStack->push(cmd);
+        }
         m_detailWidget->setTask(nullptr);
     }
 }

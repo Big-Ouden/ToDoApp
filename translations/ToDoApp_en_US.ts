@@ -1504,6 +1504,18 @@ Cette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).</so
         <translation>Please first select a task.</translation>
     </message>
     <message>
+        <source>Êtes-vous sûr de vouloir supprimer les %1 tâches sélectionnées ?</source>
+        <translation>Are you sure you want to delete the %1 selected tasks?</translation>
+    </message>
+    <message>
+        <source>
+
+Ces tâches contiennent au total %1 sous-tâche(s) qui seront également supprimée(s).</source>
+        <translation>
+
+These tasks contain a total of %1 subtask(s) that will also be deleted.</translation>
+    </message>
+    <message>
         <location filename="mainwindow.cpp" line="511"/>
         <source>Tâche et sous-tâches marquées comme en cours</source>
         <translation>Task and subtasks marked as in progress</translation>

@@ -1472,6 +1472,16 @@ Cette tâche contient %1 sous-tâche(s) qui seront également supprimée(s).</so
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Êtes-vous sûr de vouloir supprimer les %1 tâches sélectionnées ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+
+Ces tâches contiennent au total %1 sous-tâche(s) qui seront également supprimée(s).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="mainwindow.cpp" line="511"/>
         <source>Tâche et sous-tâches marquées comme en cours</source>
         <translation type="unfinished"></translation>
