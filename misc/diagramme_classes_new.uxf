@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <help_text>Diagramme de classes UML complet - ToDoApp</help_text>
+  <zoom_level>3</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>204</x>
+      <y>174</y>
+      <w>105</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;QObject&gt;&gt;
+Task
+--
+- m_id: QUuid
+- m_title: QString
+- m_description: QString
+- m_dueDate: QDate
+- m_priority: Priority
+- m_status: Status
+- m_tags: QStringList
+- m_attachments: QList&lt;QUrl&gt;
+- m_estimatedMinutes: int
+- m_actualMinutes: int
+- m_completionDate: QDate
+- m_linkedIssueId: QString
+- m_parentTask: Task*
+- m_subtasks: QList&lt;Task*&gt;
+--
++ title(): QString
++ setTitle(QString)
++ description(): QString
++ setDescription(QString)
++ priority(): Priority
++ setPriority(Priority)
++ status(): Status
++ setStatus(Status)
++ tags(): QStringList
++ addTag(QString)
++ addSubtask(Task*)
++ removeSubtask(Task*)
++ isCompleted(): bool
+--
+Signals:
++ titleChanged()
++ priorityChanged()
++ statusChanged()
++ taskModified()
++ subtaskAdded(Task*)
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>303</x>
+      <y>393</y>
+      <w>105</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>GitIssueTask
+--
+- m_issueNumber: int
+- m_repositoryUrl: QString
+- m_platform: GitPlatform
+- m_assignees: QStringList
+- m_milestone: QString
+- m_lastSyncDate: QDateTime
+- m_locallyModified: bool
+--
++ issueNumber(): int
++ setIssueNumber(int)
++ repositoryUrl(): QString
++ platform(): GitPlatform
++ setPlatform(GitPlatform)
++ assignees(): QStringList
++ isLocallyModified(): bool
++ markLocallyModified()
+--
+Signals:
++ issueNumberChanged()
++ syncRequested()
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>399</x>
+      <y>150</y>
+      <w>90</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;QAbstractItemModel&gt;&gt;
+Category
+--
+- m_id: QUuid
+- m_name: QString
+- m_color: QColor
+- m_tasks: QList&lt;Task*&gt;
+--
++ name(): QString
++ setName(QString)
++ color(): QColor
++ setColor(QColor)
++ addTask(Task*)
++ removeTask(Task*)
+--
+Signals:
++ nameChanged()
++ colorChanged()
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>399</x>
+      <y>261</y>
+      <w>120</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>TaskModel
+--
+- m_rootTasks: QList&lt;Task*&gt;
+- m_categories: QList&lt;Category*&gt;
+- m_isDarkMode: bool
+--
++ index(int, int, QModelIndex): QModelIndex
++ parent(QModelIndex): QModelIndex
++ rowCount(QModelIndex): int
++ columnCount(QModelIndex): int
++ data(QModelIndex, int): QVariant
++ setData(QModelIndex, QVariant, int): bool
++ headerData(int, Qt::Orientation, int): QVariant
++ insertTask(Task*, Task*)
++ removeTask(QModelIndex)
++ promoteTask(QModelIndex)
++ getTask(QModelIndex): Task*
++ clear()
+--
+Signals:
++ taskAdded(Task*)
++ taskRemoved(Task*)
++ taskUpdated(Task*)
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>555</x>
+      <y>159</y>
+      <w>120</w>
+      <h>75</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;QSortFilterProxyModel&gt;&gt;
+TaskFilterProxyModel
+--
+- m_searchText: QString
+- m_priorityFilter: Priority
+- m_statusFilter: Status
+- m_showCompleted: bool
+- m_priorityFilterEnabled: bool
+- m_statusFilterEnabled: bool
+--
++ setSearchText(QString)
++ setPriorityFilter(Priority, bool)
++ setStatusFilter(Status, bool)
++ setShowCompleted(bool)
++ filterAcceptsRow(int, QModelIndex): bool
+bg=#FFF3E0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>798</x>
+      <y>192</y>
+      <w>135</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;QMainWindow&gt;&gt;
+MainWindow
+--
+- m_taskModel: TaskModel*
+- m_proxyModel: TaskFilterProxyModel*
+- m_detailWidget: TaskDetailWidget*
+- m_statisticsWidget: StatisticsWidget*
+- m_pomodoroWidget: PomodoroTimer*
+- m_kanbanView: KanbanView*
+- m_gitProjectWidget: GitProjectWidget*
+- m_repositoryManager: RepositoryManager*
+- m_undoStack: QUndoStack*
+- m_searchLineEdit: QLineEdit*
+- m_priorityFilterCombo: QComboBox*
+- m_isDarkMode: bool
+--
++ undoStack(): QUndoStack*
++ setLanguage(QString)
+- setupConnections()
+- switchViewMode(ViewMode)
+--
+Slots:
+- onAddTask()
+- onDeleteTask()
+- onSaveFile()
+- onSearchTextChanged(QString)
+- onTaskCreatedFromIssue(GitIssueTask*)
+bg=#F1F8E9</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>567</x>
+      <y>480</y>
+      <w>90</w>
+      <h>75</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;QObject&gt;&gt;
+GitRepository
+--
+- m_name: QString
+- m_url: QString
+- m_platform: GitPlatform
+- m_token: QString
+- m_branch: QString
+--
++ name(): QString
++ setName(QString)
++ url(): QString
++ token(): QString
+--
+Signals:
++ nameChanged()
++ tokenChanged()
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>699</x>
+      <y>489</y>
+      <w>111</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;QObject&gt;&gt;
+RepositoryManager
+--
+- m_repositories: QList&lt;GitRepository*&gt;
+--
++ addRepository(GitRepository*)
++ removeRepository(GitRepository*)
++ findRepositoryByName(QString): GitRepository*
+--
+Signals:
++ repositoryAdded(GitRepository*)
++ repositoryRemoved(GitRepository*)
+bg=#E3F2FD</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>543</x>
+      <y>384</y>
+      <w>120</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;QObject&gt;&gt;
+GitHubConnector
+--
+- m_networkManager: QNetworkAccessManager*
+- m_repository: GitRepository*
+--
++ listIssues(QString)
++ createIssue(QString, QString, QStringList)
++ updateIssue(int, QString, QString, QString)
+--
+Signals:
++ issuesListed(QJsonArray)
++ issueCreated(int, QString)
++ apiError(QString, int)
+--
+Slots:
+- onReplyFinished(QNetworkReply*)
+bg=#FCE4EC</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>426</x>
+      <y>477</y>
+      <w>120</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;QObject&gt;&gt;
+GitLabConnector
+--
+- m_networkManager: QNetworkAccessManager*
+- m_repository: GitRepository*
+--
++ listIssues(QString)
++ createIssue(QString, QString, QStringList)
++ updateIssue(int, QString, QString, QString)
+--
+Signals:
++ issuesListed(QJsonArray)
++ issueCreated(int, QString)
++ apiError(QString, int)
+--
+Slots:
+- onReplyFinished(QNetworkReply*)
+bg=#FCE4EC</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>201</x>
+      <y>54</y>
+      <w>105</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>PersistenceManager
+&lt;&lt;static&gt;&gt;
+--
++ saveToJson(QString, QList&lt;Task*&gt;): bool
++ loadFromJson(QString): QList&lt;Task*&gt;
++ exportToCsv(QString, QList&lt;Task*&gt;): bool
++ exportToMarkdown(QString, QList&lt;Task*&gt;): bool
+--
+- taskToJson(Task*): QJsonObject
+- jsonToTask(QJsonObject): Task*
+bg=#FCE4EC</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>798</x>
+      <y>60</y>
+      <w>60</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Priority
+--
+LOW
+MEDIUM
+HIGH
+CRITICAL
+bg=#E1BEE7</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>798</x>
+      <y>105</y>
+      <w>60</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Status
+--
+NOTSTARTED
+INPROGRESS
+COMPLETED
+CANCELLED
+bg=#E1BEE7</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>798</x>
+      <y>150</y>
+      <w>60</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+GitPlatform
+--
+GITHUB
+GITLAB
+GITEA
+bg=#E1BEE7</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>252</x>
+      <y>351</y>
+      <w>57</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;330.0;170.0;330.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>186</x>
+      <y>231</y>
+      <w>24</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=*
+subtasks</panel_attributes>
+    <additional_attributes>60.0;10.0;10.0;10.0;10.0;180.0;60.0;180.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>306</x>
+      <y>273</y>
+      <w>99</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=*</panel_attributes>
+    <additional_attributes>310.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>441</x>
+      <y>228</y>
+      <w>27</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=*
+categories</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>654</x>
+      <y>513</y>
+      <w>51</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=*</panel_attributes>
+    <additional_attributes>150.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>516</x>
+      <y>270</y>
+      <w>288</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>940.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>672</x>
+      <y>183</y>
+      <w>132</w>
+      <h>78</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>420.0;240.0;310.0;240.0;210.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>753</x>
+      <y>309</y>
+      <w>51</w>
+      <h>186</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>150.0;10.0;10.0;10.0;10.0;600.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>306</x>
+      <y>189</y>
+      <w>99</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=*</panel_attributes>
+    <additional_attributes>310.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>306</x>
+      <y>198</y>
+      <w>99</w>
+      <h>15</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=0..1
+parent</panel_attributes>
+    <additional_attributes>10.0;20.0;310.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>510</x>
+      <y>186</y>
+      <w>51</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+observe</panel_attributes>
+    <additional_attributes>10.0;250.0;10.0;10.0;150.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>252</x>
+      <y>99</y>
+      <w>24</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+sérialise</panel_attributes>
+    <additional_attributes>10.0;250.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>633</x>
+      <y>453</y>
+      <w>18</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+utilise</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>543</x>
+      <y>489</y>
+      <w>30</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+utilise</panel_attributes>
+    <additional_attributes>80.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>402</x>
+      <y>393</y>
+      <w>147</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+synchronise</panel_attributes>
+    <additional_attributes>10.0;20.0;470.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>405</x>
+      <y>459</y>
+      <w>90</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..
+synchronise</panel_attributes>
+    <additional_attributes>10.0;20.0;280.0;20.0;280.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>498</x>
+      <y>0</y>
+      <w>135</w>
+      <h>57</h>
+    </coordinates>
+    <panel_attributes>Diagramme de classes UML complet - ToDoApp
+--
+Bleu: Modèle de données
+Orange: Classes abstraites Qt
+Vert: Vues et widgets
+Rose: Contrôleurs et utilitaires
+Violet: Énumérations
+--
+Héritage: &lt;&lt;-
+Composition: &lt;&lt;&lt;&lt;- (losange plein)
+Agrégation: &lt;&lt;&lt;&lt;&lt;- (losange vide)
+Association: &lt;.. (pointillé)
+bg=#E1F5FE</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

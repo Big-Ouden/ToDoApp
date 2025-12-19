@@ -47,25 +47,39 @@
 % Page de garde personnalisée
 \begin{titlepage}
 \centering
-\vspace*{1cm}
-
-% Logo ENSIIE
-\includegraphics[width=0.4\textwidth]{images/ensiie-logo.pdf}\\[2cm]
 
 % Titre
 {\huge\bfseries Rapport de projet\\[0.5cm]}
 {\LARGE Application de gestion de tâches\\[0.3cm]}
-{\LARGE\textbf{ToDoApp}}\\[2cm]
+{\LARGE\textbf{ToDoApp}}\\[1.5cm]
 
 % Informations du cours
-{\large\textbf{Cours : Langages et Applications Orientés Objets Avancés (LAOA)}}\\[1.5cm]
+{\large\textbf{Cours : Langages et Applications Orientés Objets Avancés (LAOA)}}\\[1cm]
 
 % Auteurs
 {\large
 \textbf{Auteurs :}\\[0.5cm]
 Simon Bélier\\
 Wissal Jalfa
-}\\[2cm]
+}\\[1.5cm]
+
+\vspace*{0.5cm}
+
+% Logo ENSIIE en haut
+\includegraphics[width=0.35\textwidth]{images/ensiie-logo.pdf}\\[1.5cm]
+
+% Logos C++ et Qt6
+% \vspace{1cm}
+\begin{minipage}{0.4\textwidth}
+\centering
+\textbf{Technologies utilisées :}
+\end{minipage}
+
+% \vspace{0.5cm}
+% Espace pour logos C++ et Qt6 (à ajouter si disponibles)
+\includegraphics[height=3cm]{images/cpp-logo.jpg}
+\hspace{1cm}
+\includegraphics[height=3cm]{images/qt-logo.png}
 
 \vfill
 
@@ -81,7 +95,28 @@ Wissal Jalfa
 \section{Introduction}
 % =================================================
 
-Ce rapport présente le projet ToDoApp, une application de gestion de tâches hiérarchiques développée en C++ avec le framework Qt 6. L'application implémente l'architecture MVC (Modèle-Vue-Contrôleur) et utilise les mécanismes de Qt pour synchroniser automatiquement les données et l'interface graphique.
+Ce rapport présente le projet ToDoApp, une application de gestion de tâches hiérarchiques développée en C++ avec le framework Qt 6.
+
+\subsection{Contexte et évolution du projet}
+
+À l'origine, le cahier des charges prévoyait une application simple de gestion de tâches permettant d'ajouter, modifier et supprimer des tâches avec quelques attributs basiques (titre, description, date d'échéance). Au fil du développement, le projet a considérablement évolué pour intégrer de nombreuses fonctionnalités avancées qui n'étaient pas initialement prévues :
+
+\begin{itemize}
+\item \textbf{Architecture hiérarchique} : Passage d'une liste plate de tâches à un système de tâches et sous-tâches de profondeur arbitraire avec \texttt{QAbstractItemModel}
+\item \textbf{Intégration Git} : Ajout d'un système complet de synchronisation avec GitHub, GitLab et Gitea pour suivre les issues de projets externes
+\item \textbf{Vues métier avancées} : Développement d'une vue Kanban, d'un widget de statistiques avec graphiques (distribution, heatmap, timeline, burndown chart)
+\item \textbf{Fonctionnalités de productivité} : Timer Pomodoro, mode focus, calcul de séries (streaks), suivi de progression
+\item \textbf{Système d'annulation} : Implémentation complète d'un système Undo/Redo avec \texttt{QUndoStack} et commandes personnalisées
+\item \textbf{Export et persistance} : Support de multiples formats d'export (JSON, CSV, Markdown, PDF avec templates)
+\item \textbf{Interface multilingue} : Système complet de traduction français/anglais avec détection automatique de la langue système
+\item \textbf{Thèmes visuels} : Trois thèmes personnalisables (clair, sombre, chaleureux) avec feuilles de style QSS
+\end{itemize}
+
+Cette évolution progressive a transformé un projet simple en une application complète, tout en conservant une architecture MVC rigoureuse et une séparation claire des responsabilités.
+
+\subsection{Architecture et technologies}
+
+L'application implémente l'architecture MVC (Modèle-Vue-Contrôleur) et utilise les mécanismes de Qt pour synchroniser automatiquement les données et l'interface graphique.
 
 Le projet démontre l'utilisation des concepts de Qt : modèles personnalisés dérivés de \texttt{QAbstractItemModel}, vues arborescentes (\texttt{QTreeView}), modèles proxy de filtrage (\texttt{QSortFilterProxyModel}), délégués d'édition (\texttt{QStyledItemDelegate}), et système de signaux/slots pour la communication inter-composants. L'application intègre des fonctionnalités avancées : système d'annulation/rétablissement (Undo/Redo) avec \texttt{QUndoStack}, intégration avec les plateformes Git (GitHub, GitLab, Gitea), vues métier (Kanban, Timeline, Burndown), et widgets de visualisation des statistiques.
 
